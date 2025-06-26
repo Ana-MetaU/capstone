@@ -1,6 +1,12 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const {createUser, checkUserExists} = require("../database/userUtils");
+const {
+  createUser,
+  checkUserExists,
+  getUserByUsername,
+  verifyUserPassword,
+  getUserById,
+} = require("../database/userUtils");
 const router = express.Router();
 
 // Signup Route
@@ -39,12 +45,70 @@ router.post("/signup", async (req, res) => {
       email,
     });
 
-    console.log("new user from auth",newUser)
+    console.log("new user from auth", newUser);
 
     res.status(201).json({message: "Signup successful!"});
   } catch (error) {
     console.error(error);
     res.status(500).json({error: "Something went wrong during signup"});
+  }
+});
+
+// Login Route
+router.post("/login", async (req, res) => {
+  const {username, password} = req.body;
+
+  try {
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({error: "Username and password are required"});
+    }
+
+    user = await getUserByUsername(username);
+
+    if (!user) {
+      return res.status(401).json({error: "Invalid username or password"});
+    }
+
+    validPassword = await verifyUserPassword(username, password);
+    if (!validPassword) {
+      return res.status(401).json({error: "Invalid username or password"});
+    }
+
+    // Store user ID and username in the session
+    req.session.userId = user.id;
+    req.session.username = user.username;
+
+    res.json({id: user.id, username: user.username}); // Include id and username in the response
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({error: "Something went wrong during login"});
+  }
+});
+
+// // Logout Route
+router.post("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({error: "Failed to log out"});
+    }
+    res.clearCookie("connect.sid"); // Clear the session cookie
+    res.json({message: "Logout successful"});
+  });
+});
+
+router.get("/me", async (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({message: "Not logged in"});
+  }
+
+  try {
+    const user = getUserById(req.session.userId);
+    res.json({id: req.session.userId, username: user.username});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({error: "Error fetching user session data"});
   }
 });
 
