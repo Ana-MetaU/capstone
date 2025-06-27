@@ -1,31 +1,31 @@
-.sign-up{
-    display: flex;
-    color: white;
+.sign-up {
+  display: flex;
+  color: white;
 }
 
-.signup-logo{
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    position: relative;
+.signup-logo {
+  flex: 1;
+  justify-content: center;
+  margin-right: 20px;
+  align-items: center;
+  position: relative;
 }
 
-.signup-right{
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.signup-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.signup h2{
-    font-size: 32px;
-    margin-bottom: 4px;
+.signup h2 {
+  font-size: 32px;
 }
 
-.signup-form{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .signup-form input {
@@ -36,8 +36,6 @@
   font-size: 16px;
 }
 
-
-
 .signup-form button {
   padding: 12px;
   background-color: #706d6d;
@@ -45,3 +43,22 @@
   cursor: pointer;
   border-radius: 4px;
 }
+
+.hr-lines {
+  position: relative; 
+  text-align: center; 
+  display: flex; 
+  align-items: center; 
+}
+
+.hr-lines::before,
+.hr-lines::after {
+  content: ""; 
+  flex-grow: 1; 
+  background: rgb(191, 191, 191); 
+  height: 1px; 
+  margin: 0 10px; 
+  width: 10px;
+}
+
+/* add media queries */

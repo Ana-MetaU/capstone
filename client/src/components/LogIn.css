@@ -1,15 +1,25 @@
 /* Login css styles */
 /* TODOS: */
 /* PLACE THE LINEAR GRADIENTBACKGROUND FOR THE LOGIN FORM*/
-
+.log-in {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+}
 .login-form {
-  max-width: 450px;
+  max-width: 250px;
+  height: auto;
+  width: 100%;
   padding: 50px;
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   gap: 20px;
   color: white;
+  background: linear-gradient(135deg, #851538 0%, #4a148c 100%);
+  border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .login-form h1 {
@@ -18,7 +28,7 @@
 }
 
 .login-form input {
-  padding: 12px;
+  padding: 10px;
   border: 1px solid white;
   background: transparent;
   color: white;
@@ -31,4 +41,21 @@
   color: white;
   cursor: pointer;
   border-radius: 4px;
+}
+
+.hr-lines {
+  position: relative; /* Needed for positioning the pseudo-elements */
+  text-align: center; /* Center the text within the div */
+  display: flex; /* Helps align the text and lines horizontally */
+  align-items: center; /* Vertically aligns text with lines */
+}
+
+.hr-lines::before,
+.hr-lines::after {
+  content: ""; /* Required for pseudo-elements */
+  flex-grow: 1; /* Makes the lines take up available space */
+  background: rgb(191, 191, 191); /* Color of the lines */
+  height: 1px; /* Thickness of the lines */
+  margin: 0 10px; /* Space between the text and lines */
+  width: 150px;
 }
