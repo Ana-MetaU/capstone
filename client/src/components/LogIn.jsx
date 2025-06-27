@@ -46,6 +46,11 @@ const LogIn = () => {
 
         <button type="submit">Log In</button>
       </form>
+
+      <div className="hr-lines">
+        <span> OR </span>
+      </div>
+
       <p>
         Don't have an account?
         <Link to="/signup"> Sign Up </Link>
