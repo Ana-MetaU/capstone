@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Link} from "react-router-dom";
+import {userLogin} from "../api/UserApi";
 import "./LogIn.css";
 
 const LogIn = () => {
@@ -17,8 +18,14 @@ const LogIn = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("TODO: This yet to be handled in the backend");
-    navigate("/");
+    console.log("form data", formData)
+    const result = await userLogin(formData);
+    console.log("resultsss", result);
+
+    if (result.success) {
+      navigate("/");
+    } else {
+    }
   };
 
   return (
@@ -28,7 +35,7 @@ const LogIn = () => {
         <input
           type="text"
           name="username"
-          placeholder="Email"
+          placeholder="username"
           value={formData.username}
           onChange={handleChange}
           required
