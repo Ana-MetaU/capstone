@@ -1,15 +1,18 @@
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 import Graphic from "./Graphic";
 import {Link} from "react-router-dom";
+import {userSignup} from "../api/UserApi";
 import "./SignUp.css";
 
 const SignUp = () => {
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
-    email: "",
     password: "",
+    email: "",
   });
-  const [message, setMessage] = useState("");
 
   // Handle input changes
   const handleChange = (event) => {
@@ -25,7 +28,17 @@ const SignUp = () => {
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevents page refresh
     console.log("User Input:", formData); // Logs user input
-    console.log("TODO: handle sign up in the backend");
+
+    const result = await userSignup(formData);
+    console.log("resultsss", result);
+
+    if (result.success) {
+      navigate("/login");
+    } else {
+      setMessage("something went wrong");
+    }
+
+    // have to add later for more robustness if username is not unique, inform the user
   };
 
   return (
@@ -75,9 +88,9 @@ const SignUp = () => {
           </form>
         </div>
 
-  <div className="hr-lines">
-        <span> OR </span>
-      </div>
+        <div className="hr-lines">
+          <span> OR </span>
+        </div>
 
         <p>
           Already have an account?

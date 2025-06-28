@@ -12,6 +12,7 @@ const router = express.Router();
 // Signup Route
 router.post("/signup", async (req, res) => {
   const {username, password, email} = req.body;
+  console.log("hehe is it getting here", req.body);
 
   try {
     if (!username || !password || !email) {
