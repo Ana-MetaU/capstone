@@ -1,0 +1,8 @@
+.home-container {
+  display: flex;
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+}
