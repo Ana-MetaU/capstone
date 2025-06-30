@@ -1,0 +1,17 @@
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+
+.movie-grid-parent h2 {
+  color: white;
+  text-align: start;
+  font-size: 30px;
+}
+
+.movie-grid p {
+  color: white;
+  font-size: 1.25rem;
+  text-align: center;
+}

@@ -1,15 +1,17 @@
 import React, {useState} from "react";
-import LogIn from "./LogIn";
-import SignUp from "./SignUp";
-import Graphic from "./Graphic";
 import Sidebar from "./Sidebar";
+import MovieGrid from "./MovieGrid";
+import "./Home.css";
 
 const Home = () => {
-  const [activeIcon, setActiveIcon] = useState('tv-shows');
+  const [activeIcon, setActiveIcon] = useState("tv-shows");
+
   return (
-    <div>
-      <Sidebar activeIcon={activeIcon} 
-      onActiveIconChange={setActiveIcon} />
+    <div className="home-container">
+      <Sidebar activeIcon={activeIcon} onActiveIconChange={setActiveIcon} />
+      <div className="feed">
+        <MovieGrid />
+      </div>
     </div>
   );
 };
