@@ -1,4 +1,4 @@
-import './MovieCard.css'
+import "./MovieCard.css";
 function MovieCard({props}) {
   return (
     <div className="movie-card">
@@ -12,6 +12,14 @@ function MovieCard({props}) {
         }
         alt={props.title}
       />
+
+      <div className="movie-actions">
+        <h3 className="movie-title">{props.title}</h3>
+        <div className="movie-buttons">
+          <button className="action-button watch-button">👀</button>
+          <button className="action-button favorite-button">❤️</button>
+        </div>
+      </div>
     </div>
   );
 }

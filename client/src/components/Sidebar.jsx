@@ -1,8 +1,12 @@
-import React from "react";
+import React, {useState} from "react";
 import SearchBar from "./Searchbar";
 import "./Sidebar.css";
 
 const Sidebar = ({activeIcon, onActiveIconChange}) => {
+  const [searchValue, setSearchValue] = useState("");
+  const handleSearch = () => {
+    console.log("searching for ", searchValue);
+  };
   const items = [
     {id: "tv-shows", icon: "💻", label: "TV Show"},
     {id: "movies", icon: "🍿", label: "Movies"},
@@ -18,7 +22,7 @@ const Sidebar = ({activeIcon, onActiveIconChange}) => {
         onClick={() => onActiveIconChange(item.id)}
         type="button"
       >
-        <span className="sidebar-con">{item.icon}</span>
+        <span className="sidebar-icon">{item.icon}</span>
         <span className="sidebar-label">{item.label}</span>
       </button>
     ));
@@ -30,6 +34,12 @@ const Sidebar = ({activeIcon, onActiveIconChange}) => {
         <div className="sidebar-header">
           <h3>PARTY WATCH</h3>
         </div>
+
+        <SearchBar
+          value={searchValue}
+          onChange={setSearchValue}
+          onSearch={handleSearch}
+        ></SearchBar>
 
         <div className="sidebar-items">{renderItems()}</div>
       </aside>

@@ -45,20 +45,18 @@
 }
 
 .hr-lines {
-  position: relative; 
-  text-align: center; 
-  display: flex; 
-  align-items: center; 
+  position: relative;
+  text-align: center;
+  display: flex;
+  align-items: center;
 }
 
 .hr-lines::before,
 .hr-lines::after {
-  content: ""; 
-  flex-grow: 1; 
-  background: rgb(191, 191, 191); 
-  height: 1px; 
-  margin: 0 10px; 
+  content: "";
+  flex-grow: 1;
+  background: rgb(191, 191, 191);
+  height: 1px;
+  margin: 0 10px;
   width: 10px;
 }
-
-/* add media queries */

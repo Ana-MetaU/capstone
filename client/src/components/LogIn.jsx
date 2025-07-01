@@ -18,7 +18,7 @@ const LogIn = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("form data", formData)
+    console.log("form data", formData);
     const result = await userLogin(formData);
     console.log("resultsss", result);
 
