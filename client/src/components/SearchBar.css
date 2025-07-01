@@ -1,6 +1,8 @@
 .search-bar input {
+  margin: 10px;
   background-color: #3a3a3a;
   height: 25px;
+  padding: 5px;
   width: 200px;
   border: none;
   color: white;
