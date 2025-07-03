@@ -1,40 +1,33 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
+import {useUser} from "./context/UserContext.jsx";
+import WithAuth from "./components/WithAuth.jsx";
 import {MovieProvider} from "./context/MovieContext.jsx";
 import {Routes, Route} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import LogIn from "./components/LogIn";
-import Profile from "./components/Profile.jsx";
 import SignUp from "./components/SignUp";
-import Sidebar from "./components/Sidebar.jsx";
-import MovieGrid from "./components/MovieGrid.jsx";
+import Layout from "./components/Layout.jsx";
 import "./App.css";
+
 function App() {
-  const [activeIcon, setActiveIcon] = useState("tv-shows");
+  const {user} = useUser();
+  const navigate = useNavigate();
 
-  const renderPages = () => {
-    switch (activeIcon) {
-      case "tv-shows":
-        return <MovieGrid></MovieGrid>;
-      case "movies":
-        return <MovieGrid></MovieGrid>;
-      case "profile":
-        return <Profile></Profile>;
-    }
-  };
+  // useEffect(() => {
+  //   if (!user) {
+  //     navigate('/login');
+  //   }
+  // },  [user]);
+    return (
+      <MovieProvider>
+        <Routes>
+          <Route path="/*" element={<Layout />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<LogIn />} />
+        </Routes>
+      </MovieProvider>
+    );
+  }
 
-  return (
-    <div className="layout">
-      <Sidebar activeIcon={activeIcon} onActiveIconChange={setActiveIcon} />
-      <div className="main-content">
-        <MovieProvider>
-          <Routes>
-            <Route path="/" element={renderPages()} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/login" element={<LogIn />} />
-          </Routes>
-        </MovieProvider>
-      </div>
-    </div>
-  );
-}
 
 export default App;
