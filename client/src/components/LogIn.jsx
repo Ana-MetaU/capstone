@@ -2,12 +2,14 @@ import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Link} from "react-router-dom";
 import {userLogin} from "../api/UserApi";
+import {useUser} from "../context/UserContext";
 import "./LogIn.css";
 
 const LogIn = () => {
+  console.log("what hpapening")
   const [formData, setFormData] = useState({username: "", password: ""});
   const navigate = useNavigate();
-
+  const {user, setUser, isLoading, setIsLoading} = useUser();
   const handleChange = (event) => {
     const {name, value} = event.target;
     setFormData((prev) => ({
@@ -18,11 +20,17 @@ const LogIn = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("form data", formData);
-    const result = await userLogin(formData);
-    console.log("resultsss", result);
 
+    setIsLoading(true);
+    const result = await userLogin(formData);
     if (result.success) {
+      if (result.user) {
+        setUser(result.user);
+        if (user) {
+          setIsLoading(false);
+        }
+      }
+      console.log("user", user);
       navigate("/");
     } else {
     }

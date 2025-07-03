@@ -66,7 +66,8 @@ router.post("/login", async (req, res) => {
         .json({error: "Username and password are required"});
     }
 
-    user = await getUserByUsername(username);
+    let user = await getUserByUsername(username);
+    console.log("user in backend", user);
 
     if (!user) {
       return res.status(401).json({error: "Invalid username or password"});
@@ -79,9 +80,14 @@ router.post("/login", async (req, res) => {
 
     // Store user ID and username in the session
     req.session.userId = user.id;
+    console.log("id", user.id);
     req.session.username = user.username;
+    console.log("username", user.username);
 
-    res.json({id: user.id, username: user.username}); // Include id and username in the response
+    // // Set cookies
+    // res.cookie("sessionId", req.sessionID, {httpOnly: true});
+    // res.cookie("username", user.username, {httpOnly: true});
+    res.json({id: user.id, username: user.username});
   } catch (error) {
     console.error(error);
     res.status(500).json({error: "Something went wrong during login"});
@@ -106,7 +112,7 @@ router.get("/me", async (req, res) => {
 
   try {
     const user = getUserById(req.session.userId);
-    res.json({id: req.session.userId, username: user.username});
+    res.json({id: req.session.userId, username: req.session.username });
   } catch (error) {
     console.error(error);
     res.status(500).json({error: "Error fetching user session data"});

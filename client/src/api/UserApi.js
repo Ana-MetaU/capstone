@@ -36,10 +36,11 @@ export const userLogin = async (formData) => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify(formData),
     });
 
-    const data = await response.json(formData);
+    const data = await response.json();
 
     if (response.ok) {
       return {

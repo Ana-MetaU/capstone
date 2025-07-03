@@ -1,5 +1,11 @@
+import {useUser} from "../context/UserContext";
+import {useNavigate} from "react-router-dom";
+import WithAuth from "./WithAuth";
 import "./Profile.css";
+
 const Profile = () => {
+  const {user} = useUser();
+  console.log("user", user);
   return (
     <div className="profile-container">
       <div className="profile-header">
@@ -9,7 +15,7 @@ const Profile = () => {
           </div>
 
           <div className="profile-details">
-            <h2> profile name</h2>
+            <h2> {user ? user.username : " "}</h2>
             <p>this is my bio. </p>
           </div>
         </div>
@@ -34,4 +40,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default WithAuth(Profile);
