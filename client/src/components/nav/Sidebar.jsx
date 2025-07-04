@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import SearchBar from "./Searchbar";
-import {useUser} from "../context/UserContext";
+import SearchBar from "./SearchBar";
+import {useUser} from "../../context/UserContext";
 import "./Sidebar.css";
 
 const Sidebar = ({activeIcon, onActiveIconChange}) => {

@@ -1,5 +1,5 @@
-import React, {useContext} from "react";
-import {MovieContext} from "../context/MovieContext";
+import {useContext} from "react";
+import { MovieContext } from "../../context/MovieContext";
 import MovieCard from "./MovieCard";
 import "./MovieGrid.css";
 

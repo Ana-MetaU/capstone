@@ -1,6 +1,5 @@
-import {useUser} from "../context/UserContext";
-import {useNavigate} from "react-router-dom";
-import WithAuth from "./WithAuth";
+import { useUser } from "../../context/UserContext";
+import WithAuth from "../auth/WithAuth";
 import "./Profile.css";
 
 const Profile = () => {

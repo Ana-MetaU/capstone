@@ -1,7 +1,7 @@
 import {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
-import {useUser} from "../context/UserContext";
-
+import {useUser} from "../../context/UserContext";
+import {userAuthenticate} from "../../api/UserApi";
 const WithAuth = (WrappedComponent) => {
   return function ProtectedComponent(props) {
     const {user, setUser} = useUser();
@@ -9,12 +9,10 @@ const WithAuth = (WrappedComponent) => {
 
     useEffect(() => {
       if (!user) {
-        fetch("http://localhost:3000/auth/me", {credentials: "include"})
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.id) {
-              console.log("data", data);
-              setUser(data);
+        userAuthenticate()
+          .then((result) => {
+            if (result.success) {
+              setUser(result.user);
             } else {
               navigate("/login");
             }

@@ -1,4 +1,3 @@
-import React from "react";
 import "./FilmsFilter.css";
 
 const categories = ["Watched", "Favorites"];

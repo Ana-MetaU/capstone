@@ -1,35 +1,48 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
+const router = express.Router();
+const SUCCESS = 0;
 const {
   createUser,
   checkUserExists,
   getUserByUsername,
   verifyUserPassword,
   getUserById,
+  USER_NOT_FOUND,
 } = require("../database/userUtils");
-const router = express.Router();
+
+// Helper function for input validation
+//Params: input objects {username, password, email?}, requireEmail (bollean)
+// Returns: Error message(string) or 0 (number) if success
+const validateInput = (input, requireEmail = false) => {
+  const {username, password, email} = input;
+  if (!username || !password) {
+    return "Username and password are required";
+  }
+
+  if (requireEmail && !email) {
+    return "Username, password, and email are required";
+  }
+
+  if (password.length < 8) {
+    return "password msut be at least 8 characters long";
+  }
+
+  return SUCCESS;
+};
 
 // Signup Route
 router.post("/signup", async (req, res) => {
   const {username, password, email} = req.body;
-  console.log("hehe is it getting here", req.body);
 
   try {
-    if (!username || !password || !email) {
-      return res
-        .status(400)
-        .json({error: "Username, password, and email are required."});
-    }
-
-    if (password.length < 8) {
-      return res
-        .status(400)
-        .json({error: "Password must be at least 8 characters long."});
+    const validInput = validateInput({username, password, email}, true);
+    if (validInput !== SUCCESS) {
+      return res.status(400).json({error: validInput});
     }
 
     // Check if username is already taken
     const userExists = await checkUserExists(username, email);
-    console.log("haha", userExists);
     if (userExists) {
       return res
         .status(400)
@@ -47,7 +60,6 @@ router.post("/signup", async (req, res) => {
     });
 
     console.log("new user from auth", newUser);
-
     res.status(201).json({message: "Signup successful!"});
   } catch (error) {
     console.error(error);
@@ -60,33 +72,27 @@ router.post("/login", async (req, res) => {
   const {username, password} = req.body;
 
   try {
-    if (!username || !password) {
-      return res
-        .status(400)
-        .json({error: "Username and password are required"});
+    // validate input
+    const validInput = validateInput({username, password});
+    if (validInput !== SUCCESS) {
+      return res.status(400).json({error: validateInput});
     }
 
-    let user = await getUserByUsername(username);
-    console.log("user in backend", user);
-
-    if (!user) {
-      return res.status(401).json({error: "Invalid username or password"});
+    // verify username
+    const user = await getUserByUsername(username);
+    if (user === USER_NOT_FOUND) {
+      return res.status(401).json({error: "Invalid username"});
     }
 
-    validPassword = await verifyUserPassword(username, password);
-    if (!validPassword) {
-      return res.status(401).json({error: "Invalid username or password"});
+    // verify password
+    const isValidPassword = await verifyUserPassword(username, password);
+    if (!isValidPassword) {
+      return res.status(401).json({error: "Invalid password"});
     }
 
     // Store user ID and username in the session
     req.session.userId = user.id;
-    console.log("id", user.id);
     req.session.username = user.username;
-    console.log("username", user.username);
-
-    // // Set cookies
-    // res.cookie("sessionId", req.sessionID, {httpOnly: true});
-    // res.cookie("username", user.username, {httpOnly: true});
     res.json({id: user.id, username: user.username});
   } catch (error) {
     console.error(error);
@@ -112,7 +118,7 @@ router.get("/me", async (req, res) => {
 
   try {
     const user = getUserById(req.session.userId);
-    res.json({id: req.session.userId, username: req.session.username });
+    res.json({id: req.session.userId, username: req.session.username});
   } catch (error) {
     console.error(error);
     res.status(500).json({error: "Error fetching user session data"});

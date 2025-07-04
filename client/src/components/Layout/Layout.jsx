@@ -1,16 +1,15 @@
-import React, {act, useState, useEffect} from "react";
-import {MovieProvider} from "../context/MovieContext.jsx";
-import {Routes, Route, useLocation} from "react-router-dom";
-import Feed from "./Feed.jsx";
-import WithAuth from "./WithAuth.jsx";
-import Settings from "./Settings.jsx";
-import Profile from "./Profile.jsx";
-import Sidebar from "./Sidebar.jsx";
-import MovieGrid from "./MovieGrid.jsx";
-import "../App.css";
+import {useState} from "react";
+import {MovieProvider} from "../../context/MovieContext.jsx";
+import {Routes, Route} from "react-router-dom";
+import Feed from "../feed/Feed.jsx";
+import WithAuth from "../auth/WithAuth.jsx";
+import Settings from "../Settings/Settings";
+import Profile from "../profile/Profile";
+import Sidebar from "../nav/Sidebar.jsx";
+import MovieGrid from "../media/MovieGrid.jsx";
+import "/src/App.css";
 function Layout() {
   const [activeIcon, setActiveIcon] = useState(null);
-  const location = useLocation();
   console.log("active icon in parent", activeIcon);
 
   const renderPages = () => {
