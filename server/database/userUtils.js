@@ -2,7 +2,14 @@
 // https://neo4j.com/docs/javascript-manual/5/query-advanced/
 const bcrypt = require("bcrypt");
 const {getSession} = require("./neo4j");
+const USER_NOT_FOUND = -1;
+const RESULT_INDEX = 0;
 
+//
+//Creates a new user in teh database
+// Params: userData ({username, passwordHash, email})
+// Returns: created user object
+//
 const createUser = async (userData) => {
   const session = getSession();
   try {
@@ -19,14 +26,17 @@ const createUser = async (userData) => {
             `,
       userData
     );
-    const createdUser = result.records[0].get("u").properties;
-    console.log("user created", createUser);
+    const userNode = result.records[RESULT_INDEX].get("u").properties;
+    const createdUser = userNode;
     return createUser;
   } finally {
     await session.close();
   }
 };
 
+// Checks if the user exists by username or email
+// Params: username (string), email(string)
+// Returns boolean (true if exists, false otherwise)
 const checkUserExists = async (username, email) => {
   const session = getSession();
   try {
@@ -37,52 +47,59 @@ const checkUserExists = async (username, email) => {
                 RETURN u`,
       {username, email}
     );
-    console.log("omog", result);
-    return result.records.length > 0;
+
+    user = result.records.length > 0;
+    return user;
   } finally {
     await session.close();
   }
 };
 
-// Will refactor this function to just be a findUser that you can pass id or username
+// Finds a usr by various search ways (email, id, username)
+// params: query (string), params(object)
+// Returns user or USER_NOT_FOUND
+const findUser = async (query, params) => {
+  const session = getSession();
+  try {
+    const result = await session.run(query, params);
+
+    if (!result.records.length) {
+      return USER_NOT_FOUND;
+    }
+
+    const userNode = result.records[RESULT_INDEX].get("u").properties;
+    return userNode;
+  } catch (error) {
+    console.log("database failed", error);
+  } finally {
+    await session.close();
+  }
+};
+
+// Gets user by username (uses findUser)
+// params: username(string)
+// Returns: user object or USER_NOT_FOUND
 const getUserByUsername = async (username) => {
-  const session = getSession();
-  try {
-    const result = await session.run(
-      `MATCH (u:User)
+  const query = `MATCH (u:User)
       WHERE u.username = $username
-      RETURN u`,
-      {username}
-    );
-    if (!result.records.length) {
-      return 0;
-    }
-
-    return result.records[0].get("u").properties;
-  } finally {
-    await session.close();
-  }
+      RETURN u`;
+  return await findUser(query, {username});
 };
 
+// Gets user by id (uses findUser)
+// params: id(number)
+// Returns: user object or USER_NOT_FOUND
 const getUserById = async (id) => {
-  const session = getSession();
-  try {
-    const result = await session.run(
-      `MATCH (u:User)
+  const query = `MATCH (u:User)
       WHERE u.id = $id
-      RETURN u`,
-      {id}
-    );
-    if (!result.records.length) {
-      return 0;
-    }
+      RETURN u`;
 
-    return result.records[0].get("u").properties;
-  } finally {
-    await session.close();
-  }
+  return await findUser(query, {id});
 };
 
+// Verfies user password against the hashed passwordstored in database
+// params: username (string), password (string)
+// Returns: boolean (true if valid and false if invalid)
 const verifyUserPassword = async (username, password) => {
   const session = getSession();
   try {
@@ -92,9 +109,18 @@ const verifyUserPassword = async (username, password) => {
     RETURN u`,
       {username}
     );
-    const userPassword = result.records[0].get("u").properties.passwordHash;
 
-    return await bcrypt.compare(password, userPassword);
+    const records = result.records.length;
+    if (!records) {
+      return USER_NOT_FOUND;
+    }
+    const userPassword =
+      result.records[RESULT_INDEX].get("u").properties.passwordHash;
+    const isValid = await bcrypt.compare(password, userPassword);
+
+    return isValid;
+  } catch (error) {
+    console.log("database failed", error);
   } finally {
     await session.close();
   }
@@ -106,4 +132,5 @@ module.exports = {
   getUserByUsername,
   verifyUserPassword,
   getUserById,
+  USER_NOT_FOUND
 };

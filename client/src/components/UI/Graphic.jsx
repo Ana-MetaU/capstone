@@ -1,9 +1,4 @@
-import React, {useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {Link} from "react-router-dom";
 import "./Graphic.css"
-import "./LogIn.css";
-
 const Graphic = () => {
   return (
     <div className="movie-banners">

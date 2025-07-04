@@ -1,0 +1,23 @@
+.modal-backdrop {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: auto;
+}
+
+.modal-content {
+  background: rgb(123, 30, 30);
+  border-radius: 8px;
+  width: 320px;
+  animation: slideIn 0.4s ease-out;
+}
+@keyframes slideIn {
+  from {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

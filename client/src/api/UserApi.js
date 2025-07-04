@@ -10,8 +10,7 @@ export const userSignup = async (formData) => {
       body: JSON.stringify(formData),
     });
 
-    const data = await response.json(formData);
-
+    const data = await response.json();
     if (response.ok) {
       return {
         success: true,
@@ -20,14 +19,13 @@ export const userSignup = async (formData) => {
     } else {
       return {
         success: false,
-        message: "something went wrong when signing up.",
+        message: data.error || "something went wrong when signing up.",
       };
     }
   } catch (error) {
     console.log("signing up error: ", error);
   }
 };
-
 
 export const userLogin = async (formData) => {
   try {
@@ -40,18 +38,21 @@ export const userLogin = async (formData) => {
       body: JSON.stringify(formData),
     });
 
+      console.log(response)
     const data = await response.json();
+    console.log("status", response);
 
     if (response.ok) {
       return {
         success: true,
         message: "login was successful created",
-        user: data 
+        user: data,
       };
     } else {
+       console.log("wahtttt", data.error);
       return {
         success: false,
-        message: "something went wrong when logging in.",
+        message: data.error || "something went wrong when logging in lala.",
       };
     }
   } catch (error) {
@@ -59,3 +60,29 @@ export const userLogin = async (formData) => {
   }
 };
 
+export const userAuthenticate = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/auth/me`, {
+      credentials: "include",
+    });
+
+    const data = await response.json();
+    if (response.ok && data.id) {
+      return {
+        success: true,
+        user: data,
+      };
+    } else {
+      return {
+        success: false,
+        message: "User not authenticated",
+      };
+    }
+  } catch (error) {
+    console.log("error when authenticating user", error);
+    return {
+      success: false,
+      message: "something went wrong when checking auth",
+    };
+  }
+};

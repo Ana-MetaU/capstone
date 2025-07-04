@@ -1,8 +1,7 @@
 import {useState} from "react";
-import {useNavigate} from "react-router-dom";
-import Graphic from "./Graphic";
-import {Link} from "react-router-dom";
-import {userSignup} from "../api/UserApi";
+import {useNavigate, Link} from "react-router-dom";
+import Graphic from "../UI/Graphic";
+import {userSignup} from "../../api/UserApi";
 import "./SignUp.css";
 
 const SignUp = () => {
