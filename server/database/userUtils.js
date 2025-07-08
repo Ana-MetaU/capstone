@@ -2,9 +2,7 @@
 // https://neo4j.com/docs/javascript-manual/5/query-advanced/
 const bcrypt = require("bcrypt");
 const {getSession} = require("./neo4j");
-const USER_NOT_FOUND = -1;
-const RESULT_INDEX = 0;
-
+const {USER_NOT_FOUND, RESULT_INDEX} = require("./constants.js");
 //
 //Creates a new user in teh database
 // Params: userData ({username, passwordHash, email})
@@ -132,5 +130,4 @@ module.exports = {
   getUserByUsername,
   verifyUserPassword,
   getUserById,
-  USER_NOT_FOUND
 };

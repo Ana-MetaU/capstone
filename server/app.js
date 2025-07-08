@@ -33,7 +33,8 @@ app.use(
 
 const auth = require("./Routes/auth.js");
 app.use("/auth", auth);
-
+const movies = require("./Routes/movies.js");
+app.use("/movies", movies);
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

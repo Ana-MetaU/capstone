@@ -38,7 +38,6 @@ export const userLogin = async (formData) => {
       body: JSON.stringify(formData),
     });
 
-      console.log(response)
     const data = await response.json();
     console.log("status", response);
 
@@ -49,7 +48,6 @@ export const userLogin = async (formData) => {
         user: data,
       };
     } else {
-       console.log("wahtttt", data.error);
       return {
         success: false,
         message: data.error || "something went wrong when logging in lala.",

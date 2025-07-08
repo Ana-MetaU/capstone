@@ -1,14 +1,13 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router();
-const SUCCESS = 0;
+const {SUCCESS, USER_NOT_FOUND} = require("../database/constants.js");
 const {
   createUser,
   checkUserExists,
   getUserByUsername,
   verifyUserPassword,
   getUserById,
-  USER_NOT_FOUND,
 } = require("../database/userUtils");
 
 // Helper function for input validation
