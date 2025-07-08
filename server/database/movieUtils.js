@@ -19,11 +19,12 @@ const addWatchedMovie = async (movieData) => {
             MERGE (m:Movie {tmdbId: $tmdbId})
             ON CREATE SET m.posterPath = $posterPath
             
-            // Remove from want-to-watch if it exists
-            OPTIONAL MATCH (u)-[wantToWatch:WANT_TO_WATCH]->(m)
-            DELETE wantToWatch
+            WITH u, m
             
-            // Add to watched
+            OPTIONAL MATCH (u)-[wtw:WANT_TO_WATCH]->(m)
+            DELETE wtw
+            
+            WITH u, m
             MERGE (u)-[w:WATCHED]->(m)
             ON CREATE SET w.rating = $rating, w.review = $review, w.watchedAt = datetime()
             
@@ -338,7 +339,6 @@ const removeFavoriteMovie = async (userId, tmdbId) => {
 const removeWantToWatchMovie = async (userId, tmdbId) => {
   return await removeMovie(userId, tmdbId, "WANT_TO_WATCH");
 };
-
 
 module.exports = {
   addWatchedMovie,
