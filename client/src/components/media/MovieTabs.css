@@ -1,0 +1,38 @@
+
+.tabs-section {
+  background: #2a2a2a;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.tabs {
+  display: flex;
+  background: #1a1a1a;
+}
+
+.tab {
+  flex: 1;
+  padding: 16px 20px;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: #999;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.tab.active {
+  background: #3f51b5;
+  color: white;
+}
+
+.tab:hover:not(.active) {
+  background: #333;
+  color: white;
+}
+
+.tab-content {
+  padding: 30px;
+  min-height: 400px;
+}

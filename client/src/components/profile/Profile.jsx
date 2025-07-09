@@ -1,9 +1,15 @@
 import { useUser } from "../../context/UserContext";
 import WithAuth from "../auth/WithAuth";
+import CurrentlyWatching from "../media/CurrentlyWatching";
+import MovieTabs from "../media/MovieTabs";
+import {MovieContext} from "../../context/MovieContext";
+
 import "./Profile.css";
+import { useContext } from "react";
 
 const Profile = () => {
   const {user} = useUser();
+  const {movies} = useContext(MovieContext);
   console.log("user", user);
   return (
     <div className="profile-container">
@@ -35,6 +41,10 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      <CurrentlyWatching movies={movies}/>
+      <MovieTabs></MovieTabs>
+
+      
     </div>
   );
 };

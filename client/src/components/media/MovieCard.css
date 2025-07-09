@@ -50,17 +50,14 @@
 
 .movie-buttons {
   display: flex;
-  gap: 15px;
+  flex-direction: row;
 }
 
 .watch-button,
 .favorite-button {
-  width: 40px;
-  height: 40px;
   border: none;
-  background: rgba(255, 255, 255, 0.9);
   cursor: pointer;
+  background-color: transparent;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   transition: all 0.2s ease;
-  border-radius: 50%;
 }
