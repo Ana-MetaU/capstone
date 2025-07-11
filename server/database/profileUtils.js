@@ -34,8 +34,8 @@ async function getUserProfile(userId) {
       id: profile.id,
       bio: profile.bio,
       isPublic: profile.isPublic,
-      favoritePicture: profile.profilePicutre,
-      favoriteGenres: profile.profileGenres,
+      profilePicture: profile.profilePicture,
+      favoriteGenres: profile.favoriteGenres,
       createdAt: profile.createdAt,
       updatedAt: profile.updatedAt,
     };
@@ -45,13 +45,13 @@ async function getUserProfile(userId) {
 }
 
 // Create a new profile for a user
-async function createUserProfile(userId) {
+async function createUserProfile(userId, profileData) {
   const session = getSession();
   try {
-    const bio = "";
+    const bio = profileData.bio || "";
     const isPublic = true;
-    const profilePicture = null;
-    const favoriteGenres = [];
+    const profilePicture = profileData.profilePicture || null;
+    const favoriteGenres = profileData.favoriteGenres || [];
 
     const result = await session.run(
       `
@@ -156,7 +156,7 @@ async function updateUserProfile(userId, profileData) {
       id: profile.id,
       bio: profile.bio,
       isPublic: profile.isPublic,
-      favoritePicture: profile.favoritePicture,
+      profilePicture: profile.profilePicture,
       favoriteGenres: profile.favoriteGenres,
       createdAt: profile.createdAt,
       updatedAt: profile.updatedAt,

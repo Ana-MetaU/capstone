@@ -7,7 +7,7 @@ const {
   userHasProfile,
 } = require("../database/profileUtils");
 
-// Get user profile
+// get a user profile
 router.get("/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -26,6 +26,7 @@ router.get("/:userId", async (req, res) => {
 router.post("/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
+
     if (!userId) {
       res.status(400).json({error: "no userId. Bad request"});
     }
@@ -36,9 +37,14 @@ router.post("/:userId", async (req, res) => {
         .status(409)
         .json({error: "Profile already exists for this user"});
     }
+    const {bio, isPublic, profilePicture, favoriteGenres} = req.body;
 
-    const profile = await createUserProfile(userId);
-
+    const profile = await createUserProfile(userId, {
+      bio,
+      isPublic,
+      profilePicture,
+      favoriteGenres,
+    });
     res.status(201).json(profile);
   } catch (error) {
     console.error("Error creating profile:", error);
@@ -78,6 +84,7 @@ router.get("/:userId/exists", async (req, res) => {
     if (!userId) {
       res.status(400).json({error: "no userId. Bad request"});
     }
+
     const hasProfile = await userHasProfile(userId);
     res.json({hasProfile});
   } catch (error) {

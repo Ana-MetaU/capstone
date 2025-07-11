@@ -3,13 +3,20 @@
 }
 
 .profile-header {
-  
   background: linear-gradient(135deg, #851538 0%, #4a148c 100%);
   border-radius: 12px;
   padding: 30px;
+  padding-top: 5px;
   color: white;
 }
-
+.genres-label {
+  margin: 0px;
+}
+.edit-profile-button {
+  background: transparent;
+  margin-left: 95%;
+  margin-top: 0px;
+}
 .profile-info {
   display: flex;
   align-items: center;
@@ -21,6 +28,7 @@
   height: 100px;
   border-radius: 50%;
   object-fit: cover;
+  border: 3px solid #e5e7eb;
 }
 
 .profile-details h2 {
@@ -29,12 +37,17 @@
   font-weight: bold;
 }
 .profile-details p {
-  margin-top: 5px;
+  margin-top: 0px;
+  font-style: italic;
+  margin-bottom: 0px;
 }
 
 .profile-stats {
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 .stat {
   text-align: center;

@@ -19,6 +19,12 @@ app.use(
 );
 
 app.use(express.json());
+
+const path = require("path");
+const upload = require("./Routes/upload.js");
+app.use("/upload", upload);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 connectDB();
 
 // NOTE: setting the httpOnly: true means I won't be able to access from the clieint side.
