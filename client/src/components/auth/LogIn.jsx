@@ -5,9 +5,10 @@ import {Link} from "react-router-dom";
 import {userLogin} from "../../api/UserApi";
 import {useUser} from "../../context/UserContext";
 import "./LogIn.css";
+import {createUserProfile, userHasProfile} from "../../api/ProfileApi";
 
 const LogIn = () => {
-  const {user, setUser, isLoading, setIsLoading} = useUser();
+  const {user, setUser} = useUser();
   const [formData, setFormData] = useState({username: "", password: ""});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -23,20 +24,28 @@ const LogIn = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setIsLoading(true);
 
     const result = await userLogin(formData);
-
     if (result.success) {
       if (result.user) {
         setUser(result.user);
-        setIsLoading(false);
-        navigate("/");
+        const profile = await userHasProfile(result.user.id);
+
+        if (profile.success) {
+          if (!profile.hasProfile) {
+            await createUserProfile(result.user.id, {
+              bio: null,
+              isPublic: true,
+              profilePicture: null,
+              favoriteGenres: null,
+            });
+          }
+          navigate("/");
+        }
       }
     } else {
       setErrorMessage(result.message);
       setIsModalOpen(true);
-      setIsLoading(false);
     }
   };
 
