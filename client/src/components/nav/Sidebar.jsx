@@ -3,6 +3,13 @@ import {useNavigate} from "react-router-dom";
 import SearchBar from "./SearchBar";
 import {useUser} from "../../context/UserContext";
 import "./Sidebar.css";
+import {
+  HomeButton,
+  MoviesButton,
+  ProfileButton,
+  ShowsButton,
+  SettingsButton,
+} from "../UI/Buttons";
 
 const Sidebar = ({activeIcon, onActiveIconChange}) => {
   const {user} = useUser();
@@ -12,11 +19,11 @@ const Sidebar = ({activeIcon, onActiveIconChange}) => {
     console.log("searching for ", searchValue);
   };
   const items = [
-    {id: "home", icon: "🏡", label: "Home"},
-    {id: "tv-shows", icon: "💻", label: "TV Show"},
-    {id: "movies", icon: "🍿", label: "Movies"},
-    {id: "settings", icon: "🌐", label: "Settings"},
-    {id: "profile", icon: "👩", label: "Profile"},
+    {id: "home", icon: <HomeButton />, label: "Home"},
+    {id: "tv-shows", icon: <ShowsButton />, label: "TV Show"},
+    {id: "movies", icon: <MoviesButton />, label: "Movies"},
+    {id: "settings", icon: <SettingsButton />, label: "Settings"},
+    {id: "profile", icon: <ProfileButton />, label: "Profile"},
   ];
 
   const handleIconClick = (itemId) => {
@@ -42,7 +49,7 @@ const Sidebar = ({activeIcon, onActiveIconChange}) => {
         onClick={() => handleIconClick(item.id)}
         type="button"
       >
-        <span className="sidebar-icon">{item.icon}</span>
+        <div className="sidebar-icon">{item.icon}</div>
         <span className="sidebar-label">{item.label}</span>
       </button>
     ));

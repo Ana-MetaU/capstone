@@ -5,7 +5,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #000;
 }
 .login-form {
   max-width: 250px;

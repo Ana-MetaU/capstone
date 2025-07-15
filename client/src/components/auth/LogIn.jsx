@@ -67,7 +67,6 @@ const LogIn = () => {
           name="password"
           placeholder="Password"
           value={formData.password}
-          j
           onChange={handleChange}
           required
         />

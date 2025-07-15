@@ -21,7 +21,25 @@ const EditProfileModal = ({
     currentProfile?.favoriteGenres || []
   );
 
-  const availableGenres = ["Romance", "Action", "Drama", "Thriller"];
+  const availableGenres = [
+    "Action",
+    "Adventure",
+    "Animation",
+    "Comedy",
+    "Crime",
+    "Documentary",
+    "Drama",
+    "Family",
+    "Fantasy",
+    "History",
+    "Horror",
+    "Mystery",
+    "Romance",
+    "Science Fiction",
+    "Thriller",
+    "War",
+    "Western",
+  ];
 
   const handleImageClick = () => {
     fileInputRef.current?.click();

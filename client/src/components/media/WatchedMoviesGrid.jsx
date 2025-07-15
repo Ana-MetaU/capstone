@@ -1,19 +1,21 @@
 import React, {useState, useEffect} from "react";
 import {getWatchedMovies} from "../../api/MovieApi";
-
+import {getWatchedTVShows} from "../../api/TVShowApi";
+import {getImage} from "../../utils/MediaApiUtils";
 const WatchedMoviesGrid = () => {
-  const [movies, setMovies] = useState([]);
+  const [watched, setWatched] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchWatchedMovies();
+    fetchWatched();
   }, []);
 
-  const fetchWatchedMovies = async () => {
-    const result = await getWatchedMovies();
-
-    if (result.success) {
-      setMovies(result.movies);
+  const fetchWatched = async () => {
+    const movies = await getWatchedMovies();
+    const shows = await getWatchedTVShows();
+    if (movies.success && shows.success) {
+      const all = [...movies.movies, ...shows.shows];
+      setWatched((prevItems) => [...prevItems, ...all]);
     } else {
       console.log("Failed to fetch watched movies:", result.message);
     }
@@ -22,23 +24,22 @@ const WatchedMoviesGrid = () => {
 
   const renderCards = () => {
     if (loading) {
-      return <p className="loading">Loading your watched movies...</p>;
+      return <p className="loading">Loading watched movies and shows...</p>;
     }
 
-    if (!movies || movies.length === 0) {
-      return <p className="no-movies">No watched movies yet</p>;
+    if (!watched || watched.length === 0) {
+      return <p className="no-movies">No watched movies or shows yet</p>;
     }
 
-    return movies.map((movie, index) => (
-      <div key={`${movie.tmdbId}-${index}`} className="watched-movie-card">
+    return watched.map((item, index) => (
+      <div
+        key={`${item.tmdbId || item.tvdbId}-${index}`}
+        className="watched-movie-card"
+      >
         <img
           className="watched-movie-poster"
-          src={
-            movie.posterPath
-              ? `https://image.tmdb.org/t/p/w500${movie.posterPath}`
-              : "/image.png"
-          }
-          alt={movie.title || "Movie"}
+          src={getImage(item.posterPath)}
+          alt={item.title || item.name}
         />
       </div>
     ));

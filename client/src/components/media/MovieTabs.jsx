@@ -1,8 +1,7 @@
-import MovieGrid from "./MovieGrid";
 import {useState} from "react";
 import WatchedMoviesGrid from "./WatchedMoviesGrid";
 import "./MovieTabs.css";
-import FavoriteMovieGrid from "./FavoriteMoviesGrid";
+import FavoritesGrid from "./FavoritesGrid";
 import WantToWatchGrid from "./WantToWatchGrid";
 
 const MovieTabs = () => {
@@ -12,7 +11,7 @@ const MovieTabs = () => {
     if (activeTab === "watched") {
       return <WatchedMoviesGrid></WatchedMoviesGrid>;
     } else if (activeTab === "favorites") {
-      return <FavoriteMovieGrid></FavoriteMovieGrid>;
+      return <FavoritesGrid></FavoritesGrid>;
     } else if (activeTab === "wantToWatch") {
       return <WantToWatchGrid></WantToWatchGrid>;
     }

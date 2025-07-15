@@ -1,4 +1,5 @@
 import {createContext, useEffect, useState} from "react";
+import {getAllMovieRows} from "../api/MediaApi";
 import {
   removeWantToWatchMovie,
   addFavoriteMovie,
@@ -10,11 +11,17 @@ import {
 
 const MovieContext = createContext();
 function MovieProvider({children}) {
-  const [movies, setMovies] = useState([]);
+  const [moviesRows, setMoviesRows] = useState({
+    comingSoon: [],
+    nowPlaying: [],
+    hiddenGems: [],
+    popularWeek: [],
+  });
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [page, setPage] = useState(1);
   const [favorites, setFavorites] = useState([]);
   const [wantToWatchMovies, setWantToWatchMovies] = useState([]);
+  const [loading, setLoading] = useState();
 
   // Load favorites from API
   const loadFavorites = async () => {
@@ -41,7 +48,7 @@ function MovieProvider({children}) {
   };
 
   // Add isFavorite and isWantToWatch boools to the movie objects
-  const getMoviesWithFlags = () => {
+  const addFlagsToMovies = (movies) => {
     return movies.map((movie) => ({
       ...movie,
       isFavorite: favorites.filter((fav) => fav.tmdbId === movie.id).length > 0,
@@ -50,24 +57,34 @@ function MovieProvider({children}) {
     }));
   };
 
-  // Fetch movies from TMDB API
-  // TODO: move fetch to MovieApi
-  const fetchMovies = async () => {
-    var url = `https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=${page}`;
-    var options = {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_API_BEARER}`,
-      },
+  const getMoviesRowsWithFlags = () => {
+    return {
+      comingSoon: addFlagsToMovies(moviesRows.comingSoon),
+      nowPlaying: addFlagsToMovies(moviesRows.nowPlaying),
+      hiddenGems: addFlagsToMovies(moviesRows.hiddenGems),
+      popularWeek: addFlagsToMovies(moviesRows.popularWeek),
     };
+  };
+
+
+  // Fetch movies from TMDB API
+  const fetchMovies = async () => {
+    setLoading(true);
     try {
-      const response = await fetch(url, options);
-      const result = await response.json();
-      const newMovies = result.results;
-      setMovies((prevMovies) => [...prevMovies, ...newMovies]);
+      const result = await getAllMovieRows();
+
+      if (result.success) {
+        setMoviesRows({
+          comingSoon: result.comingSoon,
+          nowPlaying: result.nowPlaying,
+          hiddenGems: result.hiddenGems,
+          popularWeek: result.popularWeek,
+        });
+      }
     } catch (error) {
       console.error("Error fetching movies", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -130,17 +147,18 @@ function MovieProvider({children}) {
   useEffect(() => {
     loadFavorites();
     loadWantToWatchMovies();
+    fetchMovies();
   }, []);
 
   // Fetch movies on page change
   useEffect(() => {
     fetchMovies();
-  }, [page]);
+  }, []);
 
   return (
     <MovieContext.Provider
       value={{
-        movies: getMoviesWithFlags(),
+        movies: getMoviesRowsWithFlags(),
         selectedMovie,
         setSelectedMovie,
         openModal,
@@ -148,6 +166,7 @@ function MovieProvider({children}) {
         toggleFavorite,
         toggleWantToWatch,
         setPage,
+        loading,
       }}
     >
       {children}

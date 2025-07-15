@@ -1,36 +1,38 @@
 import {useState, useEffect} from "react";
-import {getWantToWatchMovies} from "../../api/MovieApi";
-import {getWantToWatchTVShows} from "../../api/TVShowApi";
+import {getFavoriteMovies} from "../../api/MovieApi";
+import {getFavoriteTVShows} from "../../api/TVShowApi";
 import {getImage} from "../../utils/MediaApiUtils";
-const WantToWatchGrid = () => {
-  const [wantToWatch, setWantToWatch] = useState([]);
+
+const FavoritesGrid = () => {
+  const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchWantToWatch();
+    fetchFavorites();
   }, []);
 
-  const fetchWantToWatch = async () => {
-    const movies = await getWantToWatchMovies();
-    const shows = await getWantToWatchTVShows();
+  const fetchFavorites = async () => {
+    const movies = await getFavoriteMovies();
+    const shows = await getFavoriteTVShows();
     if (movies.success && shows.success) {
       const all = [...movies.movies, ...shows.shows];
-      setWantToWatch((prevItems) => [...prevItems, ...all]);
+      setFavorites((prevItems) => [...prevItems, ...all]);
     } else {
-      console.log("Failed to fetch want to watch movies:", result.message);
+      console.log("Failed to fetch watched movies:", movies.message);
     }
     setLoading(false);
   };
+
   const renderCards = () => {
     if (loading) {
-      return <p className="loading">Loading your watchlist...</p>;
+      return <p className="loading">Loading favorite shows and movies...</p>;
     }
 
-    if (!wantToWatch || wantToWatch.length === 0) {
-      return <p className="no-movies">No movies in your watchlist yet</p>;
+    if (!favorites || favorites.length === 0) {
+      return <p className="no-movies">No favorited movies or shows yet</p>;
     }
 
-    return wantToWatch.map((item, index) => (
+    return favorites.map((item, index) => (
       <div
         key={`${item.tmdbId || item.tvdbId}-${index}`}
         className="watched-movie-card"
@@ -46,10 +48,10 @@ const WantToWatchGrid = () => {
 
   return (
     <div className="watched-movies-container">
-      <h2>Watchlist</h2>
+      <h2>Favorites</h2>
       <div className="watched-movies-grid">{renderCards()}</div>
     </div>
   );
 };
 
-export default WantToWatchGrid;
+export default FavoritesGrid;

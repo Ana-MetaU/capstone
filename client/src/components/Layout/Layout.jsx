@@ -1,23 +1,24 @@
 import {useState} from "react";
-import {MovieProvider} from "../../context/MovieContext.jsx";
 import {Routes, Route} from "react-router-dom";
+import {MovieProvider} from "../../context/MovieContext.jsx";
+import {TVShowProvider} from "../../context/TvShowContext.jsx";
 import Feed from "../feed/Feed.jsx";
 import WithAuth from "../auth/WithAuth.jsx";
 import Settings from "../Settings/Settings";
 import Profile from "../profile/Profile";
 import Sidebar from "../nav/Sidebar.jsx";
-import MovieGrid from "../media/MovieGrid.jsx";
+import MovieRowsPage from "../media/MovieRowsPage.jsx";
+import TvShowRowsPage from "../media/TvShowRowsPage.jsx";
 import "/src/App.css";
+
 function Layout() {
   const [activeIcon, setActiveIcon] = useState(null);
-  console.log("active icon in parent", activeIcon);
-
   const renderPages = () => {
     switch (activeIcon) {
       case "tv-shows":
-        return <MovieGrid></MovieGrid>;
+        return <TvShowRowsPage></TvShowRowsPage>;
       case "movies":
-        return <MovieGrid></MovieGrid>;
+        return <MovieRowsPage></MovieRowsPage>;
       default:
         return <Feed></Feed>;
     }
@@ -27,13 +28,15 @@ function Layout() {
     <div className="layout">
       <Sidebar activeIcon={activeIcon} onActiveIconChange={setActiveIcon} />
       <div className="main-content">
-        <MovieProvider>
-          <Routes>
-            <Route path="/" element={renderPages()} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/:username" element={<Profile />} />
-          </Routes>
-        </MovieProvider>
+        <TVShowProvider>
+          <MovieProvider>
+            <Routes>
+              <Route path="/" element={renderPages()} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/:username" element={<Profile />} />
+            </Routes>
+          </MovieProvider>
+        </TVShowProvider>
       </div>
     </div>
   );

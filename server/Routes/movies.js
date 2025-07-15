@@ -200,7 +200,4 @@ router.delete("/wanttowatch/:tmdbId", async (req, res) => {
   return await deleteMovie(req, res, removeWantToWatchMovie, "want to watch");
 });
 
-//TODO: WRITE REMOVE CURRENTLY WATCHING
-// first have to consider how it will interact in the frontend
-
 module.exports = router;
