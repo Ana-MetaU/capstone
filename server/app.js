@@ -41,6 +41,10 @@ const auth = require("./Routes/auth.js");
 app.use("/auth", auth);
 const movies = require("./Routes/movies.js");
 app.use("/movies", movies);
+
+const tvshows = require("./Routes/tvshows.js");
+app.use("/tvshows", tvshows);
+
 const profile = require("./Routes/profile.js");
 app.use("/profile", profile);
 

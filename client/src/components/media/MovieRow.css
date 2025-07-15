@@ -1,0 +1,48 @@
+.movie-row {
+  margin-bottom: 40px;
+  width: 100%;
+}
+
+.section-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.movie-row-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  padding-bottom: 10px;
+  overflow-x: auto;
+  width: 100%;
+  max-width: 100%;
+}
+
+.no-movies {
+  color: #666;
+  font-style: italic;
+  padding: 20px 0;
+}
+
+.movie-row-grid::-webkit-scrollbar {
+  height: 6px;
+}
+
+.movie-row-grid::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.movie-row-grid::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.movie-row-grid::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.movie-row-grid .movie-card {
+  flex-shrink: 0;
+}

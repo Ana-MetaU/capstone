@@ -1,5 +1,5 @@
 import {useContext} from "react";
-import {MovieContext} from "../../context/MovieContext";
+import {getImage} from "../../utils/MediaApiUtils";
 import {
   HeartButton,
   UnHeartButton,
@@ -8,8 +8,9 @@ import {
 } from "../UI/Buttons";
 import "./MovieCard.css";
 
-function MovieCard({props, onClick}) {
-  const {toggleWantToWatch, toggleFavorite} = useContext(MovieContext);
+import {TVShowContext} from "../../context/TvShowContext";
+function TvShowCard({props, onClick}) {
+  const {toggleWantToWatch, toggleFavorite} = useContext(TVShowContext);
 
   const handleFavorite = () => {
     toggleFavorite(props);
@@ -25,16 +26,12 @@ function MovieCard({props, onClick}) {
       <img
         className="poster"
         onClick={onClick}
-        src={
-          props.poster_path
-            ? "https://image.tmdb.org/t/p/w500" + `${props.poster_path}`
-            : "/notfound.png"
-        }
-        alt={props.title}
+        src={props.image ? `${getImage(props.image)}` : "/notfound.png"}
+        alt={props.name}
       />
 
       <div className="movie-actions">
-        <h3 className="movie-title">{props.title}</h3>
+        <h3 className="movie-title">{props.name}</h3>
         <div className="movie-buttons">
           <button className="watch-button" onClick={handleWantToWatch}>
             {props.isWantToWatch ? <UnWatchButton /> : <WatchButton />}
@@ -49,4 +46,4 @@ function MovieCard({props, onClick}) {
   );
 }
 
-export default MovieCard;
+export default TvShowCard;
