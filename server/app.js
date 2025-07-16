@@ -48,6 +48,9 @@ app.use("/tvshows", tvshows);
 const profile = require("./Routes/profile.js");
 app.use("/profile", profile);
 
+const follow = require("./Routes/follow.js");
+app.use("/follow-requests", follow);
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

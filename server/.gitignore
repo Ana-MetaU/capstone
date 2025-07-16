@@ -27,3 +27,5 @@ uploads/profile
 *.njsproj
 *.sln
 *.sw?
+
+/generated/prisma

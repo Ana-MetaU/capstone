@@ -185,8 +185,21 @@ async function userHasProfile(userId) {
   }
 }
 
+async function getProfilePrivacy(userId) {
+  try {
+    const profile = await getUserProfile(userId);
+    return {
+      isPublic: profile.isPublic,
+    };
+  } catch (error) {
+    console.log("error getting profile privacy settings", error);
+    return false;
+  }
+}
+
 module.exports = {
   getUserProfile,
+  getProfilePrivacy,
   createUserProfile,
   updateUserProfile,
   userHasProfile,

@@ -93,4 +93,43 @@ router.get("/:userId/exists", async (req, res) => {
   }
 });
 
+
+
+router.patch("/:userId/privacy", async (req, res) => {
+  if (!req.session.userId) {
+    return res
+      .status(401)
+      .json({error: "authentication required. Log in first"});
+  }
+
+  try {
+    const userId = req.params.userId;
+    const {isPublic} = req.body;
+
+    if (req.session.userId !== userId) {
+      return res
+        .status(403)
+        .json({error: "cannot change other people's privacy"});
+    }
+
+    const currentProfile = await getUserProfile(userId);
+
+    const updatedProfile = await updateUserProfile(userId, {
+      bio: currentProfile.bio,
+      isPublic: isPublic,
+      profilePicture: currentProfile.profilePicture,
+      favoriteGenres: currentProfile.favoriteGenres,
+    });
+
+    res.json({
+      success: true,
+      message: `profile is now ${isPublic ? "public" : "private"}`,
+      profile: updatedProfile,
+    });
+  } catch (error) {
+    console.log("error updating privacy of profile", error);
+    res.status(500).json({error: "failed to update profile privacy"});
+  }
+});
+
 module.exports = router;
