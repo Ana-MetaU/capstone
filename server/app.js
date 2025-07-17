@@ -48,6 +48,9 @@ app.use("/tvshows", tvshows);
 const profile = require("./Routes/profile.js");
 app.use("/profile", profile);
 
+const users = require("./Routes/users.js");
+app.use("/users", users);
+
 const follow = require("./Routes/follow.js");
 app.use("/follow-requests", follow);
 

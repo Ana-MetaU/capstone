@@ -12,7 +12,7 @@ import "./Profile.css";
 // TODO: replace currently wathcing with recently watched. fetch latest 16 movies watched.
 const Profile = () => {
   const {user} = useUser();
-  const {profile, fetchProfile} = useProfile();
+  const {profile, fetchProfile, userStats} = useProfile();
   const {movies} = useContext(MovieContext);
   const [isEditmodalOpen, setIsEditModalOpen] = useState(false);
 
@@ -56,17 +56,22 @@ const Profile = () => {
         <div className="profile-stats">
           <div className="stat">
             <span className="stats-label">Movies Watched</span>
-            <span className="stats-number">403</span>
+            <span className="stats-number"> {userStats.moviesWatched}</span>
           </div>
 
           <div className="stat">
             <span className="stats-label">TV Shows Watched</span>
-            <span className="stats-number">50</span>
+            <span className="stats-number">{userStats.tvShowsWatched}</span>
           </div>
 
           <div className="stat">
             <span className="stats-label">Followers</span>
-            <span className="stats-number">23</span>
+            <span className="stats-number">{userStats.followers}</span>
+          </div>
+
+          <div className="stat">
+            <span className="stats-label">Following</span>
+            <span className="stats-number">{userStats.following}</span>
           </div>
         </div>
       </div>

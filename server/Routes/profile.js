@@ -93,8 +93,6 @@ router.get("/:userId/exists", async (req, res) => {
   }
 });
 
-
-
 router.patch("/:userId/privacy", async (req, res) => {
   if (!req.session.userId) {
     return res

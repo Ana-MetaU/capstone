@@ -73,7 +73,7 @@ const MovieModal = ({isOpen, onClose, movie}) => {
                 <div className="content-section">
                   {/* Top section - buttons, title, year */}
                   <div className="movie-info">
-                    <h2 className="title">{movie.title}</h2>
+                    <h2 className="modal-title">{movie.title}</h2>
                     <p className="year">
                       Release year: {movie.release_date.split("-")[0]}{" "}
                     </p>

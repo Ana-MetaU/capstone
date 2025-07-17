@@ -4,12 +4,12 @@
   position: relative;
 }
 
-.movie-poster {
+.movie-graphic {
   width: 700px;
   position: relative;
   margin: 40px;
 }
-.movie-poster:hover {
+.movie-graphic:hover {
   transform: scale(1.07);
   filter: drop-shadow(0 0 40px #851538) drop-shadow(0 0 80px #4a148c)
     brightness(1.03);

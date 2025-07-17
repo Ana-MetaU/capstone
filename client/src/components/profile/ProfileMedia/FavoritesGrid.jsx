@@ -1,9 +1,11 @@
 import {useState, useEffect} from "react";
-import {getFavoriteMovies} from "../../api/MovieApi";
-import {getFavoriteTVShows} from "../../api/TVShowApi";
-import {getImage} from "../../utils/MediaApiUtils";
-import "./MovieGrid.css";
-const FavoritesGrid = () => {
+import {
+  getUserFavoriteMovies,
+  getUserFavoriteShows,
+} from "../../../api/UsersApi";
+import {getImage} from "../../../utils/MediaApiUtils";
+import "../../media/MovieGrid.css";
+const FavoritesGrid = ({userId}) => {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -12,10 +14,11 @@ const FavoritesGrid = () => {
   }, []);
 
   const fetchFavorites = async () => {
-    const movies = await getFavoriteMovies();
-    const shows = await getFavoriteTVShows();
+    const movies = await getUserFavoriteMovies(userId);
+    const shows = await getUserFavoriteShows(userId);
 
     if (movies.success && shows.success) {
+      console.log("tadda", movies, shows);
       const all = [...movies.movies, ...shows.shows];
       setFavorites((prevItems) => [...prevItems, ...all]);
     } else {
