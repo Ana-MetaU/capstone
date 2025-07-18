@@ -1,17 +1,20 @@
 import {createContext, useContext, useState, useEffect} from "react";
 import {getUserProfile, updateUserProfile} from "../api/ProfileApi";
 import {useUser} from "./UserContext";
+import {getUserStats} from "../api/UsersApi";
 
 const ProfileContext = createContext();
 export const ProfileProvider = ({children}) => {
   const {user} = useUser();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [userStats, setUserStats] = useState({});
 
   // Load profile when user changes
   useEffect(() => {
     if (user?.id) {
       fetchProfile(user.id);
+      fetchUserStats(user.id);
     }
   }, [user?.id]);
 
@@ -55,11 +58,23 @@ export const ProfileProvider = ({children}) => {
     }
   };
 
+  const fetchUserStats = async (userId) => {
+    const result = await getUserStats(userId);
+    console.log("omgg", result.stats);
+    setUserStats({
+      tvShowsWatched: result.stats.TvShowCount,
+      moviesWatched: result.stats.movieCount,
+      followers: result.stats.Followers,
+      following: result.stats.Following,
+    });
+  };
+
   return (
     <ProfileContext.Provider
       value={{
         profile,
         loading,
+        userStats,
         updateProfile,
         setProfile,
         fetchProfile,

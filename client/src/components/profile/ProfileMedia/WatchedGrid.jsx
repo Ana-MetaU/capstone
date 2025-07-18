@@ -1,9 +1,8 @@
 import {useState, useEffect} from "react";
-import {getWatchedMovies} from "../../api/MovieApi";
-import {getWatchedTVShows} from "../../api/TVShowApi";
-import {getImage} from "../../utils/MediaApiUtils";
-import "./movieGrid.css";
-const WatchedMoviesGrid = () => {
+import {getUserWatchedMovies, getUserWatchedShows} from "../../../api/UsersApi";
+import {getImage} from "../../../utils/MediaApiUtils";
+import "../../media/MovieGrid.css";
+const WatchedGrid = ({userId}) => {
   const [watched, setWatched] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -12,13 +11,19 @@ const WatchedMoviesGrid = () => {
   }, []);
 
   const fetchWatched = async () => {
-    const movies = await getWatchedMovies();
-    const shows = await getWatchedTVShows();
-    if (movies.success && shows.success) {
+    const movies = await getUserWatchedMovies(userId);
+    const shows = await getUserWatchedShows(userId);
+    console.log("ahh", movies);
+    console.log("omg", shows);
+    if (movies.success && shows.success && movies.movies && shows.shows) {
       const all = [...movies.movies, ...shows.shows];
       setWatched((prevItems) => [...prevItems, ...all]);
     } else {
-      console.log("Failed to fetch watched movies:", shows.message);
+      console.log(
+        "error fetching watched content for other usrs",
+        movies.message,
+        shows.message
+      );
     }
     setLoading(false);
   };
@@ -54,4 +59,4 @@ const WatchedMoviesGrid = () => {
   );
 };
 
-export default WatchedMoviesGrid;
+export default WatchedGrid;

@@ -264,7 +264,6 @@ router.delete("/unfollow/:userId", async (req, res) => {
   }
 });
 
-
 // check the status betweeen two users
 router.get("/status/:userId", async (req, res) => {
   if (!req.session.userId) {
@@ -317,6 +316,5 @@ router.get("/status/:userId", async (req, res) => {
     console.log("could not check status between the two users", error);
   }
 });
-
 
 module.exports = router;

@@ -1,3 +1,4 @@
+const {isPath} = require("neo4j-driver");
 const {getSession} = require("./neo4j");
 
 // Get user profile
@@ -22,6 +23,7 @@ async function getUserProfile(userId) {
     );
 
     const records = result.records.length;
+    console.log("what is the length of records", records);
     if (!records) {
       throw new Error("User profile not found");
     }

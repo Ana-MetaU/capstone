@@ -1,5 +1,4 @@
 prisma = require("./client");
-
 // check if follow request exists between two users
 async function findFollowRequest(requesterId, recipientId) {
   return await prisma.followRequest.findUnique({

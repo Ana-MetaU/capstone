@@ -9,7 +9,9 @@ import Profile from "../profile/Profile";
 import Sidebar from "../nav/Sidebar.jsx";
 import MovieRowsPage from "../media/MovieRowsPage.jsx";
 import TvShowRowsPage from "../media/TvShowRowsPage.jsx";
-import "/src/App.css";
+import SearchResults from "../profile/SearchResults.jsx";
+import UserProfile from "../profile/UserProfile.jsx";
+import "./Layout.css";
 
 function Layout() {
   const [activeIcon, setActiveIcon] = useState(null);
@@ -32,6 +34,8 @@ function Layout() {
           <MovieProvider>
             <Routes>
               <Route path="/" element={renderPages()} />
+              <Route path="/search" element={<SearchResults />} />
+              <Route path="/profile/:username" element={<UserProfile />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/:username" element={<Profile />} />
             </Routes>

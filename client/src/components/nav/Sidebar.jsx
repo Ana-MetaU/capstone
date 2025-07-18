@@ -15,8 +15,13 @@ const Sidebar = ({activeIcon, onActiveIconChange}) => {
   const {user} = useUser();
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
+  
   const handleSearch = () => {
     console.log("searching for ", searchValue);
+
+    if (searchValue.trim()) {
+      navigate(`/search?q=${searchValue}`);
+    }
   };
   const items = [
     {id: "home", icon: <HomeButton />, label: "Home"},

@@ -6,7 +6,7 @@ const Graphic = () => {
         <img
         src="/Graphic.png"
         alt= "Graphic movie banners"
-        className="movie-poster"
+        className="movie-graphic"
         />
       </div>
     </div>

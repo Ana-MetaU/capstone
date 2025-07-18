@@ -1,8 +1,23 @@
-.movie-grid {
+.movies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 
+.movie-card {
+  position: relative;
+  overflow: hidden;
+  margin: 20px;
+  width: 200px;
+  height: 350px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-width: 10px;
+}
+
+.movie-posters {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
 .movie-grid-parent h2 {
   text-align: start;

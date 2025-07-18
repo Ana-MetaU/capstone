@@ -24,4 +24,5 @@ model FollowRequest {
   updatedAt    DateTime @updatedAt
 
   @@unique([requesterId, recipientId])
+   @@map("follow_request")
 }

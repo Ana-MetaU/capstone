@@ -4,9 +4,11 @@ import "./SearchBar.css";
 
 function SearchBar({value, onChange, onSearch}) {
   const handleKeyDown = (e) => {
-    if (e.key == "Enter") e.preventDefault();
-    if (value.trim()) {
-      onSearch(value);
+    if (e.key == "Enter") {
+      e.preventDefault();
+      if (value.trim()) {
+        onSearch(value);
+      }
     }
   };
 

@@ -1,9 +1,11 @@
 import {useState, useEffect} from "react";
-import {getWantToWatchMovies} from "../../api/MovieApi";
-import {getWantToWatchTVShows} from "../../api/TVShowApi";
-import {getImage} from "../../utils/MediaApiUtils";
-import "./movieGrid.css";
-const WantToWatchGrid = () => {
+import {
+  getUserWantToWatchMovies,
+  getUserWantToWatchShows,
+} from "../../../api/UsersApi";
+import {getImage} from "../../../utils/MediaApiUtils";
+import "../../media/MovieGrid.css";
+const WantToWatchGrid = ({userId}) => {
   const [wantToWatch, setWantToWatch] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -12,8 +14,8 @@ const WantToWatchGrid = () => {
   }, []);
 
   const fetchWantToWatch = async () => {
-    const movies = await getWantToWatchMovies();
-    const shows = await getWantToWatchTVShows();
+    const movies = await getUserWantToWatchMovies(userId);
+    const shows = await getUserWantToWatchShows(userId);
     if (movies.success && shows.success) {
       const all = [...movies.movies, ...shows.shows];
       setWantToWatch((prevItems) => [...prevItems, ...all]);
