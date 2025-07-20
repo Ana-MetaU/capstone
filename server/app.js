@@ -54,9 +54,14 @@ app.use("/users", users);
 const follow = require("./Routes/follow.js");
 app.use("/follow-requests", follow);
 
-
 const feed = require("./Routes/feed.js");
 app.use("/feed", feed);
+
+const likes = require("./Routes/like.js");
+app.use("/like", likes);
+
+const comment = require("./Routes/comment.js");
+app.use("/comment", comment);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
