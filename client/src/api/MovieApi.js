@@ -12,6 +12,8 @@ export const addWatchedMovie = async (movieData) => {
       body: JSON.stringify({
         tmdbId: movieData.tmdbId,
         posterPath: movieData.posterPath,
+        title: movieData.title,
+        overview: movieData.overview,
         rating: movieData.rating,
         review: movieData.review,
       }),
@@ -26,7 +28,9 @@ export const addWatchedMovie = async (movieData) => {
     } else {
       return {
         success: false,
-        message: data.error || "something went wrong while adding movie to watched list.",
+        message:
+          data.error ||
+          "something went wrong while adding movie to watched list.",
       };
     }
   } catch (error) {
@@ -64,7 +68,7 @@ export const getWatchedMovies = async () => {
     };
   }
 };
- 
+
 export const getWantToWatchMovies = async () => {
   try {
     const response = await fetch(`${BASE_URL}/movies/wanttowatch`, {
@@ -75,12 +79,14 @@ export const getWantToWatchMovies = async () => {
     if (response.ok) {
       return {
         success: true,
-        movies: data.movies, // movies or messgea? 
+        movies: data.movies, // movies or messgea?
       };
     } else {
       return {
         success: false,
-        message: data.error || "something went wrong while getting want to watch movies.",
+        message:
+          data.error ||
+          "something went wrong while getting want to watch movies.",
       };
     }
   } catch (error) {
@@ -91,7 +97,7 @@ export const getWantToWatchMovies = async () => {
     };
   }
 };
- 
+
 export const addFavoriteMovie = async (movieData) => {
   try {
     const response = await fetch(`${BASE_URL}/movies/favorites`, {
@@ -103,6 +109,8 @@ export const addFavoriteMovie = async (movieData) => {
       body: JSON.stringify({
         tmdbId: movieData.tmdbId,
         posterPath: movieData.posterPath,
+        title: movieData.title,
+        overview: movieData.overview,
       }),
     });
 
@@ -115,7 +123,8 @@ export const addFavoriteMovie = async (movieData) => {
     } else {
       return {
         success: false,
-        message: data.error || "something went wrong while adding movie to favorites.",
+        message:
+          data.error || "something went wrong while adding movie to favorites.",
       };
     }
   } catch (error) {
@@ -169,6 +178,8 @@ export const addWantToWatchMovie = async (movieData) => {
       body: JSON.stringify({
         tmdbId: movieData.tmdbId,
         posterPath: movieData.posterPath,
+        title: movieData.title,
+        overview: movieData.overview,
         // Removed rating and review - want-to-watch doesn't need these
       }),
     });
@@ -182,7 +193,9 @@ export const addWantToWatchMovie = async (movieData) => {
     } else {
       return {
         success: false,
-        message: data.error || "something went wrong while adding movie to want to watch.",
+        message:
+          data.error ||
+          "something went wrong while adding movie to want to watch.",
       };
     }
   } catch (error) {
@@ -213,7 +226,9 @@ export const removeWantToWatchMovie = async (tmdbId) => {
     } else {
       return {
         success: false,
-        message: data.error || "Something went wrong while removing from want to watch",
+        message:
+          data.error ||
+          "Something went wrong while removing from want to watch",
       };
     }
   } catch (error) {

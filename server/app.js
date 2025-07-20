@@ -54,6 +54,10 @@ app.use("/users", users);
 const follow = require("./Routes/follow.js");
 app.use("/follow-requests", follow);
 
+
+const feed = require("./Routes/feed.js");
+app.use("/feed", feed);
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

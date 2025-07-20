@@ -10,7 +10,8 @@ const {getSession} = require("./neo4j");
 // Params: movieData {userId, tmdbId, posterPath, rating, review}
 // Returns: movie object
 const addWatchedMovie = async (movieData) => {
-  const {userId, tmdbId, posterPath, rating, review} = movieData;
+  const {userId, tmdbId, posterPath, title, overview, rating, review} =
+    movieData;
   const session = getSession();
   try {
     const result = await session.run(
@@ -18,7 +19,8 @@ const addWatchedMovie = async (movieData) => {
             MATCH (u:User {id: $userId})
             MERGE (m:Movie {tmdbId: $tmdbId})
             ON CREATE SET m.posterPath = $posterPath
-            
+            ON CREATE SET m.title = $title
+            ON CREATE SET m.overview = $overview
             WITH u, m
             
             OPTIONAL MATCH (u)-[wtw:WANT_TO_WATCH]->(m)
@@ -34,6 +36,8 @@ const addWatchedMovie = async (movieData) => {
         userId,
         tmdbId: parseInt(tmdbId),
         posterPath,
+        title,
+        overview,
         rating: rating ? parseInt(rating) : null,
         review: review || null,
       }
@@ -48,6 +52,8 @@ const addWatchedMovie = async (movieData) => {
       userId,
       tmdbId,
       posterPath,
+      title,
+      overview,
       rating,
       review,
     };
@@ -67,6 +73,8 @@ const getWatchedMoviesByUser = async (userId) => {
             MATCH (u:User {id: $userId})-[w:WATCHED]->(m:Movie)
             RETURN m.tmdbId as tmdbId,
             m.posterPath as posterPath,
+            m.title as title,
+            m.overview as overview,
             w.rating as rating,
             w.review as review,
             w.watchedAt as watchedAt
@@ -80,6 +88,8 @@ const getWatchedMoviesByUser = async (userId) => {
     return result.records.map((record) => ({
       tmdbId: record.get("tmdbId"),
       posterPath: record.get("posterPath"),
+      title: record.get("title"),
+      overview: record.get("overview"),
       rating: record.get("rating"),
       review: record.get("review"),
       watchedAt: record.get("watchedAt"),
@@ -93,7 +103,7 @@ const getWatchedMoviesByUser = async (userId) => {
 // Params: movieData {userId, tmdbId, posterPath}
 // Returns: movie object
 const addWantToWatchMovie = async (movieData) => {
-  const {userId, tmdbId, posterPath} = movieData;
+  const {userId, tmdbId, posterPath, title, overview} = movieData;
   const session = getSession();
   try {
     const result = await session.run(
@@ -101,6 +111,8 @@ const addWantToWatchMovie = async (movieData) => {
             MATCH (u:User {id: $userId})
             MERGE (m:Movie {tmdbId: $tmdbId})
             ON CREATE SET m.posterPath = $posterPath
+            ON CREATE SET m.title = $title
+            ON CREATE SET m.overview = $overview
             MERGE (u)-[w:WANT_TO_WATCH]->(m)
             ON CREATE SET w.addedAt = datetime()
             RETURN m, w
@@ -109,6 +121,8 @@ const addWantToWatchMovie = async (movieData) => {
         userId,
         tmdbId: parseInt(tmdbId),
         posterPath,
+        title,
+        overview,
       }
     );
 
@@ -130,7 +144,7 @@ const addWantToWatchMovie = async (movieData) => {
 // Params: movieData {userId, tmdbId, posterPath}
 // Returns: movie object
 const addFavoriteMovie = async (movieData) => {
-  const {userId, tmdbId, posterPath} = movieData;
+  const {userId, tmdbId, posterPath, title, overview} = movieData;
   const session = getSession();
   try {
     const result = await session.run(
@@ -138,6 +152,8 @@ const addFavoriteMovie = async (movieData) => {
             MATCH (u:User {id: $userId})
             MERGE (m:Movie {tmdbId: $tmdbId})
             ON CREATE SET m.posterPath = $posterPath
+            ON CREATE SET m.title = $title
+            ON CREATE SET m.overview = $overview
             MERGE (u)-[f:FAVORITE]->(m)
             ON CREATE SET f.addedAt = datetime()
             RETURN m, f
@@ -146,6 +162,8 @@ const addFavoriteMovie = async (movieData) => {
         userId,
         tmdbId: parseInt(tmdbId),
         posterPath,
+        title,
+        overview,
       }
     );
 
@@ -167,7 +185,7 @@ const addFavoriteMovie = async (movieData) => {
 // Params: movieData {userId, tmdbId, posterPath, review}
 // Returns: movie object
 const addCurrentlyWatchingMovie = async (movieData) => {
-  const {userId, tmdbId, posterPath, review} = movieData;
+  const {userId, tmdbId, posterPath, overview, review} = movieData;
   const session = getSession();
   try {
     const result = await session.run(
@@ -175,6 +193,8 @@ const addCurrentlyWatchingMovie = async (movieData) => {
             MATCH (u:User {id: $userId})
             MERGE (m:Movie {tmdbId: $tmdbId})
             ON CREATE SET m.posterPath = $posterPath
+            ON CREATE SET m.title = $title
+            ON CREATE SET m.overview = $$title
             MERGE (u)-[c:CURRENTLY_WATCHING]->(m)
             ON CREATE SET c.review = $review, c.addedAt = datetime()
             RETURN m, c
@@ -183,6 +203,8 @@ const addCurrentlyWatchingMovie = async (movieData) => {
         userId,
         tmdbId: parseInt(tmdbId),
         posterPath,
+        title,
+        overview,
         review: review || null,
       }
     );
@@ -212,6 +234,8 @@ const getWantToWatchMoviesByUser = async (userId) => {
             MATCH (u:User {id: $userId})-[w:WANT_TO_WATCH]->(m:Movie)
             RETURN m.tmdbId as tmdbId, 
             m.posterPath as posterPath,
+            m.title as title,
+            m.overview as overview,
             w.addedAt as addedAt
             ORDER BY w.addedAt DESC
             `,
@@ -221,6 +245,8 @@ const getWantToWatchMoviesByUser = async (userId) => {
     return result.records.map((record) => ({
       tmdbId: record.get("tmdbId"),
       posterPath: record.get("posterPath"),
+      title: record.get("title"),
+      overview: record.get("overview"),
       addedAt: record.get("addedAt"),
     }));
   } catch (error) {
@@ -242,6 +268,8 @@ const getFavoriteMoviesByUser = async (userId) => {
             MATCH (u:User {id: $userId})-[f:FAVORITE]->(m:Movie)
             RETURN m.tmdbId as tmdbId, 
             m.posterPath as posterPath,
+            m.title as title,
+            m.overview as overview,
             f.addedAt as addedAt
             ORDER BY f.addedAt DESC
             `,
@@ -251,6 +279,8 @@ const getFavoriteMoviesByUser = async (userId) => {
     return result.records.map((record) => ({
       tmdbId: record.get("tmdbId"),
       posterPath: record.get("posterPath"),
+      title: record.get("title"),
+      overview: record.get("overview"),
       addedAt: record.get("addedAt"),
     }));
   } catch (error) {
@@ -272,6 +302,8 @@ const getCurrentlyWatchingMoviesByUser = async (userId) => {
             MATCH (u:User {id: $userId})-[c:CURRENTLY_WATCHING]->(m:Movie)
             RETURN m.tmdbId as tmdbId, 
             m.posterPath as posterPath,
+            m.title as $title,
+            m.overview as overview,
             c.review as review,
             c.addedAt as addedAt
             ORDER BY c.addedAt DESC
@@ -282,6 +314,8 @@ const getCurrentlyWatchingMoviesByUser = async (userId) => {
     return result.records.map((record) => ({
       tmdbId: record.get("tmdbId"),
       posterPath: record.get("posterPath"),
+      title: record.get("title"),
+      overview: record.get("overview"),
       review: record.get("review"),
       addedAt: record.get("addedAt"),
     }));

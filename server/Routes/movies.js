@@ -51,7 +51,7 @@ async function postMovie(req, res, postFunction, type) {
   }
 
   try {
-    const {tmdbId, posterPath, rating, review} = req.body;
+    const {tmdbId, posterPath, title, overview, rating, review} = req.body;
 
     // Validate required input
     const validInput = validateInput({tmdbId});
@@ -66,6 +66,8 @@ async function postMovie(req, res, postFunction, type) {
         userId: req.session.userId,
         tmdbId,
         posterPath,
+        title,
+        overview,
         rating,
         review,
       };
@@ -74,6 +76,7 @@ async function postMovie(req, res, postFunction, type) {
         userId: req.session.userId,
         tmdbId,
         posterPath,
+        title,
         review,
       };
     } else {
@@ -82,6 +85,7 @@ async function postMovie(req, res, postFunction, type) {
         userId: req.session.userId,
         tmdbId,
         posterPath,
+        title,
       };
     }
 
@@ -159,7 +163,6 @@ router.get("/currentlywatching", async (req, res) => {
     "currently watching"
   );
 });
-
 
 //
 // POST ROUTES
