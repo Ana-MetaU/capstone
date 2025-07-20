@@ -1,10 +1,86 @@
-import {useUser} from "../../context/UserContext";
+import {useEffect, useRef} from "react";
+import FeedItem from "./FeedItem";
+import {useFeed} from "../../context/FeedContext";
+import "./Feed.css";
 function Feed() {
-  const {user} = useUser();
-  console.log("here user should be defined", user);
+  const {
+    feedItems,
+    initialLoading,
+    loading,
+    error,
+    hasNextPage,
+    fetchInitialFeed,
+    loadMoreItems,
+  } = useFeed();
+
+  const sentinelRef = useRef(null);
+
+  useEffect(() => {
+    fetchInitialFeed();
+  }, []);
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (
+          entry.isIntersecting &&
+          hasNextPage &&
+          !loading &&
+          !initialLoading
+        ) {
+          loadMoreItems();
+        }
+      },
+      {
+        rootMargin: "100px",
+        threshold: 0.1,
+      }
+    );
+    observer.observe(sentinel);
+
+    return () => {
+      if (sentinel) {
+        observer.unobserve(sentinel);
+      }
+    };
+  }, [hasNextPage, loading, initialLoading, loadMoreItems]);
+
+  if (initialLoading) {
+    return (
+      <div className="feed-loading">
+        <p> Loading your feed...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <p> oh no... </p>;
+  }
+
   return (
-    <div>
-      <p>upcoming Feed page</p>
+    <div className="feed-container">
+      <h1>Your Feed</h1>
+      {feedItems.length === 0 ? (
+        <div className="empty-feed">
+          <p>No posts yet. </p>
+        </div>
+      ) : (
+        <div className="feed-items">
+          {feedItems.map((item, index) => (
+            <FeedItem key={index} FeedItem={item}></FeedItem>
+          ))}
+        </div>
+      )}
+
+      {hasNextPage && (
+        <div ref={sentinelRef} className="scroll-sentinel">
+          {loading && <p>Loading more posts...</p>}
+        </div>
+      )}
     </div>
   );
 }

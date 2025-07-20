@@ -18,8 +18,9 @@ function MovieProvider({children}) {
     popularWeek: [],
   });
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [page, setPage] = useState(1);
+  const [movieDetail, setMovieDetail] = useState([]);
   const [favorites, setFavorites] = useState([]);
+  const [movieVideos, setMovieVideos] = useState([]);
   const [wantToWatchMovies, setWantToWatchMovies] = useState([]);
   const [loading, setLoading] = useState();
 
@@ -65,7 +66,6 @@ function MovieProvider({children}) {
       popularWeek: addFlagsToMovies(moviesRows.popularWeek),
     };
   };
-
 
   // Fetch movies from TMDB API
   const fetchMovies = async () => {
@@ -136,6 +136,60 @@ function MovieProvider({children}) {
     }
   };
 
+  const fetchMovieDetails = async (id) => {
+    try {
+      const url = `https://api.themoviedb.org/3/movie/${id}?language=en-US`;
+      const options = {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_API_BEARER}`,
+        },
+      };
+
+      const response = await fetch(url, options);
+      const result = await response.json();
+      setMovieDetail(result);
+      return result;
+    } catch (error) {
+      console.error("Error fetching movie details:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedMovie && selectedMovie.id) {
+      fetchMovieDetails(selectedMovie.id);
+      fetchMovieVideos(selectedMovie.id);
+    }
+  }, [selectedMovie]);
+
+  const fetchMovieVideos = async (id) => {
+    try {
+      const url = `https://api.themoviedb.org/3/movie/${id}/videos?language=en-US`;
+      const options = {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_API_BEARER}`,
+        },
+      };
+
+      const response = await fetch(url, options);
+      const result = await response.json();
+
+      // Filter for official trailers from YouTube
+      const trailers = result.results.filter(
+        (video) =>
+          video.site === "YouTube" &&
+          video.type === "Trailer" &&
+          video.official === true
+      );
+
+      setMovieVideos(trailers);
+    } catch (error) {
+      console.error("Error fetching movie videos:", error);
+    }
+  };
   // Open and close modal
   function openModal(movie) {
     setSelectedMovie(movie);
@@ -150,7 +204,6 @@ function MovieProvider({children}) {
     fetchMovies();
   }, []);
 
-  // Fetch movies on page change
   useEffect(() => {
     fetchMovies();
   }, []);
@@ -161,11 +214,14 @@ function MovieProvider({children}) {
         movies: getMoviesRowsWithFlags(),
         selectedMovie,
         setSelectedMovie,
+        movieDetail,
+        setMovieDetail,
+        movieVideos,
+        fetchMovieDetails,
         openModal,
         closeModal,
         toggleFavorite,
         toggleWantToWatch,
-        setPage,
         loading,
       }}
     >

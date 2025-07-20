@@ -1,13 +1,14 @@
 import {useContext} from "react";
 import {MovieContext} from "../../context/MovieContext";
 import MovieRow from "./MovieRow";
-import MovieModal from "./MovieModal";
 import "./MovieRowsPage.css";
+import MovieDetails from "./MovieDetails";
 
 const MovieRowsPage = () => {
-  const {movies, selectedMovie, closeModal, loading} = useContext(MovieContext);
-  console.log("Movies in display", movies);
+  const {movies, loading} =
+    useContext(MovieContext);
 
+  console.log("entonces esto era el problema", movies);
   if (loading) {
     return (
       <div className="loading-container">
@@ -29,11 +30,7 @@ const MovieRowsPage = () => {
         <MovieRow movies={movies.hiddenGems} title="Hidden Gems" />
       </div>
 
-      <MovieModal
-        isOpen={!!selectedMovie}
-        onClose={closeModal}
-        movie={selectedMovie}
-      />
+   <MovieDetails> </MovieDetails>
     </div>
   );
 };
