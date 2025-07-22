@@ -32,7 +32,6 @@ export const FeedProvider = ({children}) => {
       setInitialLoading(false);
     }
   };
-
   const loadMoreItems = async () => {
     if (!hasNextPage) {
       return;
@@ -45,9 +44,10 @@ export const FeedProvider = ({children}) => {
       const result = await getFeed(nextPage, 15);
 
       if (result.success) {
-        setFeedItems((prev) => [...prev, result.feed]);
+        setFeedItems((prev) => [...prev, ...result.feed]); //BUG FIXED: I was not spreading each individual feeditem f
         setCurrentPage(nextPage);
         setHasNextPage(result.pagination.hasNextPage);
+        console.log("so once we get to second", result.feed);
       } else {
         setError(result.message);
       }
@@ -60,7 +60,7 @@ export const FeedProvider = ({children}) => {
   };
 
   const toggleLike = async (watchedId, isCurrentlyLiked) => {
-    console.log("omg is this working")
+    console.log("omg is this working");
     setFeedItems((prevItems) =>
       prevItems.map((item) => {
         if (item.watchedId === watchedId) {
@@ -95,7 +95,7 @@ export const FeedProvider = ({children}) => {
                 ...item,
                 interactions: {
                   ...item.interactions,
-                  userLiked: isCurrentlyLiked, 
+                  userLiked: isCurrentlyLiked,
                   likesCount: isCurrentlyLiked
                     ? item.interactions.likesCount + 1
                     : item.interactions.likesCount - 1,
@@ -131,6 +131,7 @@ export const FeedProvider = ({children}) => {
       setError("Failed to update like");
     }
   };
+
   const value = {
     feedItems,
     loading,

@@ -16,6 +16,7 @@ function Feed() {
   const sentinelRef = useRef(null);
 
   useEffect(() => {
+    console.log("this comes through first");
     fetchInitialFeed();
   }, []);
 
@@ -32,6 +33,7 @@ function Feed() {
           !loading &&
           !initialLoading
         ) {
+          console.log("second");
           loadMoreItems();
         }
       },
