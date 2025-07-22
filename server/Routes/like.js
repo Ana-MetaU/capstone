@@ -16,7 +16,7 @@ router.post("/:watchedId", async (req, res) => {
 
   try {
     const userId = req.session.userId;
-    const watchedId = parseInt(req.params.watchedId);
+    const watchedId = req.params.watchedId;
 
     const alreadyLiked = await hasUserLiked(userId, watchedId);
 
@@ -52,12 +52,13 @@ router.delete("/:watchedId", async (req, res) => {
 
   try {
     const userId = req.session.userId;
-    const watchedId = parseInt(req.params.watchedId);
+    const watchedId = req.params.watchedId;
 
     const result = await removeLike(userId, watchedId);
 
     if (result.success) {
       const likes = await getLikesCount(watchedId);
+      console.log('what')
       res.json({
         success: true,
         message: "like removed successfully",

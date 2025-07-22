@@ -1,31 +1,47 @@
+import {useState} from "react";
 import {Rating} from "react-simple-star-rating";
-import {CommentButton, HeartButton} from "../UI/Buttons";
-import {getImage} from "../../utils/MediaApiUtils";
+import {CommentButton, HeartButton, UnHeartButton} from "../UI/Buttons";
+import {useFeed} from "../../context/FeedContext";
+import {formatTimeAgo, getImage} from "../../utils/MediaApiUtils";
+import CommentSection from "./CommentSection";
 import "./Feed.css";
 function FeedItem({FeedItem}) {
-  const {friend, content, rating, review, watchedAt} = FeedItem;
-
-  // format time ago
+  const [showComments, setShowComments] = useState(false);
+  const {watchedId, friend, content, rating, interactions} = FeedItem;
+  const {toggleLike} = useFeed();
+  
   const getAction = () => {
-    if (review) {
+    if (rating.review) {
       return `reviewed ${content.title}`;
     } else {
       return `rated ${content.title}`;
     }
   };
 
+  const handleCommentClick = () => {
+    console.log("what is going on", showComments);
+    setShowComments((prev) => !prev);
+  };
+
+  const handleLikeClick = () => {
+    toggleLike(watchedId, interactions.userLiked);
+  };
   return (
     <div className="feed-item">
       <div className="feed-item-header">
         <div className="friend-info">
           {friend.profilePicture ? (
             <img
+              className="friend-avatar"
               src={friend.profilePicture}
+              alt={friend.username}
+            />
+          ) : (
+            <img
+              src="/image.png"
               alt={friend.username}
               className="friend-avatar"
             />
-          ) : (
-            <img src="/image.png" alt={friend.username} />
           )}
 
           <div className="friend-details">
@@ -44,7 +60,7 @@ function FeedItem({FeedItem}) {
             )}
           </div>
         </div>
-        <span className="post-age"> 1d ago</span>
+        <span className="post-age">{formatTimeAgo(rating.watchedAt)}</span>
       </div>
 
       {rating.review && (
@@ -79,16 +95,21 @@ function FeedItem({FeedItem}) {
         </div>
       </div>
       <div className="feed-item-actions">
-        <button className="action-button">
-          <HeartButton></HeartButton>
-          <span> 24 </span>
+        <button className="action-button" onClick={handleLikeClick}>
+          {interactions.userLiked ? (
+            <UnHeartButton></UnHeartButton>
+          ) : (
+            <HeartButton></HeartButton>
+          )}
+          <span> {interactions?.likesCount} </span>
         </button>
 
-        <button className="action-button">
+        <button className="action-button" onClick={handleCommentClick}>
           <CommentButton></CommentButton>
-          <span>10</span>
+          <span>{interactions?.commentCount}</span>
         </button>
       </div>
+      {showComments && <CommentSection watchedId={watchedId}></CommentSection>}
     </div>
   );
 }

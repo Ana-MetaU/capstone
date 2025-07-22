@@ -1,5 +1,6 @@
 import {createContext, useContext, useState} from "react";
 import {getFeed} from "../api/FeedApi";
+import {addLike, removeLike} from "../api/FeedApi";
 const FeedContext = createContext();
 
 export const FeedProvider = ({children}) => {
@@ -58,9 +59,82 @@ export const FeedProvider = ({children}) => {
     }
   };
 
+  const toggleLike = async (watchedId, isCurrentlyLiked) => {
+    console.log("omg is this working")
+    setFeedItems((prevItems) =>
+      prevItems.map((item) => {
+        if (item.watchedId === watchedId) {
+          return {
+            ...item,
+            interactions: {
+              ...item.interactions,
+              userLiked: !isCurrentlyLiked,
+              likesCount: isCurrentlyLiked
+                ? item.interactions.likesCount - 1
+                : item.interactions.likesCount + 1,
+            },
+          };
+        }
+        return item;
+      })
+    );
+
+    try {
+      let result;
+      if (isCurrentlyLiked) {
+        result = await removeLike(watchedId);
+      } else {
+        result = await addLike(watchedId);
+      }
+
+      if (!result.success) {
+        setFeedItems((prevItems) =>
+          prevItems.map((item) => {
+            if (item.watchedId === watchedId) {
+              return {
+                ...item,
+                interactions: {
+                  ...item.interactions,
+                  userLiked: isCurrentlyLiked, 
+                  likesCount: isCurrentlyLiked
+                    ? item.interactions.likesCount + 1
+                    : item.interactions.likesCount - 1,
+                },
+              };
+            }
+            return item;
+          })
+        );
+        setError(result.message || "Failed to update like");
+      }
+    } catch (error) {
+      console.log("Error toggling like:", error);
+
+      // Revert optimistic update on error
+      setFeedItems((prevItems) =>
+        prevItems.map((item) => {
+          if (item.watchedId === watchedId) {
+            return {
+              ...item,
+              interactions: {
+                ...item.interactions,
+                userLiked: isCurrentlyLiked,
+                likesCount: isCurrentlyLiked
+                  ? item.interactions.likesCount + 1
+                  : item.interactions.likesCount - 1,
+              },
+            };
+          }
+          return item;
+        })
+      );
+      setError("Failed to update like");
+    }
+  };
   const value = {
     feedItems,
     loading,
+    toggleLike,
     error,
     initialLoading,
     hasNextPage,
