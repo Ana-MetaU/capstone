@@ -42,3 +42,30 @@ export const getImage = (image) => {
 
   return `https://artworks.thetvdb.com${image}`;
 };
+
+export const formatTimeAgo = (time) => {
+  const timeToFormat = new Date(time);
+  const rightNow = new Date();
+
+  // the difference is in millisecs
+  const diff = rightNow - timeToFormat;
+
+  const diffSeconds = Math.floor(diff / 1000);
+  const diffMinutes = Math.floor(diffSeconds / 60);
+  const diffHours = Math.floor(diffMinutes / 60);
+  const diffDays = Math.floor(diffHours / 24);
+  const diffMonths = Math.floor(diffDays / 30);
+  const diffYears = Math.floor(diffDays / 365);
+
+  if (diffSeconds < 60) {
+    return "just now";
+  } else if (diffMinutes < 60) {
+    return `${diffMinutes}m ago`;
+  } else if (diffHours < 24) {
+    return `${diffHours}h ago`;
+  } else if (diffMonths < 12) {
+    return `${diffMonths}months ago`;
+  } else if (diffYears) {
+    return `${diffYears}y ago`;
+  }
+};

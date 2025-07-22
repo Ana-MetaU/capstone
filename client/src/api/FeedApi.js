@@ -30,3 +30,77 @@ export const getFeed = async (page = 1, limit = 15) => {
     };
   }
 };
+
+export const addLike = async (watchedId) => {
+  try {
+    const response = await fetch(`${BASE_URL}/like/${watchedId}`, {
+      method: "POST",
+      credentials: "include",
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("error adding like", error);
+    return {
+      success: false,
+      message: "failed to add like",
+    };
+  }
+};
+
+export const removeLike = async (watchedId) => {
+  try {
+    const response = await fetch(`${BASE_URL}/like/${watchedId}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("error adding like", error);
+    return {
+      success: false,
+      message: "failed to remove like",
+    };
+  }
+};
+
+export const addComment = async (watchedId, text) => {
+  try {
+    const response = await fetch(`${BASE_URL}/comment/${watchedId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({text}),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("error adding like", error);
+    return {
+      success: false,
+      message: "failed to add comment",
+    };
+  }
+};
+
+export const getComments = async (watchedId) => {
+  try {
+    const response = await fetch(`${BASE_URL}/comment/${watchedId}`, {
+      credentials: "include",
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("error getting comments", error);
+    return {
+      success: false,
+      message: "failed to get comments",
+    };
+  }
+};

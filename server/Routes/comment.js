@@ -11,7 +11,7 @@ router.post("/:watchedId", async (req, res) => {
 
   try {
     const userId = req.session.userId;
-    const watchedId = parseInt(req.params.watchedId);
+    const watchedId = req.params.watchedId;
     const {text} = req.body;
 
     if (!text || text.trim().length === 0) {
@@ -19,12 +19,11 @@ router.post("/:watchedId", async (req, res) => {
     }
 
     const result = await addComment(userId, watchedId, text.trim());
-
     if (result.success) {
       res.status(201).json({
         success: true,
         message: "comment addded",
-        comment: result.comment,
+        comment: result.comments,
       });
     } else {
       res.status(500).json({error: "failed to add comment"});
@@ -37,13 +36,13 @@ router.post("/:watchedId", async (req, res) => {
 
 router.get("/:watchedId", async (req, res) => {
   try {
-    const watchedId = parseInt(req.params.watchedId);
+    const watchedId = req.params.watchedId;
     const comments = await getComments(watchedId);
-
+    console.log("is it even here", comments);
     res.json({
       success: true,
-      comments: comments,
-      count: comments.length,
+      comments: comments.comments,
+      count: comments.comments.length,
     });
   } catch (error) {
     console.log("error getting comments", error);
