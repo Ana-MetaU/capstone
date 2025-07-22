@@ -11,6 +11,7 @@ import MovieRowsPage from "../media/MovieRowsPage.jsx";
 import TvShowRowsPage from "../media/TvShowRowsPage.jsx";
 import SearchResults from "../profile/SearchResults.jsx";
 import UserProfile from "../profile/UserProfile.jsx";
+import Notifications from "../profile/Notifications.jsx";
 import "./Layout.css";
 
 function Layout() {
@@ -21,6 +22,8 @@ function Layout() {
         return <TvShowRowsPage></TvShowRowsPage>;
       case "movies":
         return <MovieRowsPage></MovieRowsPage>;
+      case "notification":
+        return <Notifications></Notifications>
       default:
         return <Feed></Feed>;
     }

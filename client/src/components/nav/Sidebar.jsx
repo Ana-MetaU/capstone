@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import SearchBar from "./SearchBar";
+import {userLogout} from "../../api/UserApi";
 import {useUser} from "../../context/UserContext";
 import "./Sidebar.css";
 import {
@@ -9,13 +10,30 @@ import {
   ProfileButton,
   ShowsButton,
   SettingsButton,
+  NotificationButton,
+  LogoutButton,
 } from "../UI/Buttons";
 
 const Sidebar = ({activeIcon, onActiveIconChange}) => {
-  const {user} = useUser();
+  const {user, setUser} = useUser();
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
-  
+
+  const handleLogout = async () => {
+    console.log("Hello");
+    try {
+      const result = await userLogout();
+      console.log("what", result);
+      if (result.success) {
+        setUser(null);
+        window.location.replace("/");
+      } else {
+        console.log("log out failed", result);
+      }
+    } catch (error) {
+      console.log("logout error", error);
+    }
+  };
   const handleSearch = () => {
     console.log("searching for ", searchValue);
 
@@ -27,12 +45,12 @@ const Sidebar = ({activeIcon, onActiveIconChange}) => {
     {id: "home", icon: <HomeButton />, label: "Home"},
     {id: "tv-shows", icon: <ShowsButton />, label: "TV Show"},
     {id: "movies", icon: <MoviesButton />, label: "Movies"},
+    {id: "notification", icon: <NotificationButton />, label: "Notifications"},
     {id: "settings", icon: <SettingsButton />, label: "Settings"},
     {id: "profile", icon: <ProfileButton />, label: "Profile"},
   ];
 
   const handleIconClick = (itemId) => {
-    console.log("here", itemId);
     if (itemId === "profile") {
       onActiveIconChange(itemId);
       navigate(`/${user.username}`);
@@ -41,6 +59,7 @@ const Sidebar = ({activeIcon, onActiveIconChange}) => {
       navigate("/settings");
     } else {
       onActiveIconChange(itemId);
+      console.log("itemid", itemId);
       navigate("/");
     }
   };
@@ -74,6 +93,12 @@ const Sidebar = ({activeIcon, onActiveIconChange}) => {
         ></SearchBar>
 
         <div className="sidebar-items">{renderItems()}</div>
+
+        <div className="logout-button">
+          <button onClick={handleLogout}>
+            <LogoutButton></LogoutButton>
+          </button>
+        </div>
       </aside>
     </div>
   );
