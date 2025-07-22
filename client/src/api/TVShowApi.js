@@ -12,6 +12,8 @@ export const addWatchedTVShow = async (showData) => {
       body: JSON.stringify({
         tvdbId: showData.tvdbId,
         posterPath: showData.posterPath,
+        name: showData.name,
+        overview: showData.name,
         rating: showData.rating,
         review: showData.review,
       }),

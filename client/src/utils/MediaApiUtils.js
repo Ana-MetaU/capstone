@@ -63,6 +63,8 @@ export const formatTimeAgo = (time) => {
     return `${diffMinutes}m ago`;
   } else if (diffHours < 24) {
     return `${diffHours}h ago`;
+  } else if (diffDays < 30) {
+    return `${diffDays}d ago`;
   } else if (diffMonths < 12) {
     return `${diffMonths}months ago`;
   } else if (diffYears) {

@@ -1,13 +1,13 @@
 import {useContext} from "react";
 import TvShowRow from "./TvShowRow";
 import {TVShowContext} from "../../context/TvShowContext";
-import TvShowModal from "./TvShowModal";
+import TVShowDetails from "./TvShowDetails";
 import "./MovieRowsPage.css";
 
 const TvShowRowsPage = () => {
   const {shows, selectedTVShow, closeModal, loading} =
     useContext(TVShowContext);
-  console.log("shows in the display", shows);
+  console.log("shows in the display", selectedTVShow);
 
   if (loading) {
     return (
@@ -29,11 +29,7 @@ const TvShowRowsPage = () => {
         <TvShowRow tvShows={shows.randomShows} title="Random Shows" />
       </div>
 
-      <TvShowModal
-        isOpen={!!selectedTVShow}
-        onClose={closeModal}
-        show={selectedTVShow}
-      />
+      <TVShowDetails />
     </div>
   );
 };

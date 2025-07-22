@@ -8,9 +8,13 @@ import "./Feed.css";
 function FeedItem({FeedItem}) {
   const [showComments, setShowComments] = useState(false);
   const {watchedId, friend, content, rating, interactions} = FeedItem;
+  console.log("updated", FeedItem);
   const {toggleLike} = useFeed();
-  
+
   const getAction = () => {
+    if (content.type === "TVShow" && !rating.rating) {
+      return `currently watching ${content.title}`;
+    }
     if (rating.review) {
       return `reviewed ${content.title}`;
     } else {
@@ -47,7 +51,8 @@ function FeedItem({FeedItem}) {
           <div className="friend-details">
             <span className="friend-name"> {friend.username}</span>
             <span className="action-text"> {getAction()}</span>
-            {rating && (
+            
+            {rating.rating && (
               <Rating
                 initialValue={rating.rating}
                 size={24}

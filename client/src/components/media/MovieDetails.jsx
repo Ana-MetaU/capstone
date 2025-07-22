@@ -7,8 +7,7 @@ import {getImage} from "../../utils/MediaApiUtils";
 
 function MovieDetails() {
   const navigate = useNavigate();
-  const {movieDetail, selectedMovie, closeModal} = useContext(MovieContext);
-  console.log("movie details", movieDetail);
+  const {movieDetail,selectedMovie, closeModal} = useContext(MovieContext);
   if (!selectedMovie) return null;
 
   const handleOverlayClick = (e) => {
@@ -18,7 +17,7 @@ function MovieDetails() {
   };
 
   const handleWriteReview = () => {
-    navigate(`/review/${movieDetail.id}`);
+    navigate(`/review/${selectedMovie.id}`);
   };
 
   return (
@@ -45,7 +44,7 @@ function MovieDetails() {
               <div className="movie-header">
                 <h1 className="movie-title-details">{movieDetail.title}</h1>
                 <div className="movie-info">
-                  <span className="meta-badge movie-year">
+                  <span className="movie-year">
                     Year: {movieDetail.release_date?.slice(0, 4)}
                   </span>
                   <span className="movie-runtime">

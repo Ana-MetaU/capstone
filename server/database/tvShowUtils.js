@@ -10,7 +10,7 @@ const {getSession} = require("./neo4j");
 // Params: showData {userId, tvdbId, posterPath, rating, review}
 // Returns: show object
 const addWatchedTVShow = async (showData) => {
-  const {userId, tvdbId, posterPath, rating, review} = showData;
+  const {userId, tvdbId, posterPath, name, overview, rating, review} = showData;
   const session = getSession();
   try {
     const result = await session.run(
@@ -18,7 +18,8 @@ const addWatchedTVShow = async (showData) => {
             MATCH (u:User {id: $userId})
             MERGE (s:TVShow {tvdbId: $tvdbId})
             ON CREATE SET s.posterPath = $posterPath
-            
+            ON CREATE SET s.title = $name
+            ON CREATE SET s.overview = $overview
             WITH u, s
             
             OPTIONAL MATCH (u)-[wtw:WANT_TO_WATCH]->(s)
@@ -34,6 +35,8 @@ const addWatchedTVShow = async (showData) => {
         userId,
         tvdbId: parseInt(tvdbId),
         posterPath,
+        name,
+        overview,
         rating: rating ? parseInt(rating) : null,
         review: review || null,
       }
@@ -67,6 +70,8 @@ const getWatchedTVShowsByUser = async (userId) => {
             MATCH (u:User {id: $userId})-[w:WATCHED]->(s:TVShow)
             RETURN s.tvdbId as tvdbId,
             s.posterPath as posterPath,
+            w.title as name,
+            w.overview as overview,
             w.rating as rating,
             w.review as review,
             w.watchedAt as watchedAt
@@ -80,6 +85,8 @@ const getWatchedTVShowsByUser = async (userId) => {
     return result.records.map((record) => ({
       tvdbId: record.get("tvdbId"),
       posterPath: record.get("posterPath"),
+      title: record.get("name"),
+      overview: record.get("overview"),
       rating: record.get("rating"),
       review: record.get("review"),
       watchedAt: record.get("watchedAt"),
@@ -93,7 +100,7 @@ const getWatchedTVShowsByUser = async (userId) => {
 // Params: showData {userId, tvdbId, posterPath}
 // Returns: show object
 const addWantToWatchTVShow = async (showData) => {
-  const {userId, tvdbId, posterPath} = showData;
+  const {userId, tvdbId, posterPath, name, overview} = showData;
   const session = getSession();
   try {
     const result = await session.run(
@@ -167,7 +174,7 @@ const addFavoriteTVShow = async (showData) => {
 // Params: showData {userId, tvdbId, posterPath, review}
 // Returns: show object
 const addCurrentlyWatchingTVShow = async (showData) => {
-  const {userId, tvdbId, posterPath, review} = showData;
+  const {userId, tvdbId, posterPath, name, overview, review} = showData;
   const session = getSession();
   try {
     const result = await session.run(
@@ -175,6 +182,8 @@ const addCurrentlyWatchingTVShow = async (showData) => {
             MATCH (u:User {id: $userId})
             MERGE (s:TVShow {tvdbId: $tvdbId})
             ON CREATE SET s.posterPath = $posterPath
+            ON CREATE SET s.title = $name
+            ON CREATE SET s.overview = $overview
             MERGE (u)-[c:CURRENTLY_WATCHING]->(s)
             ON CREATE SET c.review = $review, c.addedAt = datetime()
             RETURN s, c
@@ -183,6 +192,8 @@ const addCurrentlyWatchingTVShow = async (showData) => {
         userId,
         tvdbId: parseInt(tvdbId),
         posterPath,
+        name,
+        overview,
         review: review || null,
       }
     );
@@ -272,7 +283,9 @@ const getCurrentlyWatchingTVShowsByUser = async (userId) => {
             MATCH (u:User {id: $userId})-[c:CURRENTLY_WATCHING]->(s:TVShow)
             RETURN s.tvdbId as tvdbId, 
             s.posterPath as posterPath,
-            c.review as review,
+            s.title as name,
+            s.overview as overview,
+            s.review as review,
             c.addedAt as addedAt
             ORDER BY c.addedAt DESC
             `,
@@ -282,6 +295,8 @@ const getCurrentlyWatchingTVShowsByUser = async (userId) => {
     return result.records.map((record) => ({
       tvdbId: record.get("tvdbId"),
       posterPath: record.get("posterPath"),
+      name: record.get("name"),
+      overview: record.get("overview"),
       review: record.get("review"),
       addedAt: record.get("addedAt"),
     }));
