@@ -39,3 +39,7 @@
 .sidebar-item.active {
   background-color: #4169e1;
 }
+
+.logout-button {
+  margin-top: 95%;
+}

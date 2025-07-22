@@ -84,3 +84,25 @@ export const userAuthenticate = async () => {
     };
   }
 };
+
+export const userLogout = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
+
+    if (response.ok) {
+      return {
+        success: true,
+        message: "Log out successful",
+      };
+    }
+  } catch (error) {
+    console.log("logout error", error);
+    return {
+      success: false,
+      message: "something went wrong during log out",
+    };
+  }
+};

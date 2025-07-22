@@ -130,3 +130,38 @@ export const userHasProfile = async (userId) => {
     };
   }
 };
+
+export const updateProfilePrivacy = async (userId, isPublic) => {
+  try {
+    console.log("guyss", userId);
+    console.log("guyss2", isPublic);
+    const response = await fetch(`${BASE_URL}/profile/${userId}/privacy`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({isPublic}),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      return {
+        success: true,
+        message: data.message,
+        profile: data.profile,
+      };
+    } else {
+      return {
+        success: false,
+        message: data.error,
+      };
+    }
+  } catch (error) {
+    console.log("privacy update error", error);
+    return {
+      success: true,
+      message: "exception occured in request",
+    };
+  }
+};
