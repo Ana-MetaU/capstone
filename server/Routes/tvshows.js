@@ -53,7 +53,7 @@ async function postTVShow(req, res, postFunction, type) {
   }
 
   try {
-    const {tvdbId, posterPath, rating, review} = req.body;
+    const {tvdbId, posterPath, rating, name,overview, review} = req.body;
 
     // Validate required input
     const validInput = validateInput({tvdbId});
@@ -68,6 +68,8 @@ async function postTVShow(req, res, postFunction, type) {
         userId: req.session.userId,
         tvdbId,
         posterPath,
+        name,
+        overview,
         rating,
         review,
       };
@@ -75,6 +77,8 @@ async function postTVShow(req, res, postFunction, type) {
       showData = {
         userId: req.session.userId,
         tvdbId,
+        name,
+        overview,
         posterPath,
         review,
       };

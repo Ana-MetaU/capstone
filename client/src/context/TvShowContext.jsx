@@ -18,7 +18,7 @@ function TVShowProvider({children}) {
     todaysGenre: [],
     randomShows: [],
   });
-
+  const [showDetail, setShowDetail] = useState([]);
   const [selectedTVShow, setSelectedTVShow] = useState(null);
   const [favorites, setFavorites] = useState([]);
   const [wantToWatchShows, setWantToWatchShows] = useState([]);
@@ -65,7 +65,7 @@ function TVShowProvider({children}) {
       randomShows: addFlagsToShows(showsRows.randomShows),
     };
   };
- 
+
   // Fetch TV shows from TVDB API
   const fetchTVShows = async () => {
     setLoading(true);
@@ -78,7 +78,6 @@ function TVShowProvider({children}) {
           randomShows: result.randomShows,
         });
       }
-
     } catch (error) {
       console.error("Error fetching TV shows", error);
     } finally {
@@ -154,6 +153,7 @@ function TVShowProvider({children}) {
         shows: getShowsRowsWithFlags(),
         selectedTVShow,
         setSelectedTVShow,
+        showDetail,
         openModal,
         closeModal,
         toggleFavorite,
