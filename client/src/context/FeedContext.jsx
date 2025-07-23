@@ -1,4 +1,4 @@
-import {createContext, useContext, useState} from "react";
+import {createContext, useContext, useState, useMemo} from "react";
 import {getFeed} from "../api/FeedApi";
 import {addLike, removeLike} from "../api/FeedApi";
 const FeedContext = createContext();
@@ -11,6 +11,10 @@ export const FeedProvider = ({children}) => {
   const [hasNextPage, setHasNextPage] = useState(true);
   const [initialLoading, setInitialLoading] = useState(true);
 
+  // friend filter states
+  const [selectedFriends, setSelectedFriends] = useState(new Set());
+  const [showAllFriends, setShowAllFriends] = useState(true);
+  console.log("friends", selectedFriends);
   const fetchInitialFeed = async () => {
     setInitialLoading(true);
     setError(null);
@@ -132,6 +136,50 @@ export const FeedProvider = ({children}) => {
     }
   };
 
+  // get unique friends from the posts
+  // NOTE: other choice is to display all available friends, but this would be useless if a person has more than 100 friends and about only half post.
+  // NOTE: therefore I believe it is more eficcient to display only the friends which have feed posts
+  const Friends = useMemo(() => {
+    const uniqueIds = new Set(
+      feedItems.map((item) => item.friend.id)
+    );
+    return Array.from(uniqueIds).map((id) => {
+      return feedItems.find((item) => item.friend?.id === id).friend; 
+    });
+  }, [feedItems]);
+
+
+  const filteredFeedItems = useMemo(() => {
+    if (showAllFriends || selectedFriends.size == 0) {
+      return feedItems; // no filtering can be done
+    }
+
+    return feedItems.filter((item) => selectedFriends.has(item.friend?.id));
+  }, [feedItems, selectedFriends, showAllFriends]);
+
+  //update selectedFriends
+  const updateSelectedFriends = (friendId) => {
+    setSelectedFriends((currentSelectedFriends) => {
+      const updatedFriends = new Set(currentSelectedFriends);
+
+      const isFriendCurrentlySelected = updatedFriends.has(friendId);
+      if (isFriendCurrentlySelected) {
+        updatedFriends.delete(friendId);
+      } else {
+        updatedFriends.add(friendId);
+      }
+
+      setShowAllFriends(updatedFriends.size === 0);
+
+      return updatedFriends;
+    });
+  };
+
+  const clearFilters = () => {
+    setSelectedFriends(new Set());
+    setShowAllFriends(true);
+  };
+
   const value = {
     feedItems,
     loading,
@@ -142,6 +190,12 @@ export const FeedProvider = ({children}) => {
     currentPage,
     fetchInitialFeed,
     loadMoreItems,
+    filteredFeedItems,
+    Friends,
+    selectedFriends,
+    showAllFriends,
+    clearFilters,
+    updateSelectedFriends,
   };
 
   return <FeedContext.Provider value={value}>{children}</FeedContext.Provider>;
