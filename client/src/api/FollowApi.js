@@ -263,3 +263,26 @@ export const getOutgoingRequest = async () => {
     };
   }
 };
+
+export const getRecs = async () => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/follow-requests/recommendations`,
+      {
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("get incoming error", error);
+    return {
+      success: false,
+      message: "Exception occured in request",
+    };
+  }
+};
