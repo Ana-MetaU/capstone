@@ -21,6 +21,34 @@ const apiHeaders = {
 //
 // Get movies coming to theaters in the next 3 months
 //
+export const searchShows = async (query) => {
+  try {
+   const url = `${TMDB_BASE_URL}/search/tv?query=${query}&include_adult=false&language=en-US&page=1`;
+    const response = await fetch(url, apiHeaders);
+    const data = await response.json();
+    return {
+      success: true,
+      results: data.results,
+    };
+  } catch (error) {
+    console.log("error fetching tv shows");
+  }
+};
+
+export const searchMovies = async (query) => {
+  try {
+    const url = `${TMDB_BASE_URL}/search/movie?query=${query}&include_adult=false&language=en-US&page=1`;
+    const response = await fetch(url, apiHeaders);
+    const data = await response.json();
+    console.log("movies data", data);
+    return {
+      success: true,
+      results: data.results,
+    };
+  } catch (error) {
+    console.log("error searching the movies in tmdb", error);
+  }
+};
 export async function getComingSoonMovies() {
   const movies = [];
   const today = getCurrentDate();
