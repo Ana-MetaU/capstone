@@ -86,6 +86,7 @@ async function postMovie(req, res, postFunction, type) {
         tmdbId,
         posterPath,
         title,
+        overview,
       };
     }
 

@@ -14,7 +14,30 @@
   top: 24px;
   right: 24px;
 }
+.search-toggle {
+  display: flex;
+  gap: 5px;
+  margin: 20px 0;
+  padding: 4px;
+  border-radius: 8px;
+}
 
+.toggle-button {
+  padding: 12px 24px;
+  border: none;
+  background-color: #2a2a2a;
+  cursor: pointer;
+  color: white;
+}
+
+.toggle-button.active {
+  background-color: #505050;
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
 .follow-request-notification {
   background-color: #f8f9fa;
   border-radius: 8px;
@@ -108,8 +131,7 @@
   margin: 30px;
 }
 
-
-.private{
+.private {
   display: flex;
   flex-direction: column;
   justify-content: center;

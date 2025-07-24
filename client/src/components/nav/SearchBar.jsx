@@ -24,7 +24,7 @@ function SearchBar({value, onChange, onSearch}) {
           className="search-input"
           id="search"
           type="text"
-          placeholder="Search movies or shows..."
+          placeholder="Search..."
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
