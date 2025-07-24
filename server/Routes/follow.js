@@ -9,6 +9,7 @@ const {
   getFollowing,
   isFollowing,
   removeFollowRelationship,
+  getFriendRecommendations,
 } = require("../database/followUtils");
 
 const {
@@ -314,6 +315,33 @@ router.get("/status/:userId", async (req, res) => {
     });
   } catch (error) {
     console.log("could not check status between the two users", error);
+  }
+});
+
+// check the status betweeen two users
+router.get("/recommendations", async (req, res) => {
+  if (!req.session.userId) {
+    return res
+      .status(401)
+      .json({error: "authentication required. Log in first"});
+  }
+
+  try {
+    const userId = req.session.userId;
+    limit = 5;
+
+    const recs = await getFriendRecommendations(userId, limit);
+
+    if (recs) {
+      return res.json({
+        success: true,
+        message: "Friend recommendations fetched successfuly",
+        recommendations: recs,
+      });
+    }
+  } catch (error) {
+    console.log("error fetching friend recommendations", error);
+    res.status(500).json({error: "Failed to fetch friend recs"});
   }
 });
 
