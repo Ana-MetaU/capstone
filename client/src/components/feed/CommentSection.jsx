@@ -17,8 +17,6 @@ function CommentSection({watchedId}) {
   const loadComments = async () => {
     try {
       const result = await getComments(watchedId);
-      console.log("result from getting comment", result);
-      console.log("is this how you access", result.comments);
       if (result.success) {
         setComments(result.comments || []);
       }
@@ -33,16 +31,13 @@ function CommentSection({watchedId}) {
     e.preventDefault();
 
     if (!newComment.trim()) return;
-    console.log("add a comment", newComment);
 
     setSubmitLoading(true);
 
     try {
       const result = await addComment(watchedId, newComment.trim());
-      console.log("result from adding comment", result);
       if (result.success) {
         setNewComment("");
-        console.log("comment added successfully");
       } else {
         console.log("failed to add comment", result.error);
       }

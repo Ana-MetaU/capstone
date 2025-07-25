@@ -35,7 +35,7 @@ const UserProfile = () => {
   useEffect(() => {
     checkFollowStatus();
     fetchUserStats();
-  }, [UserProfile?.userId]);
+  }, [UserProfile?.userId, followStatus]);
 
   const fetchUserStats = async () => {
     if (UserProfile?.userId) {
