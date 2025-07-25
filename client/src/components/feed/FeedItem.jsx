@@ -8,6 +8,7 @@ import "./Feed.css";
 function FeedItem({FeedItem}) {
   const [showComments, setShowComments] = useState(false);
   const {watchedId, friend, content, rating, interactions} = FeedItem;
+  console.log("updated", FeedItem);
   const {toggleLike} = useFeed();
 
   const getAction = () => {

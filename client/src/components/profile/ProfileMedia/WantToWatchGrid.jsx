@@ -5,7 +5,6 @@ import {
 } from "../../../api/UsersApi";
 import {getImage} from "../../../utils/MediaApiUtils";
 import "../../media/MovieGrid.css";
-import MovieCard from "../../media/MovieCard";
 const WantToWatchGrid = ({userId}) => {
   const [wantToWatch, setWantToWatch] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,16 +34,16 @@ const WantToWatchGrid = ({userId}) => {
     }
 
     return wantToWatch.map((item, index) => (
-      <MovieCard
+      <div
         key={`${item.tmdbId || item.tvdbId}-${index}`}
-        props={{
-          ...item,
-          title: item.title || item.name,
-          poster_path: item.posterPath,
-        }}
-        onClick={() => {}}
-        showAction={false}
-      />
+        className="movie-card"
+      >
+        <img
+          className="movie-posters"
+          src={getImage(item.posterPath)}
+          alt={item.title || item.name}
+        />
+      </div>
     ));
   };
 

@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "https://capstone-2m9n.onrender.com";
 
 // TODO: refactor this code
 export const addWatchedMovie = async (movieData) => {
@@ -46,6 +46,9 @@ export const getWatchedMovies = async () => {
   try {
     const response = await fetch(`${BASE_URL}/movies/watched`, {
       credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     const data = await response.json();
@@ -73,6 +76,9 @@ export const getWantToWatchMovies = async () => {
   try {
     const response = await fetch(`${BASE_URL}/movies/wanttowatch`, {
       credentials: "include",
+      headers: {
+    "Content-Type": "application/json",
+  },
     });
 
     const data = await response.json();
@@ -99,7 +105,6 @@ export const getWantToWatchMovies = async () => {
 };
 
 export const addFavoriteMovie = async (movieData) => {
-  console.log("what are we getting", movieData);
   try {
     const response = await fetch(`${BASE_URL}/movies/favorites`, {
       method: "POST",
@@ -245,6 +250,9 @@ export const getFavoriteMovies = async () => {
   try {
     const response = await fetch(`${BASE_URL}/movies/favorites`, {
       credentials: "include",
+      headers: {
+    "Content-Type": "application/json",
+  },
     });
 
     const data = await response.json();

@@ -70,7 +70,7 @@ const EditProfileModal = ({
         formData.append("ProfilePicture", fileInputRef.current.files[0]);
 
         const uploadResponse = await fetch(
-          "http://localhost:3000/upload/profile-picture",
+          "https://capstone-2m9n.onrender.com/upload/profile-picture",
           {
             method: "POST",
             credentials: "include",
@@ -87,7 +87,7 @@ const EditProfileModal = ({
       // Save profile data
       const profileData = {
         bio,
-        privacyLevel: null,
+        isPublic: true,
         profilePicture: imageUrl,
         favoriteGenres,
       };

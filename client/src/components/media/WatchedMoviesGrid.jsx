@@ -1,8 +1,8 @@
 import {useState, useEffect} from "react";
 import {getWatchedMovies} from "../../api/MovieApi";
 import {getWatchedTVShows} from "../../api/TVShowApi";
-import MovieCard from "./MovieCard";
-import "./movieGrid.css";
+import {getImage} from "../../utils/MediaApiUtils";
+import "./MovieGrid.css";
 const WatchedMoviesGrid = () => {
   const [watched, setWatched] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,16 +33,16 @@ const WatchedMoviesGrid = () => {
     }
 
     return watched.map((item, index) => (
-      <MovieCard
+      <div
         key={`${item.tmdbId || item.tvdbId}-${index}`}
-        props={{
-          ...item,  
-          title: item.title || item.name,
-          poster_path: item.posterPath,
-        }}
-        onClick={() => {}}
-        showAction={false}
-      />
+        className="movie-card"
+      >
+        <img
+          className="movie-posters"
+          src={getImage(item.posterPath)}
+          alt={item.title || item.name}
+        />
+      </div>
     ));
   };
 

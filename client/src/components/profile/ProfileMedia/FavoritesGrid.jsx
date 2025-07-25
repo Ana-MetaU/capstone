@@ -4,10 +4,7 @@ import {
   getUserFavoriteShows,
 } from "../../../api/UsersApi";
 import {getImage} from "../../../utils/MediaApiUtils";
-import MovieCard from "../../media/MovieCard";
 import "../../media/MovieGrid.css";
-import {useContext} from "react";
-import {MovieContext} from "../../../context/MovieContext";
 const FavoritesGrid = ({userId}) => {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,8 +18,9 @@ const FavoritesGrid = ({userId}) => {
     const shows = await getUserFavoriteShows(userId);
 
     if (movies.success && shows.success) {
+      console.log("tadda", movies, shows);
       const all = [...movies.movies, ...shows.shows];
-      setFavorites(all);
+      setFavorites((prevItems) => [...prevItems, ...all]);
     } else {
       console.log("Failed to fetch watched movies:", movies.message);
     }
@@ -39,16 +37,16 @@ const FavoritesGrid = ({userId}) => {
     }
 
     return favorites.map((item, index) => (
-      <MovieCard
+      <div
         key={`${item.tmdbId || item.tvdbId}-${index}`}
-        props={{
-          ...item,
-          title: item.title || item.name,
-          poster_path: item.posterPath,
-        }}
-        onClick={() => {}}
-        showAction={false}
-      />
+        className="movie-card"
+      >
+        <img
+          className="movie-posters"
+          src={getImage(item.posterPath)}
+          alt={item.title || item.name}
+        />
+      </div>
     ));
   };
 

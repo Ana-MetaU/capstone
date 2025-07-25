@@ -1,7 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const {requireLogin} = require("../middleware/requireLogin.js");
-
 const {
   addLike,
   removeLike,
@@ -9,7 +7,13 @@ const {
   hasUserLiked,
 } = require("../database/feedUtils");
 
-router.post("/:watchedId", requireLogin, async (req, res) => {
+router.post("/:watchedId", async (req, res) => {
+  if (!req.session.userId) {
+    return res
+      .status(401)
+      .json({error: "authentication required. Log in first"});
+  }
+
   try {
     const userId = req.session.userId;
     const watchedId = req.params.watchedId;
@@ -39,7 +43,13 @@ router.post("/:watchedId", requireLogin, async (req, res) => {
   }
 });
 
-router.delete("/:watchedId", requireLogin, async (req, res) => {
+router.delete("/:watchedId", async (req, res) => {
+  if (!req.session.userId) {
+    return res
+      .status(401)
+      .json({error: "authentication required. Log in first"});
+  }
+
   try {
     const userId = req.session.userId;
     const watchedId = req.params.watchedId;
@@ -48,6 +58,7 @@ router.delete("/:watchedId", requireLogin, async (req, res) => {
 
     if (result.success) {
       const likes = await getLikesCount(watchedId);
+      console.log('what')
       res.json({
         success: true,
         message: "like removed successfully",
@@ -62,7 +73,13 @@ router.delete("/:watchedId", requireLogin, async (req, res) => {
   }
 });
 
-router.get("/:watchedId/status", requireLogin, async (req, res) => {
+router.get("/:watchedId/status", async (req, res) => {
+  if (!req.session.userId) {
+    return res
+      .status(401)
+      .json({error: "authentication required. Log in first"});
+  }
+
   try {
     const userId = req.session.userId;
     const watchedId = parseInt(req.params.watchedId);

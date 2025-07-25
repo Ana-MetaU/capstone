@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = " https://capstone-2m9n.onrender.com";
 
 //TODO: refactor this (movieApi is basically the same as this)
 export const addWatchedTVShow = async (showData) => {
@@ -46,6 +46,9 @@ export const getWatchedTVShows = async () => {
   try {
     const response = await fetch(`${BASE_URL}/tvshows/watched`, {
       credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     const data = await response.json();
@@ -74,6 +77,9 @@ export const getWantToWatchTVShows = async () => {
   try {
     const response = await fetch(`${BASE_URL}/tvshows/wanttowatch`, {
       credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     const data = await response.json();
@@ -241,6 +247,9 @@ export const getFavoriteTVShows = async () => {
   try {
     const response = await fetch(`${BASE_URL}/tvshows/favorites`, {
       credentials: "include",
+      headers: {
+    "Content-Type": "application/json",
+  },
     });
 
     const data = await response.json();

@@ -1,8 +1,11 @@
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = " https://capstone-2m9n.onrender.com";
 export const getUserProfile = async (userId) => {
   try {
-    const response = await fetch(`${BASE_URL}/profile/${userId}`, {
+    const response = await fetch(`${BASE_URL}/profiles/${userId}`, {
       credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     const data = await response.json();
@@ -29,7 +32,7 @@ export const getUserProfile = async (userId) => {
 // Create user profile
 export const createUserProfile = async (userId, profileData) => {
   try {
-    const response = await fetch(`${BASE_URL}/profile/${userId}`, {
+    const response = await fetch(`${BASE_URL}/profiles/${userId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -37,7 +40,7 @@ export const createUserProfile = async (userId, profileData) => {
       credentials: "include",
       body: JSON.stringify({
         bio: profileData.bio,
-        privateLevel: profileData.privateLevel,
+        isPublic: profileData.isPublic,
         profilePicture: profileData.profilePicture,
         favoriteGenres: profileData.favoriteGenres,
       }),
@@ -67,7 +70,7 @@ export const createUserProfile = async (userId, profileData) => {
 // Update user profile
 export const updateUserProfile = async (userId, profileData) => {
   try {
-    const response = await fetch(`${BASE_URL}/profile/${userId}`, {
+    const response = await fetch(`${BASE_URL}/profiles/${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -75,7 +78,7 @@ export const updateUserProfile = async (userId, profileData) => {
       credentials: "include",
       body: JSON.stringify({
         bio: profileData.bio,
-        privacyLevel: profileData.privacyLevel,
+        isPublic: profileData.isPublic,
         profilePicture: profileData.profilePicture,
         favoriteGenres: profileData.favoriteGenres,
       }),
@@ -106,8 +109,11 @@ export const updateUserProfile = async (userId, profileData) => {
 // Check if user has a profile
 export const userHasProfile = async (userId) => {
   try {
-    const response = await fetch(`${BASE_URL}/profile/${userId}/exists`, {
+    const response = await fetch(`${BASE_URL}/profiles/${userId}/exists`, {
       credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     const data = await response.json();
@@ -131,15 +137,17 @@ export const userHasProfile = async (userId) => {
   }
 };
 
-export const updateProfilePrivacy = async (userId, privacyLevel) => {
+export const updateProfilePrivacy = async (userId, isPublic) => {
   try {
-    const response = await fetch(`${BASE_URL}/profile/${userId}/privacy`, {
+    console.log("guyss", userId);
+    console.log("guyss2", isPublic);
+    const response = await fetch(`${BASE_URL}/profiles/${userId}/privacy`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify(privacyLevel),
+      body: JSON.stringify({isPublic}),
     });
 
     const data = await response.json();

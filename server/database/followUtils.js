@@ -1,5 +1,4 @@
 const {getSession} = require("./neo4j");
-const neo4j = require("neo4j-driver");
 
 // Create a follows relationship
 async function createFollowRelationship(followerId, followeeId) {
@@ -110,67 +109,10 @@ async function getFollowers(userId) {
   }
 }
 
-// get friends recommendation
-async function getFriendRecommendations(userId) {
-  const session = getSession();
-
-  try {
-    const result = await session.run(
-      `
-      MATCH (user:User {id: $userId})-[:FOLLOWS]->(mutual:User)-[:FOLLOWS]->(recommendation:User)
-      WHERE NOT (user)-[:FOLLOWS]->(recommendation)
-      AND user <> recommendation
-      MATCH (recommendation)-[:HAS_PROFILE]->(recProfile: Profile)
-      RETURN DISTINCT recommendation.id as id,
-      recommendation.username as username,
-      recProfile.bio as bio,
-      recProfile.privacyLevel as privacyLevel,
-      recProfile.profilePicture as profilePicture,
-      recProfile.favoriteGenres as favoriteGenres 
-      `,
-      {
-        userId: userId,
-      }
-    );
-
-    return result.records.map((record) => ({
-      id: record.get("id"),
-      username: record.get("username"),
-      privacyLevel: record.get("privacyLevel"),
-      profilePicture: record.get("profilePicture"),
-      favoriteGenres: record.get("favoriteGenres"),
-    }));
-  } finally {
-    await session.close();
-  }
-}
-
-async function isFriendOfFriends(userId, targetUserId) {
-  const session = getSession();
-  try {
-    const result = await session.run(
-      `
-      MATCH (userA: User {id: $userId})-[:FOLLOWS]->(friend: User)-[:FOLLOWS]->(userB: User {id: $targetUserId})
-      RETURN count(friend) > 0 as isFriendOfFriend
-      `,
-      {userId, targetUserId}
-    );
-
-    console.log("omg", result.records)
-
-    return (
-      result.records.length > 0 && result.records[0].get("isFriendOfFriend")
-    );
-  } finally {
-    await session.close();
-  }
-}
 module.exports = {
   createFollowRelationship,
   removeFollowRelationship,
   isFollowing,
   getFollowing,
   getFollowers,
-  getFriendRecommendations,
-  isFriendOfFriends,
 };

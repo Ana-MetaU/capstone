@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const reguireLogin = require("../middleware/requireLogin");
 const {
   getUserStats,
   getUserProfileByUsername,
@@ -16,21 +15,17 @@ const {
   getFavoriteTVShowsByUser,
   getWantToWatchTVShowsByUser,
 } = require("../database/tvShowUtils");
-const {requireLogin} = require("../middleware/requireLogin");
-
-router.use(requireLogin);
 
 // Generic GET movies handler
-async function getMedia(req, res, fetchFunction, type) {
-  const userId = req.params.userId;
+async function getMovies(req, res, fetchFunction, userId, type) {
   if (!userId) {
-    return res.status.json({error: "Missing target userId"});
+    res.status(400).json({error: "Need a userId"});
   }
   try {
-    const media = await fetchFunction(userId);
+    const fetchedMovies = await fetchFunction(userId);
     res.status(200).json({
       message: `${type} movies fetched successfully`,
-      movies: media,
+      movies: fetchedMovies,
     });
   } catch (error) {
     console.log(`Error fetching ${type} movies:`, error);
@@ -40,6 +35,12 @@ async function getMedia(req, res, fetchFunction, type) {
 
 // search by username
 router.get("/search", async (req, res) => {
+  if (!req.session.userId) {
+    return res
+      .status(401)
+      .json({error: "authentication required. Log in first"});
+  }
+
   try {
     const {q} = req.query;
 
@@ -66,6 +67,12 @@ router.get("/search", async (req, res) => {
 });
 
 router.get("/:username", async (req, res) => {
+  if (!req.session.userId) {
+    return res
+      .status(401)
+      .json({error: "authentication required. Log in first"});
+  }
+
   try {
     const {username} = req.params;
 
@@ -84,29 +91,58 @@ router.get("/:username", async (req, res) => {
   }
 });
 
-// Media
 router.get("/:userId/movies/watched", async (req, res) => {
-  return await getMedia(req, res, getWatchedMoviesByUser, "watched");
-});
-
-router.get("/:userId/movies/favorites", async (req, res) => {
-  return await getMedia(req, res, getFavoriteMoviesByUser, "favorites");
-});
-
-router.get("/:userId/movies/wanttowatch", async (req, res) => {
-  return await getMedia(req, res, getWantToWatchMoviesByUser, "want to watch");
+  userId = req.params.userId;
+  return await getMovies(req, res, getWatchedMoviesByUser, userId, "watched");
 });
 
 router.get("/:userId/tvshows/watched", async (req, res) => {
-  return await getMedia(req, res, getWatchedTVShowsByUser, "watched");
+  userId = req.params.userId;
+  return await getMovies(req, res, getWatchedTVShowsByUser, userId, "watched");
 });
 
 router.get("/:userId/tvshows/favorites", async (req, res) => {
-  return await getMedia(req, res, getFavoriteTVShowsByUser, "favorites");
+  userId = req.params.userId;
+  return await getMovies(
+    req,
+    res,
+    getFavoriteTVShowsByUser,
+    userId,
+    "favorites"
+  );
+});
+
+router.get("/:userId/movies/favorites", async (req, res) => {
+  userId = req.params.userId;
+  return await getMovies(
+    req,
+    res,
+    getFavoriteMoviesByUser,
+    userId,
+    "favorites"
+  );
+});
+
+router.get("/:userId/movies/wanttowatch", async (req, res) => {
+  userId = req.params.userId;
+  return await getMovies(
+    req,
+    res,
+    getWantToWatchMoviesByUser,
+    userId,
+    "want to watch"
+  );
 });
 
 router.get("/:userId/tvshows/wanttowatch", async (req, res) => {
-  return await getMedia(req, res, getWantToWatchTVShowsByUser, "want to watch");
+  userId = req.params.userId;
+  return await getMovies(
+    req,
+    res,
+    getWantToWatchTVShowsByUser,
+    userId,
+    "want to watch"
+  );
 });
 
 router.get("/:userId/stats", async (req, res) => {

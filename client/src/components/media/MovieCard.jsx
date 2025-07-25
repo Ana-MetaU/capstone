@@ -7,17 +7,15 @@ import {
   UnWatchButton,
 } from "../UI/Buttons";
 import "./MovieCard.css";
-import {getImage} from "../../utils/MediaApiUtils";
 
-function MovieCard({props, onClick, showAction}) {
+function MovieCard({props, onClick}) {
   const {toggleWantToWatch, toggleFavorite} = useContext(MovieContext);
-  console.log("what", props)
+
   const handleFavorite = () => {
     toggleFavorite(props);
   };
 
   const handleWantToWatch = () => {
-    console.log("props", props);
     toggleWantToWatch(props);
   };
 
@@ -27,24 +25,25 @@ function MovieCard({props, onClick, showAction}) {
       <img
         className="poster"
         onClick={onClick}
-        src={getImage(props.poster_path)}
+        src={
+          props.poster_path
+            ? "https://image.tmdb.org/t/p/w500" + `${props.poster_path}`
+            : "/notfound.png"
+        }
         alt={props.title}
       />
 
       <div className="movie-actions">
         <h3 className="movie-title">{props.title}</h3>
+        <div className="movie-buttons">
+          <button className="watch-button" onClick={handleWantToWatch}>
+            {props.isWantToWatch ? <UnWatchButton /> : <WatchButton />}
+          </button>
 
-        {showAction && (
-          <div className="movie-buttons">
-            <button className="watch-button" onClick={handleWantToWatch}>
-              {props.isWantToWatch ? <UnWatchButton /> : <WatchButton />}
-            </button>
-
-            <button className="favorite-button" onClick={handleFavorite}>
-              {props.isFavorite ? <UnHeartButton /> : <HeartButton />}
-            </button>
-          </div>
-        )}
+          <button className="favorite-button" onClick={handleFavorite}>
+            {props.isFavorite ? <UnHeartButton /> : <HeartButton />}
+          </button>
+        </div>
       </div>
     </div>
   );

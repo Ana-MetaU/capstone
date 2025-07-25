@@ -6,112 +6,28 @@ async function getFeed(userId, page, limit) {
   try {
     const offset = parseInt(page - 1) * limit;
     const query = `
-  MATCH (author: User)-[:HAS_PROFILE]->(profile: Profile {privacyLevel: 'public'})
-MATCH (author)-[watched: WATCHED]->(content)
-WHERE (content:Movie OR content:TVShow)
-AND author.id <> $userId
-RETURN watched {
-  .id,
-  .rating,
-  .review,
-  .watchedAt
-} as post,
-author {
-  .id,
-  .username
-} as author,
-profile {
-  .profilePicture,
-  .privacyLevel
-} as profile,
-content {
-  .title,
-  .posterPath,
-  .overview
-} as contentDetails,
-labels(content)[0] as contentType,
-size(coalesce(watched.likedBy,[])) as likesCount,
-size(coalesce(watched.commentTexts, [])) as commentsCount,
-$userId IN coalesce(watched.likedBy, []) as userLiked,
-id(watched) as watchedId,
-'public' as category
+  MATCH (currentUser:User {id: $userId})-[:FOLLOWS]->(friend:User)-[w:WATCHED]->(content)
+  WHERE content:Movie OR content:TVShow
+  MATCH (friend)-[:HAS_PROFILE]->(friendProfile:Profile)
 
-UNION
-
-MATCH (me: User {id: $userId})
-MATCH (author: User)-[:HAS_PROFILE]->(profile: Profile {privacyLevel: 'friends_of_friends'})
-MATCH (author)-[watched: WATCHED]->(content)
-WHERE (content:Movie OR content:TVShow)
-AND author.id <> me
-AND (
-  (me)-[:FOLLOWS]->(author)  
-  OR 
-  EXISTS {
-    MATCH (me)-[:FOLLOWS]->(someone:User)-[:FOLLOWS]->(author)
-  }
-)
-RETURN watched {
-  .id,
-  .rating,
-  .review,
-  .watchedAt
-} as post,
-author {
-  .id,
-  .username
-} as author,
-profile {
-  .profilePicture,
-  .privacyLevel
-} as profile,
-content {
-  .title,
-  .posterPath,
-  .overview
-} as contentDetails,
-labels(content)[0] as contentType,
-size(coalesce(watched.likedBy,[])) as likesCount,
-size(coalesce(watched.commentTexts, [])) as commentsCount,
-$userId IN coalesce(watched.likedBy, []) as userLiked,
-id(watched) as watchedId,
-'friends_of_friends' as category
-
-UNION
-
-MATCH (me: User {id: $userId})-[:FOLLOWS]->(author: User)
-MATCH (author)-[:HAS_PROFILE]->(profile: Profile {privacyLevel: 'friends_only'})
-MATCH (author)-[watched: WATCHED]->(content)
-WHERE (content: Movie OR content: TVShow)
-AND author <> me
-RETURN watched {
-  .id,
-  .rating,
-  .review,
-  .watchedAt
-} as post,
-author {
-  .id,
-  .username
-} as author,
-profile {
-  .profilePicture,
-  .privacyLevel
-} as profile,
-content {
-  .title,
-  .posterPath,
-  .overview
-} as contentDetails,
-labels(content)[0] as contentType,
-size(coalesce(watched.likedBy,[])) as likesCount,
-size(coalesce(watched.commentTexts, [])) as commentsCount,
-$userId IN coalesce(watched.likedBy, []) as userLiked,
-id(watched) as watchedId,
-'friends_only' as category
-
-ORDER BY post.createdAt DESC
-SKIP $offset
-LIMIT $limit
+  RETURN
+    friend.username AS friendUsername,
+    friend.id AS friendId,
+    friendProfile.profilePicture AS friendProfilePicture,
+    w.rating AS rating,
+    w.review AS review,
+    w.watchedAt AS watchedAt,
+    content.title AS contentTitle,
+    content.posterPath AS contentPoster,
+    content.overview AS contentOverview,
+    labels(content)[0] AS contentType,
+    size(coalesce(w.likedBy,[])) as likesCount,
+    size(coalesce(w.commentTexts, [])) as commentsCount,
+    $userId IN coalesce(w.likedBy, []) as userLiked,
+    id(w) as watchedId
+  ORDER BY w.watchedAt DESC
+  SKIP $offset
+  LIMIT $limit
 `;
     const params = {
       userId,
@@ -124,21 +40,20 @@ LIMIT $limit
     const feedItems = result.records.map((record) => ({
       watchedId: record.get("watchedId").toString(),
       friend: {
-        id: record.get("author").id,
-        username: record.get("author").username,
-        profilePicture: record.get("profile").profilePicture,
-        privacyLevel: record.get("profile").privacyLevel,
+        id: record.get("friendId"),
+        username: record.get("friendUsername"),
+        profilePicture: record.get("friendProfilePicture"),
       },
       content: {
-        title: record.get("contentDetails").title,
-        posterPath: record.get("contentDetails").posterPath,
-        overview: record.get("contentDetails").overview,
+        title: record.get("contentTitle"),
+        posterPath: record.get("contentPoster"),
+        overview: record.get("contentOverview"),
         type: record.get("contentType"),
       },
       rating: {
-        rating: record.get("post").rating,
-        review: record.get("post").review,
-        watchedAt: record.get("post").watchedAt.toString(),
+        rating: record.get("rating"),
+        review: record.get("review"),
+        watchedAt: record.get("watchedAt").toString(),
       },
       interactions: {
         likesCount: record.get("likesCount").toNumber(),

@@ -1,8 +1,11 @@
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = " https://capstone-2m9n.onrender.com";
 export const getUserProfileByUsername = async (username) => {
   try {
     const response = await fetch(`${BASE_URL}/users/${username}`, {
       credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     const data = await response.json();
@@ -33,6 +36,9 @@ export const searchUsersByUsername = async (query) => {
       `${BASE_URL}/users/search?q=${encodeURIComponent(query)}`,
       {
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
 
@@ -62,6 +68,9 @@ export const getUserStats = async (userId) => {
   try {
     const response = await fetch(`${BASE_URL}/users/${userId}/stats`, {
       credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     const data = await response.json();
@@ -89,6 +98,9 @@ export const getUserWatchedMovies = async (userId) => {
   try {
     const response = await fetch(`${BASE_URL}/users/${userId}/movies/watched`, {
       credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     const data = await response.json();
@@ -118,6 +130,9 @@ export const getUserWatchedShows = async (userId) => {
       `${BASE_URL}/users/${userId}/tvshows/watched`,
       {
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
 
@@ -148,6 +163,9 @@ export const getUserFavoriteShows = async (userId) => {
       `${BASE_URL}/users/${userId}/tvshows/favorites`,
       {
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
 
@@ -178,6 +196,9 @@ export const getUserFavoriteMovies = async (userId) => {
       `${BASE_URL}/users/${userId}/movies/favorites`,
       {
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
 
@@ -208,6 +229,9 @@ export const getUserWantToWatchMovies = async (userId) => {
       `${BASE_URL}/users/${userId}/movies/wanttowatch`,
       {
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
 
@@ -238,6 +262,9 @@ export const getUserWantToWatchShows = async (userId) => {
       `${BASE_URL}/users/${userId}/tvshows/wanttowatch`,
       {
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
 

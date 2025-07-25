@@ -102,6 +102,7 @@ export async function getRandomShows() {
       );
 
       shows.push(...pageShows);
+      console.log("shows", shows);
     } catch (error) {
       console.error("Error fetching page:", error);
     }

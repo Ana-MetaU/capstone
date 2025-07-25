@@ -35,7 +35,7 @@ const LogIn = () => {
           if (!profile.hasProfile) {
             await createUserProfile(result.user.id, {
               bio: null,
-              privacyLevel: "public",
+              isPublic: true,
               profilePicture: null,
               favoriteGenres: null,
             });

@@ -1,31 +1,13 @@
 import {useState, useEffect} from "react";
 import {getUserProfile, updateProfilePrivacy} from "../../api/ProfileApi";
 import {useUser} from "../../context/UserContext";
-import "./Settings.css";
+
 function Settings() {
   const {user} = useUser();
-  const [privacyLevel, setPrivacyLevel] = useState("public");
+  const [isPublic, setIsPublic] = useState(true);
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(false);
 
-  const privacyOptions = [
-    {
-      value: "friends_only",
-      label: "Private",
-      description: "Only your friends can see your profile and posts",
-    },
-    {
-      value: "friends_of_friends",
-      label: "Friends of Friends",
-      description:
-        "Your friends and and their friends can see your profile and posts",
-    },
-    {
-      value: "public",
-      label: "Public",
-      description: "Everyone can see your profile and posts",
-    },
-  ];
   useEffect(() => {
     fetchPrivacySettings();
   }, [user]);
@@ -39,7 +21,7 @@ function Settings() {
     try {
       const result = await getUserProfile(user.id);
       if (result.success) {
-        setPrivacyLevel(result.profile.privacyLevel);
+        setIsPublic(result.profile.isPublic);
       }
     } catch (error) {
       console.log("failed to fetch privacy settings", error);
@@ -55,11 +37,9 @@ function Settings() {
 
     setUpdating(true);
     try {
-      const result = await updateProfilePrivacy(user.id, {
-        privacyLevel: newSetting,
-      });
+      const result = await updateProfilePrivacy(user.id, newSetting);
       if (result.success) {
-        setPrivacyLevel(newSetting);
+        setIsPublic(newSetting);
       }
     } catch (error) {
       console.log("error updating privacy", error);
@@ -79,32 +59,26 @@ function Settings() {
   return (
     <div>
       <h2>Settings</h2>
-      <h3>Visibility</h3>
 
       <div className="privacy">
-x        {privacyOptions.map((option) => (
-          <label key={option.value} className="privacy-label">
-            <div className="privacy-option">
-              <input
-                type="radio"
-                name="privacy"
-                value={option.value}
-                checked={privacyLevel === option.value}
-                onChange={(e) => handlePrivacyChange(e.target.value)}
-                disabled={updating}
-              ></input>
-            </div>
-            <p>{option.label}</p>
-          </label>
-        ))}{" "}
+        <h3>Privacy Settings</h3>
+        <label>
+          <input
+            type="checkbox"
+            checked={isPublic}
+            onChange={(e) => handlePrivacyChange(e.target.checked)}
+            disabled={updating}
+          ></input>
+          Make my profile public
+        </label>
+
         <p>
-          currently selected:
-          {
-            privacyOptions.find((option) => option.value === privacyLevel)
-              ?.description
-          }
+          {isPublic
+            ? "Your profile is now public. Others can see your posts and follow you"
+            : "Your profile is now private. Others need to request to see your content"}
         </p>
         {updating && <p>updating...</p>}
+        
       </div>
     </div>
   );

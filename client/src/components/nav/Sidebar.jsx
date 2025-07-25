@@ -20,8 +20,10 @@ const Sidebar = ({activeIcon, onActiveIconChange}) => {
   const [searchValue, setSearchValue] = useState("");
 
   const handleLogout = async () => {
+    console.log("Hello");
     try {
       const result = await userLogout();
+      console.log("what", result);
       if (result.success) {
         setUser(null);
         window.location.replace("/");
@@ -63,6 +65,7 @@ const Sidebar = ({activeIcon, onActiveIconChange}) => {
   };
 
   const renderItems = () => {
+    console.log("actuve icon", activeIcon);
     return items.map((item) => (
       <button
         key={item.id}

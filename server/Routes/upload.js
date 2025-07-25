@@ -1,16 +1,24 @@
 const express = require("express");
 const multer = require("multer");
+const cloudinary = require("cloudinary").v2;
+const {CloudinaryStorage} = require("multer-storage-cloudinary");
 const router = express.Router();
 
-// For handling file paths
-// Configure storage for Multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/profile"); // Destination folder for uploaded files
-  },
-  filename: (req, file, cb) => {
-    // Generate a unique filename to avoid collisions
-    cb(null, Date.now() + "-" + file.originalname);
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "profile_avatars",
+    allowed_formats: ["jpg", "png", "jpeg", "webp", "gif"],
+    public_id: (req, file) => {
+      // Customize the public ID if needed
+      return `my_file_${Date.now()}`;
+    },
   },
 });
 
@@ -21,8 +29,8 @@ router.post("/profile-picture", upload.single("ProfilePicture"), (req, res) => {
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
   }
-  const imageUrl = `http://localhost:3000/uploads/profile/${req.file.filename}`;
-  res.send({success: true, imageUrl: imageUrl});
+
+  res.send({success: true, imageUrl: req.file.path});
 });
 
 module.exports = router;

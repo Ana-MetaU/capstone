@@ -1,10 +1,15 @@
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "https://capstone-2m9n.onrender.com";
 
 export const getFeed = async (page = 1, limit = 15) => {
   try {
     const response = await fetch(
       `${BASE_URL}/feed?page=${page}&limit=${limit}`,
-      {credentials: "include"}
+      {
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
 
     const data = await response.json();

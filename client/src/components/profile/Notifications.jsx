@@ -7,7 +7,6 @@ import {
 } from "../../api/FollowApi";
 import {getUserProfile} from "../../api/ProfileApi"; // Import the profile API
 import {useUser} from "../../context/UserContext";
-import Recs from "./Recs";
 import "./Notifications.css";
 
 const Notifications = () => {
@@ -154,9 +153,6 @@ const Notifications = () => {
               </div>
             </div>
           ))}
-      </div>
-      <div className="friend-recs">
-<Recs></Recs>
       </div>
     </div>
   );
