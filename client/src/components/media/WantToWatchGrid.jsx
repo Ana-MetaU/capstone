@@ -2,7 +2,7 @@ import {useState, useEffect} from "react";
 import {getWantToWatchMovies} from "../../api/MovieApi";
 import {getWantToWatchTVShows} from "../../api/TVShowApi";
 import MovieCard from "./MovieCard";
-import "./movieGrid.css";
+import "./MovieGrid.css";
 const WantToWatchGrid = () => {
   const [wantToWatch, setWantToWatch] = useState([]);
   const [loading, setLoading] = useState(true);
