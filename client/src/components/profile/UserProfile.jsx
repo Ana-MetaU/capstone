@@ -30,7 +30,7 @@ const UserProfile = () => {
   }, [username]);
   useEffect(() => {
     canViewContent();
-  }, [UserProfile?.userId, followStatus]);
+  }, [UserProfile?.userId, followStatus, UserProfile?.privacyLevel]);
 
   useEffect(() => {
     checkFollowStatus();
