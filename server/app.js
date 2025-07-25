@@ -42,9 +42,8 @@ app.use(
   })
 );
 
-const upload = require("./Routes/upload.js");
-app.use("/upload", upload);
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+const profilePictureRouter = require("./Routes/upload.js");
+app.use("/upload", profilePictureRouter);
 
 const auth = require("./Routes/auth.js");
 app.use("/auth", auth);
