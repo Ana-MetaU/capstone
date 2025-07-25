@@ -12,7 +12,7 @@ export const addWatchedTVShow = async (showData) => {
         tvdbId: showData.tvdbId,
         posterPath: showData.posterPath,
         name: showData.name,
-        overview: showData.name,
+        overview: showData.overview,
         rating: showData.rating,
         review: showData.review,
       }),
@@ -108,6 +108,8 @@ export const addFavoriteTVShow = async (showData) => {
       body: JSON.stringify({
         tvdbId: showData.tvdbId,
         posterPath: showData.posterPath,
+        name: showData.name,
+        overview: showData.overview,
       }),
     });
 
@@ -176,6 +178,8 @@ export const addWantToWatchTVShow = async (showData) => {
       body: JSON.stringify({
         tvdbId: showData.tvdbId,
         posterPath: showData.posterPath,
+        name: showData.posterPath,
+        overview: showData.posterPath,
       }),
     });
 
