@@ -255,7 +255,7 @@ router.get("/status/:userId", requireLogin, async (req, res) => {
       });
     }
 
-    incoming = await findFollowRequest(userId, targetUserId);
+    const incoming = await findFollowRequest(userId, targetUserId);
     if (incoming && incoming.status === "pending") {
       return res.json({
         success: true,
