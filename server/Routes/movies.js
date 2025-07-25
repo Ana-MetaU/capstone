@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const {SUCCESS} = require("../database/constants.js");
+const {requireLogin} = require("../middleware/requireLogin.js");
 const {
   addWatchedMovie,
   getWatchedMoviesByUser,
@@ -15,7 +16,8 @@ const {
   removeWatchedMovie,
 } = require("../database/movieUtils.js");
 
-// Helper function for input validation
+router.use(requireLogin);
+
 const validateInput = (input) => {
   const {tmdbId} = input;
   if (!tmdbId) {
@@ -24,12 +26,39 @@ const validateInput = (input) => {
   return SUCCESS;
 };
 
+const buildMovieBody = (body, userId, type) => {
+  const {tmdbId, posterPath, title, overview, rating, review} = body;
+
+  if (type === "watched") {
+    return {
+      userId,
+      tmdbId,
+      posterPath,
+      title,
+      overview,
+      rating,
+      review,
+    };
+  } else if (type === "currently watching") {
+    return {
+      userId,
+      tmdbId,
+      posterPath,
+      title,
+      review,
+    };
+  } else {
+    return {
+      userId,
+      tmdbId,
+      posterPath,
+      title,
+      overview,
+    };
+  }
+};
 // Generic GET movies handler
 async function getMovies(req, res, fetchFunction, type) {
-  if (!req.session.userId) {
-    return res.status(401).json({error: "log in first"});
-  }
-
   try {
     const fetchedMovies = await fetchFunction(req.session.userId);
     res.status(200).json({
@@ -44,52 +73,15 @@ async function getMovies(req, res, fetchFunction, type) {
 
 // Generic POST movies handler
 async function postMovie(req, res, postFunction, type) {
-  if (!req.session.userId) {
-    return res
-      .status(401)
-      .json({error: "authentication required. Log in first"});
-  }
-
+  const {tmdbId} = req.body;
   try {
-    const {tmdbId, posterPath, title, overview, rating, review} = req.body;
-
     // Validate required input
     const validInput = validateInput({tmdbId});
     if (validInput !== SUCCESS) {
       return res.status(400).json({error: validInput});
     }
 
-    let movieData;
-
-    if (type === "watched") {
-      movieData = {
-        userId: req.session.userId,
-        tmdbId,
-        posterPath,
-        title,
-        overview,
-        rating,
-        review,
-      };
-    } else if (type === "currently watching") {
-      movieData = {
-        userId: req.session.userId,
-        tmdbId,
-        posterPath,
-        title,
-        review,
-      };
-    } else {
-      // favorites and want-to-watch movieData
-      movieData = {
-        userId: req.session.userId,
-        tmdbId,
-        posterPath,
-        title,
-        overview,
-      };
-    }
-
+    const movieData = buildMovieBody(req.body, req.session.userId, type);
     const result = await postFunction(movieData);
 
     res.status(201).json({
@@ -107,12 +99,6 @@ async function postMovie(req, res, postFunction, type) {
 // Generic DELETE movies handler
 async function deleteMovie(req, res, deleteFunction, type) {
   const {tmdbId} = req.params;
-
-  if (!req.session.userId) {
-    return res
-      .status(401)
-      .json({error: "authentication required. Log in first"});
-  }
 
   try {
     const validInput = validateInput({tmdbId});

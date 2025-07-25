@@ -26,6 +26,7 @@ const MovieGrid = () => {
         isOpen={!!selectedMovie}
         onClose={closeModal}
         movie={selectedMovie}
+
       ></MovieModal>
     </div>
   );

@@ -16,6 +16,7 @@ const MovieRow = ({movies, title}) => {
         key={movie.id}
         props={movie}
         onClick={() => openModal(movie)}
+        showAction={true}
       />
     ));
   };

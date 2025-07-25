@@ -99,6 +99,7 @@ export const getWantToWatchMovies = async () => {
 };
 
 export const addFavoriteMovie = async (movieData) => {
+  console.log("what are we getting", movieData);
   try {
     const response = await fetch(`${BASE_URL}/movies/favorites`, {
       method: "POST",

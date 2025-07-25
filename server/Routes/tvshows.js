@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const {SUCCESS} = require("../database/constants.js");
+const {requireLogin} = require("../middleware/requireLogin.js");
+
 const {
   addWatchedTVShow,
   getWatchedTVShowsByUser,
@@ -14,6 +16,7 @@ const {
   addFavoriteTVShow,
   removeWatchedTVShow,
 } = require("../database/tvShowUtils.js");
+router.use(requireLogin);
 
 // Helper function for input validation
 const validateInput = (input) => {
@@ -24,20 +27,47 @@ const validateInput = (input) => {
   return SUCCESS;
 };
 
+const buildShowBody = (body, userId, type) => {
+  const {tvdbId, posterPath, rating, name, overview, review} = body;
+
+  if (type === "watched") {
+    return {
+      userId,
+      tvdbId,
+      posterPath,
+      name,
+      overview,
+      rating,
+      review,
+    };
+  } else if (type === "currently watching") {
+    return {
+      userId,
+      tvdbId,
+      name,
+      overview,
+      review,
+      posterPath,
+    };
+  } else {
+    return {
+      userId,
+      tvdbId,
+      name,
+      overview,
+      posterPath,
+    };
+  }
+};
+
 // Generic GET TV shows handler
 async function getTVShows(req, res, fetchFunction, type) {
-  if (!req.session.userId) {
-    return res.status(401).json({error: "log in first"});
-  }
-
   try {
     const fetchedTVShows = await fetchFunction(req.session.userId);
     res.status(200).json({
       message: `${type} TV shows fetched successfully`,
       shows: fetchedTVShows,
     });
-
-    console.log("getting movies", fetchedTVShows);
   } catch (error) {
     console.log(`Error fetching ${type} TV shows:`, error);
     res.status(500).json({error: `Failed to fetch ${type} TV shows`});
@@ -46,14 +76,8 @@ async function getTVShows(req, res, fetchFunction, type) {
 
 // Generic POST TV shows handler
 async function postTVShow(req, res, postFunction, type) {
-  if (!req.session.userId) {
-    return res
-      .status(401)
-      .json({error: "authentication required. Log in first"});
-  }
-
   try {
-    const {tvdbId, posterPath, rating, name,overview, review} = req.body;
+    const {tvdbId, posterPath, rating, name, overview, review} = req.body;
 
     // Validate required input
     const validInput = validateInput({tvdbId});
@@ -61,35 +85,7 @@ async function postTVShow(req, res, postFunction, type) {
       return res.status(400).json({error: validInput});
     }
 
-    let showData;
-
-    if (type === "watched") {
-      showData = {
-        userId: req.session.userId,
-        tvdbId,
-        posterPath,
-        name,
-        overview,
-        rating,
-        review,
-      };
-    } else if (type === "currently watching") {
-      showData = {
-        userId: req.session.userId,
-        tvdbId,
-        name,
-        overview,
-        posterPath,
-        review,
-      };
-    } else {
-      // favorites and want-to-watch showData
-      showData = {
-        userId: req.session.userId,
-        tvdbId,
-        posterPath,
-      };
-    }
+    const showData = buildShowBody(req.body, req.session.userId, type);
 
     const result = await postFunction(showData);
 
@@ -108,12 +104,6 @@ async function postTVShow(req, res, postFunction, type) {
 // Generic DELETE TV shows handler
 async function deleteTVShow(req, res, deleteFunction, type) {
   const {tvdbId} = req.params;
-
-  if (!req.session.userId) {
-    return res
-      .status(401)
-      .json({error: "authentication required. Log in first"});
-  }
 
   try {
     const validInput = validateInput({tvdbId});

@@ -103,6 +103,7 @@ const SearchResults = () => {
         key={item.id}
         props={item}
         onClick={() => handleMovieClick(item)}
+        showAction={true}
       ></MovieCard>
     );
   };

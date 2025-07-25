@@ -2,6 +2,8 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 const {SUCCESS, USER_NOT_FOUND} = require("../database/constants.js");
+const {requireAuth} = require("../middleware/requireLogin.js");
+
 const {
   createUser,
   checkUserExists,
@@ -110,11 +112,7 @@ router.post("/logout", (req, res) => {
   });
 });
 
-router.get("/me", async (req, res) => {
-  if (!req.session.userId) {
-    return res.status(401).json({message: "Not logged in"});
-  }
-
+router.get("/me", requireAuth, async (req, res) => {
   try {
     const user = getUserById(req.session.userId);
     res.json({id: req.session.userId, username: req.session.username});
