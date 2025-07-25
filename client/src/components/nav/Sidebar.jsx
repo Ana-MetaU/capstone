@@ -33,7 +33,6 @@ const Sidebar = ({activeIcon, onActiveIconChange}) => {
     }
   };
   const handleSearch = () => {
-    console.log("searching for ", searchValue);
 
     if (searchValue.trim()) {
       navigate(`/search?q=${searchValue}`);

@@ -7,7 +7,6 @@ import "./MovieRowsPage.css";
 const TvShowRowsPage = () => {
   const {shows, selectedTVShow, closeModal, loading} =
     useContext(TVShowContext);
-  console.log("shows in the display", selectedTVShow);
 
   if (loading) {
     return (

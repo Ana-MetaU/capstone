@@ -11,7 +11,6 @@ function CommentSection({watchedId}) {
 
   useEffect(() => {
     loadComments();
-    console.log("comments", comments);
   }, [watchedId, submitLoading]);
 
   const loadComments = async () => {

@@ -50,7 +50,6 @@ export const FeedProvider = ({children}) => {
         setFeedItems((prev) => [...prev, ...result.feed]); //BUG FIXED: I was not spreading each individual feeditem f
         setCurrentPage(nextPage);
         setHasNextPage(result.pagination.hasNextPage);
-        console.log("so once we get to second", result.feed);
       } else {
         setError(result.message);
       }
@@ -63,7 +62,6 @@ export const FeedProvider = ({children}) => {
   };
 
   const toggleLike = async (watchedId, isCurrentlyLiked) => {
-    console.log("omg is this working");
     setFeedItems((prevItems) =>
       prevItems.map((item) => {
         if (item.watchedId === watchedId) {

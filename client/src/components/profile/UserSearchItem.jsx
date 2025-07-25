@@ -8,11 +8,6 @@ const UserSearchItem = ({user, currentUser}) => {
     return null;
   }
 
-  useEffect(() => {
-    // 1. check relationship status
-    console.log("checking relationship status for user", user.username);
-  }, [user.userId]);
-
   const handleProfileClick = () => {
     navigate(`/profile/${user.username}`);
   };

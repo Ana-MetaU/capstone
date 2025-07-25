@@ -28,7 +28,6 @@ export const getUserProfileByUsername = async (username) => {
 
 export const searchUsersByUsername = async (query) => {
   try {
-    console.log("frotnend calling");
     const response = await fetch(
       `${BASE_URL}/users/search?q=${encodeURIComponent(query)}`,
       {

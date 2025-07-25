@@ -49,7 +49,6 @@ export const getWatchedTVShows = async () => {
 
     const data = await response.json();
     if (response.ok) {
-      console.log("what are we getting", data.shows);
       return {
         success: true,
         shows: data.shows,
@@ -256,6 +255,36 @@ export const getFavoriteTVShows = async () => {
     }
   } catch (error) {
     console.log("getting favorites error: ", error);
+    return {
+      success: false,
+      message: "Exception occurred in request",
+    };
+  }
+};
+
+export const getCurrentlyWatchingTVShows = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/tvshows/currentlywatching`, {
+      credentials: "include",
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return {
+        success: true,
+        shows: data.shows,
+      };
+    } else {
+      return {
+        success: false,
+        message:
+          data.error ||
+          "Something went wrong while getting currently watching TV shows.",
+      };
+    }
+  } catch (error) {
+    console.log("Error fetching currently watching TV shows:", error);
     return {
       success: false,
       message: "Exception occurred in request",

@@ -40,7 +40,6 @@ const SearchResults = () => {
     setIsLoading(true);
     try {
       const result = await searchUsersByUsername(query);
-      console.log("result", result);
       if (result.success) {
         setUserResults(result.results || []);
       } else {
@@ -67,8 +66,6 @@ const SearchResults = () => {
         searchShows(query),
       ]);
 
-      console.log("movie response", movieResponse);
-      console.log("show repsonse", showResponse);
       const movies = movieResponse.success ? movieResponse.results : [];
       const shows = showResponse.success ? showResponse.results : [];
 
@@ -83,7 +80,6 @@ const SearchResults = () => {
       );
 
       const combined = [...movieResults, ...showResults];
-      console.log("combined", combined);
       setMediaResults(combined);
     } catch (error) {
       console.log("failed to search media", error);

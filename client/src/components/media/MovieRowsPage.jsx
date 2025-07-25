@@ -8,7 +8,6 @@ const MovieRowsPage = () => {
   const {movies, loading} =
     useContext(MovieContext);
 
-  console.log("entonces esto era el problema", movies);
   if (loading) {
     return (
       <div className="loading-container">

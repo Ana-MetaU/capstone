@@ -14,8 +14,6 @@ const WatchedGrid = ({userId}) => {
   const fetchWatched = async () => {
     const movies = await getUserWatchedMovies(userId);
     const shows = await getUserWatchedShows(userId);
-    console.log("ahh", movies);
-    console.log("omg", shows);
     if (movies.success && shows.success && movies.movies && shows.shows) {
       const all = [...movies.movies, ...shows.shows];
       setWatched((prevItems) => [...prevItems, ...all]);

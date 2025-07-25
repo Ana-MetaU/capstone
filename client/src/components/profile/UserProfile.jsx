@@ -11,9 +11,9 @@ import {
 import {useParams} from "react-router-dom";
 import {useUser} from "../../context/UserContext";
 import {LockButton} from "../UI/Buttons";
-import "./UserProfile.css";
 import {getUserProfileByUsername, getUserStats} from "../../api/UsersApi";
 import MovieTabs from "./ProfileMedia/MovieTabs";
+import "./UserProfile.css";
 const UserProfile = () => {
   const {username} = useParams(); //username of the clicked user
   const {user} = useUser();
@@ -87,7 +87,6 @@ const UserProfile = () => {
 
     try {
       if (followStatus === "none") {
-        console.log("calling followerUser for ", UserProfile.userId);
         const result = await followUser(UserProfile.userId);
         if (result.success) {
           await checkFollowStatus();
@@ -107,12 +106,11 @@ const UserProfile = () => {
         }
       } else if (followStatus === "request sent") {
         const result = await cancelFollowRequest(UserProfile.userId);
-        console.log("result of cancel", result);
         if (result.success) {
           await checkFollowStatus();
           await canViewContent();
         } else {
-          console.log("cancling request erorr", result.message);
+          console.log("canceling request erorr", result.message);
         }
       }
     } catch (error) {
@@ -127,7 +125,6 @@ const UserProfile = () => {
     setFollowLoading(true);
 
     try {
-      console.log("accepting follow request from ", UserProfile.username);
       const result = await acceptFollowRequest(UserProfile.userId);
 
       if (result.success) {

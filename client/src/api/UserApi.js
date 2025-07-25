@@ -39,7 +39,6 @@ export const userLogin = async (formData) => {
     });
 
     const data = await response.json();
-    console.log("status", response);
 
     if (response.ok) {
       return {
