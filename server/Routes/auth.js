@@ -94,7 +94,14 @@ router.post("/login", async (req, res) => {
     // Store user ID and username in the session
     req.session.userId = user.id;
     req.session.username = user.username;
-    res.json({id: user.id, username: user.username});
+    req.session.save((err) => {
+      if (err) {
+        console.error("Failed to save session:", err);
+        return res.status(500).json({error: "Session save error"});
+      }
+      res.json({id: user.id, username: user.username});
+    });
+    console.log("Session after save:", req.session);
   } catch (error) {
     console.error(error);
     res.status(500).json({error: "Something went wrong during login"});
@@ -114,7 +121,7 @@ router.post("/logout", (req, res) => {
 
 router.get("/me", requireAuth, async (req, res) => {
   try {
-    const user = getUserById(req.session.userId);
+    const user = await getUserById(req.session.userId);
     res.json({id: req.session.userId, username: req.session.username});
   } catch (error) {
     console.error(error);

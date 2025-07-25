@@ -1,6 +1,5 @@
-const BASE_URL = "http://localhost:3000";
+import {BASE_URL} from "./constants";
 
-//TODO: refactor this (movieApi is basically the same as this)
 export const addWatchedTVShow = async (showData) => {
   try {
     const response = await fetch(`${BASE_URL}/tvshows/watched`, {

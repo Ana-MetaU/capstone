@@ -5,27 +5,25 @@ const express = require("express");
 var session = require("express-session");
 const app = express();
 const cors = require("cors");
+const {PrismaSessionStore} = require("@quixo3/prisma-session-store");
 const {connectDB} = require("./database/neo4j");
 const PORT = process.env.PORT || 3000;
+
+prisma = require("./prisma/client.js");
+const path = require("path");
+app.use(express.json());
+connectDB();
+app.set("trust proxy", 1);
 
 // Configure CORS to allow requests from your frontend's origin and include credentials
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://cine-plus.onrender.com",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-app.use(express.json());
-
-const path = require("path");
-const upload = require("./Routes/upload.js");
-app.use("/upload", upload);
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-connectDB();
 
 // NOTE: setting the httpOnly: true means I won't be able to access from the clieint side.
 app.use(
@@ -33,9 +31,21 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: {secure: false, httpOnly: true, maxAge: 365 * 24 * 60 * 60 * 1000},
+    store: new PrismaSessionStore(prisma, {
+      dbRecordIdIsSessionId: true,
+    }),
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: process.env.NODE_ENV === "production",
+    },
   })
 );
+
+const path = require("path");
+const upload = require("./Routes/upload.js");
+app.use("/upload", upload);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const auth = require("./Routes/auth.js");
 app.use("/auth", auth);

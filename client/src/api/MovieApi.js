@@ -1,5 +1,4 @@
-const BASE_URL = "http://localhost:3000";
-
+import {BASE_URL} from "./constants";
 // TODO: refactor this code
 export const addWatchedMovie = async (movieData) => {
   try {

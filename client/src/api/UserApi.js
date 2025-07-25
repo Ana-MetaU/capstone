@@ -1,5 +1,4 @@
-const BASE_URL = "http://localhost:3000";
-
+import {BASE_URL} from "./constants";
 export const userSignup = async (formData) => {
   try {
     const response = await fetch(`${BASE_URL}/auth/signup`, {
@@ -7,6 +6,7 @@ export const userSignup = async (formData) => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify(formData),
     });
 

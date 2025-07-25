@@ -1,4 +1,3 @@
-//TODO: refactor (due by July 25)
 import {
   getCurrentDate,
   getDateThreeMonthsLater,
