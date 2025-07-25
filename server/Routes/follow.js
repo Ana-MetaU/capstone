@@ -36,7 +36,7 @@ router.post("/follow/:userId", requireLogin, async (req, res) => {
     if (privacyInfo.privacyLevel === "public") {
       await createFollowRelationship(followerId, followeeId);
 
-      res.status(201).json({
+      return res.status(201).json({
         success: true,
         message: "successfully followed user",
       });
@@ -44,11 +44,10 @@ router.post("/follow/:userId", requireLogin, async (req, res) => {
       const isFriendOfFriend = await isFriendOfFriends(followerId, followeeId);
       if (isFriendOfFriend) {
         await createFollowRelationship(followerId, followeeId);
-        res.status(201).json({
+        return res.status(201).json({
           success: true,
           message: "successfully followed user",
         });
-        return;
       }
     }
     // For all other cases (including not friend_of_friend), send follow request
@@ -57,13 +56,13 @@ router.post("/follow/:userId", requireLogin, async (req, res) => {
       return res.status(400).json({error: "there is already a follow request"});
     }
     await createFollowRequest(followerId, followeeId);
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Follow request sent",
     });
   } catch (error) {
     console.error("Error sending friend request:", error);
-    res.status(500).json({error: "Failed to follow request"});
+    return res.status(500).json({error: "Failed to follow request"});
   }
 });
 
