@@ -246,20 +246,20 @@ router.get("/status/:userId", requireLogin, async (req, res) => {
       });
     }
 
-    const pending = await findFollowRequest(userId, targetUserId);
+    const pending = await findFollowRequest(targetUserId, userId);
 
     if (pending && pending.status === "pending") {
       return res.json({
         success: true,
-        status: "request sent",
+        status: "request recieved",
       });
     }
 
-    incoming = await findFollowRequest(targetUserId, userId);
+    incoming = await findFollowRequest(userId, targetUserId);
     if (incoming && incoming.status === "pending") {
       return res.json({
         success: true,
-        status: "request recieved",
+        status: "request sent",
       });
     }
 
