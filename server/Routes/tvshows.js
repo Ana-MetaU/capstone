@@ -53,9 +53,9 @@ const buildShowBody = (body, userId, type) => {
     return {
       userId,
       tvdbId,
+      posterPath,
       name,
       overview,
-      posterPath,
     };
   }
 };
