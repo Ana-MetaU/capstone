@@ -2,6 +2,8 @@ const BASE_URL = "http://localhost:3000";
 
 export const followUser = async (userId) => {
   try {
+    console.log("supp");
+
     const response = await fetch(
       `${BASE_URL}/follow-requests/follow/${userId}`,
       {
@@ -9,7 +11,7 @@ export const followUser = async (userId) => {
         credentials: "include",
       }
     );
-
+    console.log("hi", response);
     const data = await response.json();
     if (response.ok) {
       return {
@@ -284,5 +286,38 @@ export const getRecs = async () => {
       success: false,
       message: "Exception occured in request",
     };
+  }
+};
+
+export const checkFriendOfFriendsAcess = async (userId) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/follow-requests/friend-of-friends/${userId}`,
+      {
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("error checking friend of friends access", error);
+  }
+};
+
+export const cancelFollowRequest = async (userId) => {
+  console.log("helloooo");
+  try {
+    const response = await fetch(
+      `${BASE_URL}/follow-requests/cancel-request/${userId}`,
+      {
+        method: "DELETE",
+        credentials: "include",
+      }
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("error canceling follow request", error);
   }
 };

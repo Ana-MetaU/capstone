@@ -10,6 +10,7 @@ const {
   isFollowing,
   removeFollowRelationship,
   getFriendRecommendations,
+  isFriendOfFriends,
 } = require("../database/followUtils");
 
 const {
@@ -36,31 +37,36 @@ router.post("/follow/:userId", async (req, res) => {
       return res.status(400).json({error: "Cannot follow yourself."});
     }
 
-    isPublic = await getProfilePrivacy(followeeId);
-
-    if (isPublic.isPublic) {
+    const privacyInfo = await getProfilePrivacy(followeeId);
+    console.log("privacy", privacyInfo);
+   if (privacyInfo.privacyLevel === "public") {
       await createFollowRelationship(followerId, followeeId);
+
       res.status(201).json({
         success: true,
         message: "successfully followed user",
       });
-    } else {
-      // private profile (send to postgress database first)
-      const existingRequest = await findFollowRequest(followerId, followeeId);
-
-      if (existingRequest) {
-        return res
-          .status(400)
-          .json({error: "there is already a follow request"});
+    } else if (privacyInfo.privacyLevel === "friends_of_friends") {
+      const isFriendOfFriend = await isFriendOfFriends(followerId, followeeId);
+      if (isFriendOfFriend) {
+        await createFollowRelationship(followerId, followeeId);
+        res.status(201).json({
+          success: true,
+          message: "successfully followed user",
+        });
+        return;
       }
-
-      await createFollowRequest(followerId, followeeId);
-
-      res.status(201).json({
-        success: true,
-        message: "Follow request sent",
-      });
     }
+    // For all other cases (including not friend_of_friend), send follow request
+    const existingRequest = await findFollowRequest(followerId, followeeId);
+    if (existingRequest) {
+      return res.status(400).json({error: "there is already a follow request"});
+    }
+    await createFollowRequest(followerId, followeeId);
+    res.status(201).json({
+      success: true,
+      message: "Follow request sent",
+    });
   } catch (error) {
     console.error("Error sending friend request:", error);
     res.status(500).json({error: "Failed to follow request"});
@@ -344,5 +350,61 @@ router.get("/recommendations", async (req, res) => {
     res.status(500).json({error: "Failed to fetch friend recs"});
   }
 });
+router.get("/friend-of-friends/:userId", async (req, res) => {
+  if (!req.session.userId) {
+    return res
+      .status(401)
+      .json({error: "authentication required. Log in first"});
+  }
 
+  try {
+    const currentUserId = req.session.userId;
+    const targetUserId = req.params.userId;
+    const isFriendOfFriend = await isFriendOfFriends(
+      currentUserId,
+      targetUserId
+    );
+
+    res.status(200).json({
+      success: true,
+      hasAccess: isFriendOfFriend,
+    });
+  } catch (error) {
+    console.log("error checking friend of friends", error);
+    res.status(500).json({error: "Failed to check friend of friends access"});
+  }
+});
+
+router.delete("/cancel-request/:userId", async (req, res) => {
+  if (!req.session.userId) {
+    return res
+      .status(401)
+      .json({error: "authentication required. Log in first"});
+  }
+
+  try {
+    const followerId = req.session.userId;
+    const followeeId = req.params.userId;
+
+    const followRequest = await findFollowRequest(followerId, followeeId);
+    if (!followRequest) {
+      return res.status(404).json({error: "Follow request not found"});
+    }
+
+    if (followRequest.status !== "pending") {
+      return res
+        .status(400)
+        .json({error: "cannot cancel request if it is not pending"});
+    }
+    await deleteFollowRequest(followRequest.id);
+
+    res.json({
+      success: true,
+      message: "Follow request canceled",
+    });
+  } catch (error) {
+    console.log("error canceling follow request", error);
+    res.status(500).json({error: "Failed to cancel follow request"});
+  }
+});
 module.exports = router;

@@ -11,7 +11,7 @@ async function searchUserByUsername(searchQuery) {
       p{
       .id,
       .bio,
-      .isPublic,
+      .privacyLevel,
       .profilePicture,
       .favoriteGenres
       } as profile
@@ -28,7 +28,7 @@ async function searchUserByUsername(searchQuery) {
         username: record.get("username"),
         profileId: profile.id,
         bio: profile.bio,
-        isPublic: profile.isPublic,
+        privacyLevel: profile.privacyLevel,
         profilePicture: profile.profilePicture,
         favoriteGenres: profile.favoriteGenres,
       };
@@ -48,7 +48,7 @@ async function getUserProfileByUsername(username) {
       p{
       .id,
       .bio,
-      .isPublic,
+      .privacyLevel,
       .profilePicture,
       .favoriteGenres,
       .createdAt,
@@ -70,7 +70,7 @@ async function getUserProfileByUsername(username) {
       username: record.get("username"),
       id: profile.id,
       bio: profile.bio,
-      isPublic: profile.isPublic,
+      privacyLevel: profile.privacyLevel,
       profilePicture: profile.profilePicture,
       createdAt: profile.createdAt,
       updatedAt: profile.updatedAt,

@@ -60,7 +60,6 @@ export const ProfileProvider = ({children}) => {
 
   const fetchUserStats = async (userId) => {
     const result = await getUserStats(userId);
-    console.log("omgg", result.stats);
     setUserStats({
       tvShowsWatched: result.stats.TvShowCount,
       moviesWatched: result.stats.movieCount,

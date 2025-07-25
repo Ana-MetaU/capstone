@@ -39,7 +39,6 @@ const SearchResults = () => {
     }
     setIsLoading(true);
     try {
-      console.log("searching for users", query);
       const result = await searchUsersByUsername(query);
       console.log("result", result);
       if (result.success) {
@@ -165,7 +164,9 @@ const SearchResults = () => {
               </div>
             ) : (
               <div className="movie-grid">
-                {mediaResults.map((item) => renderMediaItem(item))}
+                {addFlagsToMovies(mediaResults).map((item) =>
+                  renderMediaItem(item)
+                )}
               </div>
             )}
           </div>

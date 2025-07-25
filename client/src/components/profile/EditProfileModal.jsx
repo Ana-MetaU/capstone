@@ -87,7 +87,7 @@ const EditProfileModal = ({
       // Save profile data
       const profileData = {
         bio,
-        isPublic: true,
+        privacyLevel: null,
         profilePicture: imageUrl,
         favoriteGenres,
       };
