@@ -14,7 +14,6 @@ export const FeedProvider = ({children}) => {
   // friend filter states
   const [selectedFriends, setSelectedFriends] = useState(new Set());
   const [showAllFriends, setShowAllFriends] = useState(true);
-  console.log("friends", selectedFriends);
   const fetchInitialFeed = async () => {
     setInitialLoading(true);
     setError(null);

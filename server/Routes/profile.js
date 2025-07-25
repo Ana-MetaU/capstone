@@ -5,6 +5,7 @@ const {
   createUserProfile,
   updateUserProfile,
   userHasProfile,
+  PRIVACY_TIERS,
 } = require("../database/profileUtils");
 
 // get a user profile
@@ -15,6 +16,7 @@ router.get("/:userId", async (req, res) => {
       res.status(400).json({error: "no userId. Bad request"});
     }
     const profile = await getUserProfile(userId);
+    console.log("what is going on", profile);
     res.json(profile);
   } catch (error) {
     console.error("Error getting profile:", error);
@@ -37,11 +39,11 @@ router.post("/:userId", async (req, res) => {
         .status(409)
         .json({error: "Profile already exists for this user"});
     }
-    const {bio, isPublic, profilePicture, favoriteGenres} = req.body;
+    const {bio, privacyLevel, profilePicture, favoriteGenres} = req.body;
 
     const profile = await createUserProfile(userId, {
       bio,
-      isPublic,
+      privacyLevel,
       profilePicture,
       favoriteGenres,
     });
@@ -60,11 +62,11 @@ router.put("/:userId", async (req, res) => {
     if (!userId) {
       res.status(400).json({error: "no userId. Bad request"});
     }
-    const {bio, isPublic, profilePicture, favoriteGenres} = req.body;
+    const {bio, privacyLevel, profilePicture, favoriteGenres} = req.body;
 
     const updatedProfile = await updateUserProfile(userId, {
       bio,
-      isPublic,
+      privacyLevel,
       profilePicture,
       favoriteGenres,
     });
@@ -102,7 +104,7 @@ router.patch("/:userId/privacy", async (req, res) => {
 
   try {
     const userId = req.params.userId;
-    const {isPublic} = req.body;
+    const {privacyLevel} = req.body;
 
     if (req.session.userId !== userId) {
       return res
@@ -110,18 +112,25 @@ router.patch("/:userId/privacy", async (req, res) => {
         .json({error: "cannot change other people's privacy"});
     }
 
+    // validate privacy input
+    if (!PRIVACY_TIERS.includes(privacyLevel)) {
+      return res.status(400).json({
+        error: "Nonexistent privacy tier.",
+      });
+    }
+
     const currentProfile = await getUserProfile(userId);
 
     const updatedProfile = await updateUserProfile(userId, {
       bio: currentProfile.bio,
-      isPublic: isPublic,
+      privacyLevel: privacyLevel,
       profilePicture: currentProfile.profilePicture,
       favoriteGenres: currentProfile.favoriteGenres,
     });
 
     res.json({
       success: true,
-      message: `profile is now ${isPublic ? "public" : "private"}`,
+      message: `profile is now ${privacyLevel}`,
       profile: updatedProfile,
     });
   } catch (error) {

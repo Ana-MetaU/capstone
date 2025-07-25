@@ -5,6 +5,8 @@ import {
   getFollowStatus,
   acceptFollowRequest,
   rejectFollowRequet,
+  checkFriendOfFriendsAcess,
+  cancelFollowRequest,
 } from "../../api/FollowApi";
 import {useParams} from "react-router-dom";
 import {useUser} from "../../context/UserContext";
@@ -20,6 +22,7 @@ const UserProfile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [followLoading, setFollowLoading] = useState(false);
   const [userStats, setUserStats] = useState({});
+  const [canView, setCanView] = useState(false);
   useEffect(() => {
     if (username) {
       fetchUserProfile();
@@ -28,7 +31,8 @@ const UserProfile = () => {
 
   useEffect(() => {
     checkFollowStatus();
-    fetchUserStats(UserProfile?.userId);
+    fetchUserStats();
+    canViewContent();
   }, [UserProfile?.userId]);
 
   const fetchUserStats = async () => {
@@ -47,7 +51,7 @@ const UserProfile = () => {
   const fetchUserProfile = async () => {
     try {
       const result = await getUserProfileByUsername(username);
-
+      console.log("okkk ", result);
       if (result.success) {
         setUserProfile(result.profile);
       } else {
@@ -68,7 +72,7 @@ const UserProfile = () => {
     try {
       console.log("checking follow status with user: ", username);
       const result = await getFollowStatus(UserProfile.userId);
-
+      console.log("what did we get", result);
       if (result.success) {
         setFollowStatus(result.status);
       } else {
@@ -86,9 +90,10 @@ const UserProfile = () => {
       if (followStatus === "none") {
         console.log("calling followerUser for ", UserProfile.userId);
         const result = await followUser(UserProfile.userId);
-
+        console.log("whatttt", result);
         if (result.success) {
           await checkFollowStatus();
+          await canViewContent();
         } else {
           console.log("follow failed", result.message);
         }
@@ -98,8 +103,18 @@ const UserProfile = () => {
 
         if (result.success) {
           await checkFollowStatus();
+          await canViewContent();
         } else {
           console.log("unfollow failed", result.message);
+        }
+      } else if (followStatus === "request sent") {
+        const result = await cancelFollowRequest(UserProfile.userId);
+        console.log("result of cancel", result);
+        if (result.success) {
+          await checkFollowStatus();
+          await canViewContent();
+        } else {
+          console.log("cancling request erorr", result.message);
         }
       }
     } catch (error) {
@@ -119,6 +134,7 @@ const UserProfile = () => {
 
       if (result.success) {
         await checkFollowStatus();
+        await canViewContent();
       } else {
         console.log("accepted request failed", result.message);
       }
@@ -138,6 +154,7 @@ const UserProfile = () => {
 
       if (result.success) {
         await checkFollowStatus();
+        await canViewContent();
       } else {
         console.log("decline request failed", result.message);
       }
@@ -148,8 +165,34 @@ const UserProfile = () => {
     }
   };
 
-  const canViewContent = () => {
-    return UserProfile.isPublic || followStatus === "following";
+  const canViewContent = async () => {
+    if (!UserProfile) {
+      return;
+    }
+    console.log("girlll", UserProfile.privacyLevel);
+
+    if (UserProfile.privacyLevel === "public") {
+      setCanView(true);
+      return;
+    }
+
+    if (followStatus === "following") {
+      setCanView(true);
+      return;
+    }
+    if (UserProfile.privacyLevel === "friends_of_friends") {
+      try {
+        const result = await checkFriendOfFriendsAcess(UserProfile.userId);
+        console.log("do i have access", result);
+        setCanView(result.hasAccess);
+        return;
+      } catch (error) {
+        console.log("error checking friend of friends access", error);
+        setCanView(false);
+        return;
+      }
+    }
+    setCanView(false);
   };
 
   if (isLoading) {
@@ -268,7 +311,7 @@ const UserProfile = () => {
         </div>
       </div>
       <div className="profile-content">
-        {canViewContent() ? (
+        {canView ? (
           <div className="public">
             <MovieTabs userId={UserProfile.userId}></MovieTabs>
           </div>

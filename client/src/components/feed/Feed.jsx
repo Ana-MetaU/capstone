@@ -15,14 +15,9 @@ function Feed() {
     fetchInitialFeed,
     loadMoreItems,
   } = useFeed();
-  console.log("feedItems", feedItems);
-  console.log("filtered", filteredFeedItems);
-  console.log("feed items length", feedItems.length);
-  console.log("filtered items lenght", filteredFeedItems?.length);
   const sentinelRef = useRef(null);
 
   useEffect(() => {
-    console.log("this comes through first");
     fetchInitialFeed();
   }, []);
 

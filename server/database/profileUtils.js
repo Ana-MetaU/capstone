@@ -1,6 +1,6 @@
 const {isPath} = require("neo4j-driver");
 const {getSession} = require("./neo4j");
-
+const PRIVACY_TIERS = ["friends_only", "friends_of_friends", "public"];
 // Get user profile
 async function getUserProfile(userId) {
   const session = getSession();
@@ -12,7 +12,7 @@ async function getUserProfile(userId) {
              p {
                .id,
                .bio,
-               .isPublic,
+               .privacyLevel,
                .profilePicture,
                .favoriteGenres,
                .createdAt,
@@ -35,7 +35,7 @@ async function getUserProfile(userId) {
       username: record.get("username"),
       id: profile.id,
       bio: profile.bio,
-      isPublic: profile.isPublic,
+      privacyLevel: profile.privacyLevel,
       profilePicture: profile.profilePicture,
       favoriteGenres: profile.favoriteGenres,
       createdAt: profile.createdAt,
@@ -51,7 +51,7 @@ async function createUserProfile(userId, profileData) {
   const session = getSession();
   try {
     const bio = profileData.bio || "";
-    const isPublic = true;
+    const privacyLevel = profileData.privacyLevel || "public";
     const profilePicture = profileData.profilePicture || null;
     const favoriteGenres = profileData.favoriteGenres || [];
 
@@ -61,7 +61,7 @@ async function createUserProfile(userId, profileData) {
       CREATE (p:Profile {
         id: randomUUID(),
         bio: $bio,
-        isPublic: $isPublic,
+        privacyLevel: $privacyLevel,
         profilePicture: $profilePicture,
         favoriteGenres: $favoriteGenres,
         createdAt: datetime(),
@@ -72,7 +72,7 @@ async function createUserProfile(userId, profileData) {
              p {
                .id,
                .bio,
-               .isPublic,
+               .privacyLevel,
                .profilePicture,
                .favoriteGenres,
                .createdAt,
@@ -82,7 +82,7 @@ async function createUserProfile(userId, profileData) {
       {
         userId,
         bio,
-        isPublic,
+        privacyLevel,
         profilePicture,
         favoriteGenres,
       }
@@ -101,7 +101,7 @@ async function createUserProfile(userId, profileData) {
       username: record.get("username"),
       id: profile.id,
       bio: profile.bio,
-      isPublic: profile.isPublic,
+      privacyLevel: profile.privacyLevel,
       profilePicture: profile.profilePicture,
       favoriteGenres: profile.favoriteGenres,
       createdAt: profile.createdAt,
@@ -119,7 +119,7 @@ async function updateUserProfile(userId, profileData) {
       `
       MATCH (u:User {id: $userId})-[:HAS_PROFILE]->(p:Profile)
       SET p.bio = CASE WHEN $bio IS NOT NULL THEN $bio ELSE p.bio END,
-          p.isPublic = CASE WHEN $isPublic IS NOT NULL THEN $isPublic ELSE p.isPublic END, 
+          p.privacyLevel = CASE WHEN $privacyLevel IS NOT NULL THEN $privacyLevel ELSE p.privacyLevel END, 
           p.profilePicture = CASE WHEN $profilePicture IS NOT NULL THEN $profilePicture ELSE p.profilePicture END,
           p.favoriteGenres = CASE WHEN $favoriteGenres IS NOT NULL THEN $favoriteGenres ELSE p.favoriteGenres END,
           p.updatedAt = datetime()
@@ -127,7 +127,7 @@ async function updateUserProfile(userId, profileData) {
              p {
                .id,
                .bio,
-               .isPublic,
+               .privacyLevel,
                .profilePicture,
                .favoriteGenres,
                .createdAt,
@@ -137,7 +137,7 @@ async function updateUserProfile(userId, profileData) {
       {
         userId,
         bio: profileData.bio,
-        isPublic: profileData.isPublic,
+        privacyLevel: profileData.privacyLevel,
         profilePicture: profileData.profilePicture,
         favoriteGenres: profileData.favoriteGenres,
       }
@@ -157,7 +157,7 @@ async function updateUserProfile(userId, profileData) {
       username: record.get("username"),
       id: profile.id,
       bio: profile.bio,
-      isPublic: profile.isPublic,
+      privacyLevel: profile.privacyLevel,
       profilePicture: profile.profilePicture,
       favoriteGenres: profile.favoriteGenres,
       createdAt: profile.createdAt,
@@ -179,7 +179,7 @@ async function userHasProfile(userId) {
       {userId}
     );
 
-    hasProfile =
+   const hasProfile =
       result.records.length > 0 && result.records[0].get("hasProfile");
     return hasProfile;
   } finally {
@@ -191,7 +191,7 @@ async function getProfilePrivacy(userId) {
   try {
     const profile = await getUserProfile(userId);
     return {
-      isPublic: profile.isPublic,
+      privacyLevel: profile.privacyLevel,
     };
   } catch (error) {
     console.log("error getting profile privacy settings", error);
@@ -205,4 +205,5 @@ module.exports = {
   createUserProfile,
   updateUserProfile,
   userHasProfile,
+  PRIVACY_TIERS
 };

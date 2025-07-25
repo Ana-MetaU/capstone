@@ -127,8 +127,8 @@ function MovieProvider({children}) {
         const movieData = {
           tmdbId: movieId,
           posterPath: movie.poster_path,
-          title: movie.poster_path,
-          overview: movie.poster_path,
+          title: movie.title,
+          overview: movie.overview,
         };
         await addWantToWatchMovie(movieData);
       }

@@ -37,7 +37,7 @@ export const createUserProfile = async (userId, profileData) => {
       credentials: "include",
       body: JSON.stringify({
         bio: profileData.bio,
-        isPublic: profileData.isPublic,
+        privateLevel: profileData.privateLevel,
         profilePicture: profileData.profilePicture,
         favoriteGenres: profileData.favoriteGenres,
       }),
@@ -75,7 +75,7 @@ export const updateUserProfile = async (userId, profileData) => {
       credentials: "include",
       body: JSON.stringify({
         bio: profileData.bio,
-        isPublic: profileData.isPublic,
+        privacyLevel: profileData.privacyLevel,
         profilePicture: profileData.profilePicture,
         favoriteGenres: profileData.favoriteGenres,
       }),
@@ -131,17 +131,15 @@ export const userHasProfile = async (userId) => {
   }
 };
 
-export const updateProfilePrivacy = async (userId, isPublic) => {
+export const updateProfilePrivacy = async (userId, privacyLevel) => {
   try {
-    console.log("guyss", userId);
-    console.log("guyss2", isPublic);
     const response = await fetch(`${BASE_URL}/profile/${userId}/privacy`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify({isPublic}),
+      body: JSON.stringify(privacyLevel),
     });
 
     const data = await response.json();

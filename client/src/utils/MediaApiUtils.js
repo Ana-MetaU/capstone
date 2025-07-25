@@ -5,9 +5,7 @@ export const getCurrentDate = () => {
 
 export const getDateThreeMonthsLater = () => {
   const date = new Date();
-  console.log("date", date);
   date.setMonth(date.getMonth() + 3);
-  console.log("after ", date.toISOString().split("T")[0]);
   return date.toISOString().split("T")[0];
 };
 
