@@ -28,11 +28,13 @@ const UserProfile = () => {
       fetchUserProfile();
     }
   }, [username]);
+  useEffect(() => {
+    canViewContent();
+  }, [UserProfile?.userId, followStatus]);
 
   useEffect(() => {
     checkFollowStatus();
     fetchUserStats();
-    canViewContent();
   }, [UserProfile?.userId]);
 
   const fetchUserStats = async () => {
@@ -169,7 +171,6 @@ const UserProfile = () => {
     if (!UserProfile) {
       return;
     }
-    console.log("girlll", UserProfile.privacyLevel);
 
     if (UserProfile.privacyLevel === "public") {
       setCanView(true);
@@ -183,7 +184,6 @@ const UserProfile = () => {
     if (UserProfile.privacyLevel === "friends_of_friends") {
       try {
         const result = await checkFriendOfFriendsAcess(UserProfile.userId);
-        console.log("do i have access", result);
         setCanView(result.hasAccess);
         return;
       } catch (error) {

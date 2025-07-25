@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const {requireLogin} = require("../middleware/requireLogin");
 const {getProfilePrivacy} = require("../database/profileUtils");
 
 const {
@@ -22,13 +22,7 @@ const {
 } = require("../prisma/followRequestUtils");
 
 // Send follow request request
-router.post("/follow/:userId", async (req, res) => {
-  if (!req.session.userId) {
-    return res
-      .status(401)
-      .json({error: "authentication required. Log in first"});
-  }
-
+router.post("/follow/:userId", requireLogin, async (req, res) => {
   try {
     const followerId = req.session.userId;
     const followeeId = req.params.userId;
@@ -39,7 +33,7 @@ router.post("/follow/:userId", async (req, res) => {
 
     const privacyInfo = await getProfilePrivacy(followeeId);
     console.log("privacy", privacyInfo);
-   if (privacyInfo.privacyLevel === "public") {
+    if (privacyInfo.privacyLevel === "public") {
       await createFollowRelationship(followerId, followeeId);
 
       res.status(201).json({
@@ -74,12 +68,7 @@ router.post("/follow/:userId", async (req, res) => {
 });
 
 // accept follow request
-router.post("/accept/:userId", async (req, res) => {
-  if (!req.session.userId) {
-    return res
-      .status(401)
-      .json({error: "authentication required. Log in first"});
-  }
+router.post("/accept/:userId", requireLogin, async (req, res) => {
   try {
     const recipientId = req.session.userId; // accepting
     const requesterId = req.params.userId; // person who sent
@@ -108,12 +97,7 @@ router.post("/accept/:userId", async (req, res) => {
 });
 
 // reject follow request
-router.post("/reject/:userId", async (req, res) => {
-  if (!req.session.userId) {
-    return res
-      .status(401)
-      .json({error: "authentication required. Log in first"});
-  }
+router.post("/reject/:userId", requireLogin, async (req, res) => {
   try {
     const recipientId = req.session.userId; // rejecting
     const requesterId = req.params.userId; // person who sent
@@ -143,13 +127,7 @@ router.post("/reject/:userId", async (req, res) => {
 });
 
 // check who the current user logged in is following
-router.get("/following", async (req, res) => {
-  if (!req.session.userId) {
-    return res
-      .status(401)
-      .json({error: "authentication required. Log in first"});
-  }
-
+router.get("/following", requireLogin, async (req, res) => {
   try {
     const userId = req.session.userId;
     const following = await getFollowing(userId);
@@ -167,13 +145,7 @@ router.get("/following", async (req, res) => {
 });
 
 // check the current user's followers
-router.get("/followers", async (req, res) => {
-  if (!req.session.userId) {
-    return res
-      .status(401)
-      .json({error: "authentication required. Log in first"});
-  }
-
+router.get("/followers", requireLogin, async (req, res) => {
   try {
     const userId = req.session.userId;
     const followers = await getFollowers(userId);
@@ -191,13 +163,7 @@ router.get("/followers", async (req, res) => {
 });
 
 // Get all incoming follow requests
-router.get("/incoming", async (req, res) => {
-  if (!req.session.userId) {
-    return res
-      .status(401)
-      .json({error: "authentication required. Log in first"});
-  }
-
+router.get("/incoming", requireLogin, async (req, res) => {
   try {
     const userId = req.session.userId;
     const incomingRequests = await getIncomingRequest(userId);
@@ -214,13 +180,7 @@ router.get("/incoming", async (req, res) => {
 });
 
 // Get all outgoing follow requests
-router.get("/outgoing", async (req, res) => {
-  if (!req.session.userId) {
-    return res
-      .status(401)
-      .json({error: "authentication required. Log in first"});
-  }
-
+router.get("/outgoing", requireLogin, async (req, res) => {
   try {
     const userId = req.session.userId;
     const outgoingRequests = await getOutgoingRequests(userId);
@@ -237,13 +197,7 @@ router.get("/outgoing", async (req, res) => {
 });
 
 // unfollow another user
-router.delete("/unfollow/:userId", async (req, res) => {
-  if (!req.session.userId) {
-    return res
-      .status(401)
-      .json({error: "authentication required. Log in first"});
-  }
-
+router.delete("/unfollow/:userId", requireLogin, async (req, res) => {
   try {
     const followerId = req.session.userId;
     const followeeId = req.params.userId;
@@ -272,13 +226,7 @@ router.delete("/unfollow/:userId", async (req, res) => {
 });
 
 // check the status betweeen two users
-router.get("/status/:userId", async (req, res) => {
-  if (!req.session.userId) {
-    return res
-      .status(401)
-      .json({error: "authentication required. Log in first"});
-  }
-
+router.get("/status/:userId", requireLogin, async (req, res) => {
   try {
     const userId = req.session.userId;
     const targetUserId = req.params.userId;
@@ -325,13 +273,7 @@ router.get("/status/:userId", async (req, res) => {
 });
 
 // check the status betweeen two users
-router.get("/recommendations", async (req, res) => {
-  if (!req.session.userId) {
-    return res
-      .status(401)
-      .json({error: "authentication required. Log in first"});
-  }
-
+router.get("/recommendations", requireLogin, async (req, res) => {
   try {
     const userId = req.session.userId;
     limit = 5;
@@ -350,13 +292,7 @@ router.get("/recommendations", async (req, res) => {
     res.status(500).json({error: "Failed to fetch friend recs"});
   }
 });
-router.get("/friend-of-friends/:userId", async (req, res) => {
-  if (!req.session.userId) {
-    return res
-      .status(401)
-      .json({error: "authentication required. Log in first"});
-  }
-
+router.get("/friend-of-friends/:userId", requireLogin, async (req, res) => {
   try {
     const currentUserId = req.session.userId;
     const targetUserId = req.params.userId;
@@ -375,13 +311,7 @@ router.get("/friend-of-friends/:userId", async (req, res) => {
   }
 });
 
-router.delete("/cancel-request/:userId", async (req, res) => {
-  if (!req.session.userId) {
-    return res
-      .status(401)
-      .json({error: "authentication required. Log in first"});
-  }
-
+router.delete("/cancel-request/:userId", requireLogin, async (req, res) => {
   try {
     const followerId = req.session.userId;
     const followeeId = req.params.userId;

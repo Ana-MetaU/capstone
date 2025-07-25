@@ -1,7 +1,7 @@
 import {useState, useEffect} from "react";
 import {getWantToWatchMovies} from "../../api/MovieApi";
 import {getWantToWatchTVShows} from "../../api/TVShowApi";
-import {getImage} from "../../utils/MediaApiUtils";
+import MovieCard from "./MovieCard";
 import "./movieGrid.css";
 const WantToWatchGrid = () => {
   const [wantToWatch, setWantToWatch] = useState([]);
@@ -32,16 +32,17 @@ const WantToWatchGrid = () => {
     }
 
     return wantToWatch.map((item, index) => (
-      <div
+      <MovieCard
         key={`${item.tmdbId || item.tvdbId}-${index}`}
-        className="movie-card"
-      >
-        <img
-          className="movie-posters"
-          src={getImage(item.posterPath)}
-          alt={item.title || item.name}
-        />
-      </div>
+        props={{
+          ...item,
+          id: item.tmdbId || item.tvdbId,
+          title: item.title || item.name,
+          poster_path: item.posterPath,
+        }}
+        onClick={() => {}}
+        showAction={false}
+      />
     ));
   };
 

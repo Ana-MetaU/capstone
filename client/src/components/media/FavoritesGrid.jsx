@@ -1,7 +1,7 @@
 import {useState, useEffect} from "react";
 import {getFavoriteMovies} from "../../api/MovieApi";
 import {getFavoriteTVShows} from "../../api/TVShowApi";
-import {getImage} from "../../utils/MediaApiUtils";
+import MovieCard from "./MovieCard";
 import "./MovieGrid.css";
 const FavoritesGrid = () => {
   const [favorites, setFavorites] = useState([]);
@@ -34,16 +34,16 @@ const FavoritesGrid = () => {
     }
 
     return favorites.map((item, index) => (
-      <div
+      <MovieCard
         key={`${item.tmdbId || item.tvdbId}-${index}`}
-        className="movie-card"
-      >
-        <img
-          className="movie-posters"
-          src={getImage(item.posterPath)}
-          alt={item.title || item.name}
-        />
-      </div>
+        props={{
+          ...item,
+          title: item.title || item.name,
+          poster_path: item.posterPath,
+        }}
+        onClick={() => {}}
+        showAction={false}
+      />
     ));
   };
 

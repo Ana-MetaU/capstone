@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const {requireAuth, ensureNoConflict} = require("../middleware/requireLogin");
 const {
   getUserProfile,
   createUserProfile,
@@ -7,16 +8,25 @@ const {
   userHasProfile,
   PRIVACY_TIERS,
 } = require("../database/profileUtils");
+const {error} = require("neo4j-driver");
 
+function validateUserId(req, res) {
+  const userId = req.params.userId;
+  if (!userId) {
+    res.status(400).jon({error: "No userId. Bad request"});
+    return null;
+  }
+  return userId;
+}
 // get a user profile
 router.get("/:userId", async (req, res) => {
   try {
-    const userId = req.params.userId;
+    const userId = validateUserId(req, res);
     if (!userId) {
-      res.status(400).json({error: "no userId. Bad request"});
+      return;
     }
+
     const profile = await getUserProfile(userId);
-    console.log("what is going on", profile);
     res.json(profile);
   } catch (error) {
     console.error("Error getting profile:", error);
@@ -27,10 +37,9 @@ router.get("/:userId", async (req, res) => {
 // Create user profile
 router.post("/:userId", async (req, res) => {
   try {
-    const userId = req.params.userId;
-
+    const userId = validateUserId(req, res);
     if (!userId) {
-      res.status(400).json({error: "no userId. Bad request"});
+      return;
     }
     // Check if profile already exists
     const hasProfile = await userHasProfile(userId);
@@ -57,10 +66,9 @@ router.post("/:userId", async (req, res) => {
 // Update user profile
 router.put("/:userId", async (req, res) => {
   try {
-    const userId = req.params.userId;
-
+    const userId = validateUserId(req, res);
     if (!userId) {
-      res.status(400).json({error: "no userId. Bad request"});
+      return;
     }
     const {bio, privacyLevel, profilePicture, favoriteGenres} = req.body;
 
@@ -81,10 +89,9 @@ router.put("/:userId", async (req, res) => {
 //  Check if user has a profile
 router.get("/:userId/exists", async (req, res) => {
   try {
-    const userId = req.params.userId;
-
+    const userId = validateUserId(req, res);
     if (!userId) {
-      res.status(400).json({error: "no userId. Bad request"});
+      return;
     }
 
     const hasProfile = await userHasProfile(userId);
@@ -95,48 +102,41 @@ router.get("/:userId/exists", async (req, res) => {
   }
 });
 
-router.patch("/:userId/privacy", async (req, res) => {
-  if (!req.session.userId) {
-    return res
-      .status(401)
-      .json({error: "authentication required. Log in first"});
-  }
+router.patch(
+  "/:userId/privacy",
+  requireAuth,
+  ensureNoConflict,
+  async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const {privacyLevel} = req.body;
 
-  try {
-    const userId = req.params.userId;
-    const {privacyLevel} = req.body;
+      // validate privacy input
+      if (!PRIVACY_TIERS.includes(privacyLevel)) {
+        return res.status(400).json({
+          error: "Nonexistent privacy tier.",
+        });
+      }
 
-    if (req.session.userId !== userId) {
-      return res
-        .status(403)
-        .json({error: "cannot change other people's privacy"});
-    }
+      const currentProfile = await getUserProfile(userId);
 
-    // validate privacy input
-    if (!PRIVACY_TIERS.includes(privacyLevel)) {
-      return res.status(400).json({
-        error: "Nonexistent privacy tier.",
+      const updatedProfile = await updateUserProfile(userId, {
+        bio: currentProfile.bio,
+        privacyLevel: privacyLevel,
+        profilePicture: currentProfile.profilePicture,
+        favoriteGenres: currentProfile.favoriteGenres,
       });
+
+      res.json({
+        success: true,
+        message: `profile is now ${privacyLevel}`,
+        profile: updatedProfile,
+      });
+    } catch (error) {
+      console.log("error updating privacy of profile", error);
+      res.status(500).json({error: "failed to update profile privacy"});
     }
-
-    const currentProfile = await getUserProfile(userId);
-
-    const updatedProfile = await updateUserProfile(userId, {
-      bio: currentProfile.bio,
-      privacyLevel: privacyLevel,
-      profilePicture: currentProfile.profilePicture,
-      favoriteGenres: currentProfile.favoriteGenres,
-    });
-
-    res.json({
-      success: true,
-      message: `profile is now ${privacyLevel}`,
-      profile: updatedProfile,
-    });
-  } catch (error) {
-    console.log("error updating privacy of profile", error);
-    res.status(500).json({error: "failed to update profile privacy"});
   }
-});
+);
 
 module.exports = router;

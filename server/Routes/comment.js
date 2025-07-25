@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const {requireLogin} = require("../middleware/requireLogin.js");
+
 const {addComment, getComments} = require("../database/feedUtils");
 
-router.post("/:watchedId", async (req, res) => {
+router.post("/:watchedId", requireLogin, async (req, res) => {
   if (!req.session.userId) {
     return res
       .status(401)
