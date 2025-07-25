@@ -78,7 +78,7 @@ const Sidebar = ({activeIcon, onActiveIconChange}) => {
 
   return (
     <div className="sidebar">
-      <aside>
+      <aside className="sidebar-aside"> 
         <div className="sidebar-header">
           <h3>PARTY WATCH</h3>
         </div>

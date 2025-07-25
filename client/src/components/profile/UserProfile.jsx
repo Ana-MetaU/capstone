@@ -53,7 +53,6 @@ const UserProfile = () => {
   const fetchUserProfile = async () => {
     try {
       const result = await getUserProfileByUsername(username);
-      console.log("okkk ", result);
       if (result.success) {
         setUserProfile(result.profile);
       } else {
@@ -72,9 +71,7 @@ const UserProfile = () => {
       return;
     }
     try {
-      console.log("checking follow status with user: ", username);
       const result = await getFollowStatus(UserProfile.userId);
-      console.log("what did we get", result);
       if (result.success) {
         setFollowStatus(result.status);
       } else {
@@ -92,7 +89,6 @@ const UserProfile = () => {
       if (followStatus === "none") {
         console.log("calling followerUser for ", UserProfile.userId);
         const result = await followUser(UserProfile.userId);
-        console.log("whatttt", result);
         if (result.success) {
           await checkFollowStatus();
           await canViewContent();
