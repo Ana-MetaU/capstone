@@ -78,7 +78,7 @@ async function getTVShows(req, res, fetchFunction, type) {
 async function postTVShow(req, res, postFunction, type) {
   try {
     const {tvdbId, posterPath, rating, name, overview, review} = req.body;
-
+    console.log("req body", req.body);
     // Validate required input
     const validInput = validateInput({tvdbId});
     if (validInput !== SUCCESS) {

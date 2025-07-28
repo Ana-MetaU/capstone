@@ -111,7 +111,7 @@ function TVShowProvider({children}) {
         const showData = {
           tvdbId: showId,
           posterPath: show.image,
-          title: show.name,
+          name: show.name,
           overview: show.overview,
         };
         await addFavoriteTVShow(showData);
@@ -137,7 +137,7 @@ function TVShowProvider({children}) {
         const showData = {
           tvdbId: showId,
           posterPath: show.image,
-          title: show.name,
+          name: show.name,
           overview: show.overview,
         };
         await addWantToWatchTVShow(showData);

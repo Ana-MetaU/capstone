@@ -18,7 +18,10 @@ app.set("trust proxy", 1);
 // Configure CORS to allow requests from your frontend's origin and include credentials
 app.use(
   cors({
-    origin: "https://cine-plus.onrender.com",
+    origin:
+      process.env.NODE_ENV === "production"
+        ? "https://cine-plus.onrender.com"
+        : "http://localhost:5173",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -37,7 +40,7 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 1 day
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      secure: process.env.NODE_ENV === "production",
+      secure: process.env.NODE_ENV === "production" ? true : false,
     },
   })
 );
