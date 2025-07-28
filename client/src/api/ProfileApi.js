@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000";
+import {BASE_URL} from "./constants";
 export const getUserProfile = async (userId) => {
   try {
     const response = await fetch(`${BASE_URL}/profile/${userId}`, {

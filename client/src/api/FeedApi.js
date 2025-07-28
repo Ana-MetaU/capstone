@@ -1,5 +1,4 @@
-const BASE_URL = "http://localhost:3000";
-
+import {BASE_URL} from "./constants";
 export const getFeed = async (page = 1, limit = 15) => {
   try {
     const response = await fetch(

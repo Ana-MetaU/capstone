@@ -11,13 +11,11 @@ import {getImage} from "../../utils/MediaApiUtils";
 
 function MovieCard({props, onClick, showAction}) {
   const {toggleWantToWatch, toggleFavorite} = useContext(MovieContext);
-  console.log("what", props)
   const handleFavorite = () => {
     toggleFavorite(props);
   };
 
   const handleWantToWatch = () => {
-    console.log("props", props);
     toggleWantToWatch(props);
   };
 

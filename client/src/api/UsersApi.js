@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000";
+import {BASE_URL} from "./constants";
 export const getUserProfileByUsername = async (username) => {
   try {
     const response = await fetch(`${BASE_URL}/users/${username}`, {
@@ -28,7 +28,6 @@ export const getUserProfileByUsername = async (username) => {
 
 export const searchUsersByUsername = async (query) => {
   try {
-    console.log("frotnend calling");
     const response = await fetch(
       `${BASE_URL}/users/search?q=${encodeURIComponent(query)}`,
       {

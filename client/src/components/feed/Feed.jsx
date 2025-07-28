@@ -6,7 +6,6 @@ import "./Feed.css";
 function Feed() {
   const [showFilters, setShowFilters] = useState(false);
   const {
-    feedItems,
     filteredFeedItems,
     initialLoading,
     loading,
@@ -34,14 +33,9 @@ function Feed() {
           !loading &&
           !initialLoading
         ) {
-          console.log("second");
           loadMoreItems();
         }
       },
-      {
-        rootMargin: "100px",
-        threshold: 0.1,
-      }
     );
     observer.observe(sentinel);
 

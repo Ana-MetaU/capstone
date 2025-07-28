@@ -6,6 +6,7 @@ import {
   addWantToWatchTVShow,
   getFavoriteTVShows,
   getWantToWatchTVShows,
+  getCurrentlyWatchingTVShows,
 } from "../api/TVShowApi";
 
 import {getAllTVShowRows} from "../api/MediaApiV2";
@@ -22,6 +23,7 @@ function TVShowProvider({children}) {
   const [selectedTVShow, setSelectedTVShow] = useState(null);
   const [favorites, setFavorites] = useState([]);
   const [wantToWatchShows, setWantToWatchShows] = useState([]);
+  const [currentlyWatching, setCurrentlyWatching] = useState([]);
   const [loading, setLoading] = useState(false);
 
   // Load favorites from API
@@ -45,6 +47,17 @@ function TVShowProvider({children}) {
       }
     } catch (error) {
       console.error("Error loading want to watch TV shows:", error);
+    }
+  };
+
+  const loadCurrentlyWatching = async () => {
+    try {
+      const result = await getCurrentlyWatchingTVShows();
+      if (result.success && result.shows) {
+        setCurrentlyWatching(result.shows);
+      }
+    } catch (error) {
+      console.error("Error loading currently watching shows:", error);
     }
   };
 
@@ -98,7 +111,7 @@ function TVShowProvider({children}) {
         const showData = {
           tvdbId: showId,
           posterPath: show.image,
-          title: show.name,
+          name: show.name,
           overview: show.overview,
         };
         await addFavoriteTVShow(showData);
@@ -124,7 +137,7 @@ function TVShowProvider({children}) {
         const showData = {
           tvdbId: showId,
           posterPath: show.image,
-          title: show.name,
+          name: show.name,
           overview: show.overview,
         };
         await addWantToWatchTVShow(showData);
@@ -148,6 +161,7 @@ function TVShowProvider({children}) {
   useEffect(() => {
     loadFavorites();
     loadWantToWatchShows();
+    loadCurrentlyWatching();
     fetchTVShows();
   }, []);
 
@@ -157,6 +171,8 @@ function TVShowProvider({children}) {
         shows: getShowsRowsWithFlags(),
         selectedTVShow,
         setSelectedTVShow,
+        wantToWatchShows,
+        currentlyWatching,
         showDetail,
         openModal,
         closeModal,

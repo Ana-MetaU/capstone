@@ -33,7 +33,6 @@ const Sidebar = ({activeIcon, onActiveIconChange}) => {
     }
   };
   const handleSearch = () => {
-    console.log("searching for ", searchValue);
 
     if (searchValue.trim()) {
       navigate(`/search?q=${searchValue}`);
@@ -78,7 +77,7 @@ const Sidebar = ({activeIcon, onActiveIconChange}) => {
 
   return (
     <div className="sidebar">
-      <aside>
+      <aside className="sidebar-aside"> 
         <div className="sidebar-header">
           <h3>PARTY WATCH</h3>
         </div>

@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000";
+import {BASE_URL} from "./constants";
 
 export const followUser = async (userId) => {
   try {

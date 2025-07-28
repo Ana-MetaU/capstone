@@ -70,8 +70,8 @@ const getWatchedTVShowsByUser = async (userId) => {
             MATCH (u:User {id: $userId})-[w:WATCHED]->(s:TVShow)
             RETURN s.tvdbId as tvdbId,
             s.posterPath as posterPath,
-            w.title as name,
-            w.overview as overview,
+            s.title as name,
+            s.overview as overview,
             w.rating as rating,
             w.review as review,
             w.watchedAt as watchedAt
@@ -108,6 +108,8 @@ const addWantToWatchTVShow = async (showData) => {
             MATCH (u:User {id: $userId})
             MERGE (s:TVShow {tvdbId: $tvdbId})
             ON CREATE SET s.posterPath = $posterPath
+            ON CREATE SET s.title = $name
+            ON CREATE SET s.overview = $overview
             MERGE (u)-[w:WANT_TO_WATCH]->(s)
             ON CREATE SET w.addedAt = datetime()
             RETURN s, w
@@ -116,6 +118,8 @@ const addWantToWatchTVShow = async (showData) => {
         userId,
         tvdbId: parseInt(tvdbId),
         posterPath,
+        name,
+        overview,
       }
     );
 
@@ -137,7 +141,7 @@ const addWantToWatchTVShow = async (showData) => {
 // Params: showData {userId, tvdbId, posterPath}
 // Returns: show object
 const addFavoriteTVShow = async (showData) => {
-  const {userId, tvdbId, posterPath} = showData;
+  const {userId, tvdbId, posterPath, name, overview} = showData;
   const session = getSession();
   try {
     const result = await session.run(
@@ -145,6 +149,8 @@ const addFavoriteTVShow = async (showData) => {
             MATCH (u:User {id: $userId})
             MERGE (s:TVShow {tvdbId: $tvdbId})
             ON CREATE SET s.posterPath = $posterPath
+            ON CREATE SET s.title = $name
+            ON CREATE SET s.overview = $overview
             MERGE (u)-[f:FAVORITE]->(s)
             ON CREATE SET f.addedAt = datetime()
             RETURN s, f
@@ -153,6 +159,8 @@ const addFavoriteTVShow = async (showData) => {
         userId,
         tvdbId: parseInt(tvdbId),
         posterPath,
+        name,
+        overview,
       }
     );
 
@@ -223,6 +231,8 @@ const getWantToWatchTVShowsByUser = async (userId) => {
             MATCH (u:User {id: $userId})-[w:WANT_TO_WATCH]->(s:TVShow)
             RETURN s.tvdbId as tvdbId, 
             s.posterPath as posterPath,
+            s.title as name,
+            s.overview as overview,
             w.addedAt as addedAt
             ORDER BY w.addedAt DESC
             `,
@@ -232,6 +242,8 @@ const getWantToWatchTVShowsByUser = async (userId) => {
     return result.records.map((record) => ({
       tvdbId: record.get("tvdbId"),
       posterPath: record.get("posterPath"),
+      title: record.get("name"),
+      overview: record.get("overview"),
       addedAt: record.get("addedAt"),
     }));
   } catch (error) {
@@ -253,6 +265,8 @@ const getFavoriteTVShowsByUser = async (userId) => {
             MATCH (u:User {id: $userId})-[f:FAVORITE]->(s:TVShow)
             RETURN s.tvdbId as tvdbId, 
             s.posterPath as posterPath,
+            s.title as name,
+            s.overview as overview,
             f.addedAt as addedAt
             ORDER BY f.addedAt DESC
             `,
@@ -262,6 +276,8 @@ const getFavoriteTVShowsByUser = async (userId) => {
     return result.records.map((record) => ({
       tvdbId: record.get("tvdbId"),
       posterPath: record.get("posterPath"),
+      name: record.get("name"),
+      overview: record.get("overview"),
       addedAt: record.get("addedAt"),
     }));
   } catch (error) {
@@ -285,7 +301,7 @@ const getCurrentlyWatchingTVShowsByUser = async (userId) => {
             s.posterPath as posterPath,
             s.title as name,
             s.overview as overview,
-            s.review as review,
+            c.review as review,
             c.addedAt as addedAt
             ORDER BY c.addedAt DESC
             `,

@@ -1,6 +1,7 @@
 import {useState, useRef} from "react";
 import "./EditProfileModal.css";
 import {createUserProfile, updateUserProfile} from "../../api/ProfileApi";
+import {BASE_URL} from "../../api/constants";
 
 // TODO: potentially incorporate withAuth because passing it down as a prop does not seem secured since does not mean that the user is logged in and can update, but backend protects against editing as well.
 const EditProfileModal = ({
@@ -70,7 +71,7 @@ const EditProfileModal = ({
         formData.append("ProfilePicture", fileInputRef.current.files[0]);
 
         const uploadResponse = await fetch(
-          "http://localhost:3000/upload/profile-picture",
+          `${BASE_URL}/upload/profile-picture`,
           {
             method: "POST",
             credentials: "include",

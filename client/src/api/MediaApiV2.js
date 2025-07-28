@@ -1,4 +1,3 @@
-//TODO: refactor (due by July 25)
 import {removeDuplicates} from "../utils/MediaApiUtils";
 
 const TVDB_BASE_URL = "https://api4.thetvdb.com/v4";

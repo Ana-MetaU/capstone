@@ -1,5 +1,4 @@
-const BASE_URL = "http://localhost:3000";
-
+import {BASE_URL} from "./constants";
 // TODO: refactor this code
 export const addWatchedMovie = async (movieData) => {
   try {
@@ -99,7 +98,6 @@ export const getWantToWatchMovies = async () => {
 };
 
 export const addFavoriteMovie = async (movieData) => {
-  console.log("what are we getting", movieData);
   try {
     const response = await fetch(`${BASE_URL}/movies/favorites`, {
       method: "POST",

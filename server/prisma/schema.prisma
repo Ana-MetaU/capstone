@@ -26,3 +26,11 @@ model FollowRequest {
   @@unique([requesterId, recipientId])
    @@map("follow_request")
 }
+model Session {
+  id        String   @id @default(cuid())
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

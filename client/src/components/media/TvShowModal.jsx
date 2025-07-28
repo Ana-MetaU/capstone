@@ -39,7 +39,6 @@ const TvShowModal = ({isOpen, onClose, show}) => {
 
     const result = await addWatchedTVShow(showData);
     if (result.success) {
-      console.log("movie added");
       onClose();
     } else {
       alert(result.message);

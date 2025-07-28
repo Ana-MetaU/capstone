@@ -1,6 +1,5 @@
-const BASE_URL = "http://localhost:3000";
+import {BASE_URL} from "./constants";
 
-//TODO: refactor this (movieApi is basically the same as this)
 export const addWatchedTVShow = async (showData) => {
   try {
     const response = await fetch(`${BASE_URL}/tvshows/watched`, {
@@ -13,7 +12,7 @@ export const addWatchedTVShow = async (showData) => {
         tvdbId: showData.tvdbId,
         posterPath: showData.posterPath,
         name: showData.name,
-        overview: showData.name,
+        overview: showData.overview,
         rating: showData.rating,
         review: showData.review,
       }),
@@ -50,7 +49,6 @@ export const getWatchedTVShows = async () => {
 
     const data = await response.json();
     if (response.ok) {
-      console.log("what are we getting", data.shows);
       return {
         success: true,
         shows: data.shows,
@@ -110,6 +108,8 @@ export const addFavoriteTVShow = async (showData) => {
       body: JSON.stringify({
         tvdbId: showData.tvdbId,
         posterPath: showData.posterPath,
+        name: showData.name,
+        overview: showData.overview,
       }),
     });
 
@@ -178,6 +178,8 @@ export const addWantToWatchTVShow = async (showData) => {
       body: JSON.stringify({
         tvdbId: showData.tvdbId,
         posterPath: showData.posterPath,
+        name: showData.name,
+        overview: showData.posterPath,
       }),
     });
 
@@ -257,6 +259,36 @@ export const getFavoriteTVShows = async () => {
     }
   } catch (error) {
     console.log("getting favorites error: ", error);
+    return {
+      success: false,
+      message: "Exception occurred in request",
+    };
+  }
+};
+
+export const getCurrentlyWatchingTVShows = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/tvshows/currentlywatching`, {
+      credentials: "include",
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return {
+        success: true,
+        shows: data.shows,
+      };
+    } else {
+      return {
+        success: false,
+        message:
+          data.error ||
+          "Something went wrong while getting currently watching TV shows.",
+      };
+    }
+  } catch (error) {
+    console.log("Error fetching currently watching TV shows:", error);
     return {
       success: false,
       message: "Exception occurred in request",

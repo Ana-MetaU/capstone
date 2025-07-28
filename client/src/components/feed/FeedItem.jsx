@@ -22,7 +22,6 @@ function FeedItem({FeedItem}) {
   };
 
   const handleCommentClick = () => {
-    console.log("what is going on", showComments);
     setShowComments((prev) => !prev);
   };
 
