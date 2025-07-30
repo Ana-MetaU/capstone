@@ -9,11 +9,7 @@
   padding-top: 5px;
   color: white;
 }
-.profile-actions {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-}
+
 .search-toggle {
   display: flex;
   gap: 5px;
@@ -85,11 +81,13 @@
 .genres-label {
   margin: 0px;
 }
-
+.profile-actions {
+  margin-left: auto;
+}
 .profile-info {
   display: flex;
   align-items: center;
-  gap: 20px;
+  width: 100%;
 }
 
 .profile-picture img {
@@ -98,6 +96,7 @@
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid #e5e7eb;
+  margin: 24px;
 }
 
 .profile-details h2 {
@@ -138,4 +137,29 @@
   align-items: center;
   text-align: center;
   margin: 30px;
+}
+
+@media (max-width: 768px) {
+  .user-profile-header {
+    flex-direction: column;
+    padding: 20px 16px;
+    text-align: center;
+  }
+
+  .profile-info {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .profile-actions {
+    margin-left: 0;
+  }
+  .profile-details h2 {
+    font-size: 1.5rem;
+  }
+
+  .follow-button {
+    margin: 8px 0px;
+  }
 }

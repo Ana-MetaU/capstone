@@ -24,3 +24,26 @@
   background-color: #007bff;
   width: 100%;
 }
+
+@media (max-width: 768px) {
+  .friends-filter {
+    width: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+  .friend-checkbox {
+    gap: 10px;
+    padding: 6px 0px;
+  }
+
+  .clear-button {
+    font-size: 14px;
+  }
+
+  .filter-header h2 {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+}

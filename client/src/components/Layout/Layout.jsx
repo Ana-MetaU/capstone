@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Routes, Route} from "react-router-dom";
+import {Routes, Route, useNavigate} from "react-router-dom";
 import {MovieProvider} from "../../context/MovieContext.jsx";
 import {TVShowProvider} from "../../context/TvShowContext.jsx";
 import Feed from "../feed/Feed.jsx";
@@ -12,10 +12,14 @@ import TvShowRowsPage from "../media/TvShowRowsPage.jsx";
 import SearchResults from "../profile/SearchResults.jsx";
 import UserProfile from "../profile/UserProfile.jsx";
 import Notifications from "../profile/Notifications.jsx";
+import SearchBar from "../nav/SearchBar.jsx";
 import "./Layout.css";
 
 function Layout() {
   const [activeIcon, setActiveIcon] = useState(null);
+  const [isCollapsed, setIsCollapased] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+
   const renderPages = () => {
     switch (activeIcon) {
       case "tv-shows":
@@ -23,15 +27,20 @@ function Layout() {
       case "movies":
         return <MovieRowsPage></MovieRowsPage>;
       case "notification":
-        return <Notifications></Notifications>
+        return <Notifications></Notifications>;
       default:
         return <Feed></Feed>;
     }
   };
 
   return (
-    <div className="layout">
-      <Sidebar activeIcon={activeIcon} onActiveIconChange={setActiveIcon} />
+    <div className={`layout ${isCollapsed ? "collapsed" : ""}`}>
+      <Sidebar
+        activeIcon={activeIcon}
+        onActiveIconChange={setActiveIcon}
+        isCollapsed={isCollapsed}
+        setIsCollapased={setIsCollapased}
+      />
       <div className="main-content">
         <TVShowProvider>
           <MovieProvider>

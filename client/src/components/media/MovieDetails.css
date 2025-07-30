@@ -79,7 +79,6 @@
   overflow: hidden;
 }
 
-
 .review-btn:hover {
   box-shadow: 0 8px 25px #007bff99;
 }
@@ -163,4 +162,49 @@
   margin: 0 0 20px 0;
   color: #fff;
   text-align: center;
+}
+
+@media (max-width: 768px) {
+  .movie-details-modal {
+    width: 90vw;
+    max-width: 95vw;
+    max-height: 95vh;
+    border-radius: 12px;
+  }
+
+  .content-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 16px;
+  }
+
+  .movie-poster-details {
+    height: auto;
+    max-height: 300px;
+  }
+
+  .review-btn {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .movie-title-details {
+    font-size: 24px;
+  }
+
+  .rating-score {
+    font-size: 16px;
+  }
+
+  .movie-year,
+  .movie-runtime,
+  .movie-genres {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .overview-text {
+    font-size: 14px;
+  }
 }

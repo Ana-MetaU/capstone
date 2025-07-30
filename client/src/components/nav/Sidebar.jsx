@@ -12,13 +12,19 @@ import {
   SettingsButton,
   NotificationButton,
   LogoutButton,
+  MenuButton,
 } from "../UI/Buttons";
 
-const Sidebar = ({activeIcon, onActiveIconChange}) => {
+const Sidebar = ({
+  activeIcon,
+  onActiveIconChange,
+  isCollapsed,
+  setIsCollapased,
+}) => {
   const {user, setUser} = useUser();
-  const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
 
+  const navigate = useNavigate();
   const handleLogout = async () => {
     try {
       const result = await userLogout();
@@ -33,7 +39,6 @@ const Sidebar = ({activeIcon, onActiveIconChange}) => {
     }
   };
   const handleSearch = () => {
-
     if (searchValue.trim()) {
       navigate(`/search?q=${searchValue}`);
     }
@@ -76,27 +81,34 @@ const Sidebar = ({activeIcon, onActiveIconChange}) => {
   };
 
   return (
-    <div className="sidebar">
-      <aside className="sidebar-aside"> 
-        <div className="sidebar-header">
-          <h3>PARTY WATCH</h3>
-        </div>
+    <>
+      <button className="menu" onClick={() => setIsCollapased((prev) => !prev)}>
+        <MenuButton />
+      </button>
+      <div className={`sidebar ${isCollapsed ? "open" : ""}`}>
+        <aside className="sidebar-aside">
+          <div className="sidebar-header">
+            <h3>PARTY WATCH</h3>
+          </div>
+          <div className="search-bar-sidebar">
+            <SearchBar
+              value={searchValue}
+              onChange={setSearchValue}
+              onSearch={handleSearch}
+              isCollapsed={isCollapsed}
+            ></SearchBar>
+          </div>
 
-        <SearchBar
-          value={searchValue}
-          onChange={setSearchValue}
-          onSearch={handleSearch}
-        ></SearchBar>
+          <div className="sidebar-items">{renderItems()}</div>
 
-        <div className="sidebar-items">{renderItems()}</div>
-
-        <div className="logout-button">
-          <button onClick={handleLogout}>
-            <LogoutButton></LogoutButton>
-          </button>
-        </div>
-      </aside>
-    </div>
+          <div className="logout-button">
+            <button onClick={handleLogout}>
+              <LogoutButton></LogoutButton>
+            </button>
+          </div>
+        </aside>
+      </div>
+    </>
   );
 };
 

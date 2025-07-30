@@ -1,10 +1,20 @@
 import {useEffect, useRef, useState} from "react";
+import { useNavigate } from "react-router-dom";
 import FeedItem from "./FeedItem";
 import {useFeed} from "../../context/FeedContext";
+import SearchBar from "../nav/SearchBar";
 import FriendsFilter from "./FriendsFilter";
 import "./Feed.css";
 function Feed() {
   const [showFilters, setShowFilters] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    if (searchValue.trim()) {
+      navigate(`/search?q=${searchValue}`);
+    }
+  };
   const {
     filteredFeedItems,
     initialLoading,
@@ -24,19 +34,12 @@ function Feed() {
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (
-          entry.isIntersecting &&
-          hasNextPage &&
-          !loading &&
-          !initialLoading
-        ) {
-          loadMoreItems();
-        }
-      },
-    );
+    const observer = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (entry.isIntersecting && hasNextPage && !loading && !initialLoading) {
+        loadMoreItems();
+      }
+    });
     observer.observe(sentinel);
 
     return () => {
@@ -60,6 +63,13 @@ function Feed() {
 
   return (
     <div className="feed-container">
+      <div className="search-bar-layout">
+        <SearchBar
+          value={searchValue}
+          onChange={setSearchValue}
+          onSearch={handleSearch}
+        ></SearchBar>
+      </div>
       <div className="feed-header">
         <h1>Your Feed</h1>
         <button

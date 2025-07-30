@@ -23,6 +23,7 @@
 .login-form h1 {
   text-align: center;
   color: white;
+  font-size: 2.5rem;
 }
 
 .login-form input {
@@ -41,19 +42,80 @@
   border-radius: 4px;
 }
 
-.hr-lines {
+.hr-lines-login {
   position: relative; /* Needed for positioning the pseudo-elements */
   text-align: center; /* Center the text within the div */
   display: flex; /* Helps align the text and lines horizontally */
   align-items: center; /* Vertically aligns text with lines */
+  max-width: 100%;
 }
 
-.hr-lines::before,
-.hr-lines::after {
+.hr-lines-login::before,
+.hr-lines-login::after {
   content: ""; /* Required for pseudo-elements */
   flex-grow: 1; /* Makes the lines take up available space */
   background: rgb(191, 191, 191); /* Color of the lines */
   height: 1px; /* Thickness of the lines */
-  margin: 0 10px; /* Space between the text and lines */
-  width: 150px;
+  margin: 0px 10px;
+  width: 300px;
+}
+
+@media (min-width: 600px) and (max-width: 3000px) {
+  .log-in {
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .log-in {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .hr-lines-login {
+    position: relative; /* Needed for positioning the pseudo-elements */
+    text-align: center; /* Center the text within the div */
+    display: flex; /* Helps align the text and lines horizontally */
+    align-items: center; /* Vertically aligns text with lines */
+    max-width: 100%;
+  }
+
+  .hr-lines-login::before,
+  .hr-lines-login::after {
+    content: ""; /* Required for pseudo-elements */
+    flex-grow: 1; /* Makes the lines take up available space */
+    background: rgb(191, 191, 191); /* Color of the lines */
+    height: 1px; /* Thickness of the lines */
+    margin: 0px 10px;
+    width: 150px;
+  }
+}
+
+@media (max-width: 599px) {
+  .log-in {
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .login-form{
+    width: 100vw;
+  }
+
+  .hr-lines-login {
+    position: relative; /* Needed for positioning the pseudo-elements */
+    text-align: center; /* Center the text within the div */
+    display: flex; /* Helps align the text and lines horizontally */
+    align-items: center; /* Vertically aligns text with lines */
+  }
+
+  .hr-lines-login::before,
+  .hr-lines-login::after {
+    content: ""; /* Required for pseudo-elements */
+    flex-grow: 1; /* Makes the lines take up available space */
+    background: rgb(191, 191, 191); /* Color of the lines */
+    height: 1px; /* Thickness of the lines */
+    margin: 0px 10px;
+    width: 150px;
+  }
 }

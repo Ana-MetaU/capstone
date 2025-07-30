@@ -3,7 +3,6 @@
 .feed-container {
   max-width: 1200px;
   flex: 1;
-  padding: 20px;
   background-color: #1a1a1a;
   min-height: 100vh;
 }
@@ -225,4 +224,85 @@
   text-align: center;
   padding: 20px;
   color: #cccccc;
+}
+
+.search-bar-layout {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background-color: #121212;
+  padding: 6px 10px;
+}
+
+@media (max-width: 768px) {
+  .feed-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .feed-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .feed-header h1 {
+    font-size: 20px;
+    margin-bottom: 0;
+  }
+
+  .filter-toggle {
+    align-items: flex-end;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .feed-filter {
+    flex-direction: column;
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+  .feed-items {
+    gap: 16px;
+  }
+
+  .friend-info {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .friend-avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .friend-name {
+    font-size: 13px;
+  }
+
+  .post-time {
+    font-size: 11px;
+  }
+
+  .review-text p{
+    font-size: 14px;
+  }
+
+  .poster-image-post{
+    width: 70px;
+    height: 105px;
+  }
+
+  .friend-filter{
+    width: 100%;
+    padding: 10px;
+  }
+}
+@media (min-width: 902px) {
+  .search-bar-layout {
+    display: none;
+  }
 }

@@ -46,3 +46,12 @@
 .movie-row-grid .movie-card {
   flex-shrink: 0;
 }
+
+
+@media (max-width: 768px){
+  .movie-row-grid .movie-card{
+    width: 120px;
+    height: 180px;
+    margin: 5px;
+  }
+}

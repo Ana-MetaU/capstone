@@ -42,3 +42,24 @@
 .search-button:hover {
   background-color: #1a1a1a;
 }
+
+@media (max-width: 768px) {
+  .search-bar-container {
+    padding: 0px 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin: 10px auto;
+    max-width: 75%;
+  }
+
+  .search-input {
+    padding: 0px;
+
+  }
+
+.search-button{
+display: none;
+}
+  }
+
+

@@ -28,3 +28,14 @@
   font-size: 1.25rem;
   text-align: center;
 }
+
+@media (max-width: 769px) {
+  .movies-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+  }
+  .movie-card{
+    height: 220px;
+    margin: 6px;
+  }
+}

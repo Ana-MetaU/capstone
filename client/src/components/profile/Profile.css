@@ -57,3 +57,39 @@
   font-size: 0.9rem;
   font-weight: bold;
 }
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 10px;
+  }
+  .profile-header {
+    padding: 20px 15px;
+    border: 10px;
+  }
+  .edit-profile-button {
+    margin-left: auto;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .profile-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .genres-label {
+    font-size: 0.8rem;
+    display: block;
+    margin-top: 5px;
+  }
+  .profile-stats {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px;
+  }
+  .stat {
+    flex: 1 1 45%;
+  }
+}

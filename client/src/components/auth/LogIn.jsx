@@ -74,7 +74,7 @@ const LogIn = () => {
         <button type="submit">Log In</button>
       </form>
 
-      <div className="hr-lines">
+      <div className="hr-lines-login">
         <span> OR </span>
       </div>
 
