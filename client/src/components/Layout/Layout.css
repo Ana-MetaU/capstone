@@ -6,9 +6,9 @@
   display: block;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 769px) {
   .layout {
-    margin-left: 0;
+    margin-left: 0px;
   }
 
   .layout.collapsed {
@@ -16,6 +16,15 @@
   }
 }
 
+@media (min-width: 769px) and (max-width: 902px) {
+  .layout {
+    margin-left: 80px;
+  }
+
+  .layout.collapsed {
+    margin-left: 80px;
+  }
+}
 @media (min-width: 902px) {
   .search-bar-layout {
     display: none;

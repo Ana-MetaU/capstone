@@ -1,4 +1,5 @@
 import {useEffect} from "react";
+import "./ErrorModal.css";
 function ErrorModal({isOpen, onClose, message}) {
   useEffect(() => {
     if (isOpen) {
@@ -13,9 +14,9 @@ function ErrorModal({isOpen, onClose, message}) {
     return null;
   }
   return (
-    <div className="modal-backdrop">
-      <div className="modal-content">
-        <h3>error</h3>
+    <div className="error-modal-backdrop">
+      <div className="error-modal-content">
+        <h2>⚠️ error ⚠️</h2>
         <p>{message}</p>
       </div>
     </div>

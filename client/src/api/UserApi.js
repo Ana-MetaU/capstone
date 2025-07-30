@@ -49,7 +49,7 @@ export const userLogin = async (formData) => {
     } else {
       return {
         success: false,
-        message: data.error || "something went wrong when logging in lala.",
+        message: data.error || "something went wrong with login.",
       };
     }
   } catch (error) {

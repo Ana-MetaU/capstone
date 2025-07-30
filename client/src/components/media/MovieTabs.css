@@ -32,7 +32,6 @@
 }
 
 .tab-content {
-  padding: 30px;
   min-height: 400px;
 }
 
@@ -46,7 +45,4 @@
     padding: 12px 16px;
   }
 
-  .tab-content {
-    padding: 16px;
-  }
 }

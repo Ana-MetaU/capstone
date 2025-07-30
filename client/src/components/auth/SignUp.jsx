@@ -2,10 +2,12 @@ import {useState} from "react";
 import {useNavigate, Link} from "react-router-dom";
 import Graphic from "../UI/Graphic";
 import {userSignup} from "../../api/UserApi";
+import ErrorModal from "../UI/ErrorModal";
 import "./SignUp.css";
 
 const SignUp = () => {
   const [message, setMessage] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
@@ -26,15 +28,14 @@ const SignUp = () => {
   // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevents page refresh
-    console.log("User Input:", formData); // Logs user input
 
     const result = await userSignup(formData);
-    console.log("resultsss", result);
 
     if (result.success) {
       navigate("/login");
     } else {
-      setMessage("something went wrong");
+      setMessage(result.message);
+      setIsModalOpen(true);
     }
 
     // have to add later for more robustness if username is not unique, inform the user
@@ -97,6 +98,11 @@ const SignUp = () => {
           Already have an account?
           <Link to="/login"> Login </Link>
         </p>
+        <ErrorModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          message={message}
+        />
       </div>
     </div>
   );

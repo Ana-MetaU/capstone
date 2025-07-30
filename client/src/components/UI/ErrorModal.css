@@ -1,23 +1,29 @@
-.modal-backdrop {
+.error-modal-backdrop {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: auto;
+  top: 0%;
+  z-index: 2000;
 }
 
-.modal-content {
-  background: rgb(123, 30, 30);
-  border-radius: 8px;
+.error-modal-content {
+  background: white;
+  border-radius: 40px;
   width: 320px;
-  animation: slideIn 0.4s ease-out;
+  animation: slideInOut 3s ease-out;
+  color: black;
+  text-align: center;
 }
-@keyframes slideIn {
-  from {
+
+@keyframes slideInOut {
+  0% {
     transform: translateY(-100px);
     opacity: 0;
   }
-  to {
-    transform: translateY(0);
+  50% {
+    transform: translateY(16px);
     opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px);
+    opacity: 0;
   }
 }
