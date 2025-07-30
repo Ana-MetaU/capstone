@@ -5,7 +5,7 @@ function ErrorModal({isOpen, onClose, message}) {
     if (isOpen) {
       const timer = setTimeout(() => {
         onClose();
-      }, 4000);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [isOpen, onClose]);

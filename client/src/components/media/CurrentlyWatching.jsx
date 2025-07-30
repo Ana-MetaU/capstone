@@ -8,9 +8,8 @@ import {getImage} from "../../utils/MediaApiUtils";
 // Right now it is hard coded as upcoming movies from tmdb api
 function CurrentlyWatching() {
   const {currentlyWatching} = useContext(TVShowContext);
-  console.log("currentl", currentlyWatching);
   const CurrentMovies = () => {
-    if (!currentlyWatching) {
+    if (currentlyWatching.length === 0) {
       return <p>No current movies. </p>;
     }
     return currentlyWatching.map((show) => (
