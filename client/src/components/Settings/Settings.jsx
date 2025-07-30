@@ -12,18 +12,18 @@ function Settings() {
     {
       value: "friends_only",
       label: "Private",
-      description: "Only your friends can see your profile and posts",
+      description: " Only your friends can see your profile and posts",
     },
     {
       value: "friends_of_friends",
       label: "Friends of Friends",
       description:
-        "Your friends and and their friends can see your profile and posts",
+        " Your friends and and their friends can see your profile and posts",
     },
     {
       value: "public",
       label: "Public",
-      description: "Everyone can see your profile and posts",
+      description: " Everyone can see your profile and posts",
     },
   ];
   useEffect(() => {
@@ -82,7 +82,7 @@ function Settings() {
       <h3>Visibility</h3>
 
       <div className="privacy">
-x        {privacyOptions.map((option) => (
+        {privacyOptions.map((option) => (
           <label key={option.value} className="privacy-label">
             <div className="privacy-option">
               <input
@@ -98,7 +98,7 @@ x        {privacyOptions.map((option) => (
           </label>
         ))}{" "}
         <p>
-          currently selected:
+          Selection: 
           {
             privacyOptions.find((option) => option.value === privacyLevel)
               ?.description

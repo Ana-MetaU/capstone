@@ -18,6 +18,7 @@
   width: 90%;
   max-width: 600px;
   max-height: 90vh;
+  overflow-y: auto;
 }
 
 .modal-header h2 {
@@ -90,7 +91,7 @@
 
 .genres-checkboxes {
   display: flex;
-  flex-wrap: wrap  ;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
@@ -109,7 +110,6 @@ label {
 
 textarea {
   width: 100%;
-  padding: 0.75rem;
   border: 1px solid #d1d5db;
   border-radius: 4px;
   resize: vertical;
@@ -146,4 +146,12 @@ textarea {
 .save-button-active {
   background: #3b83f67b;
   border: 1px solid #3b83f67b;
+}
+
+@media (max-width: 769px) {
+  .modal-content {
+    color: black;
+    background: white;
+    border-radius: 8px;
+  }
 }

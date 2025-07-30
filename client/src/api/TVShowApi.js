@@ -266,6 +266,48 @@ export const getFavoriteTVShows = async () => {
   }
 };
 
+export const addCurrentlyWatchingTVShows = async (showData) => {
+  try {
+    const response = await fetch(`${BASE_URL}/tvshows/currentlywatching`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        tvdbId: showData.tvdbId,
+        posterPath: showData.posterPath,
+        name: showData.name,
+        overview: showData.overview,
+        rating: showData.rating,
+        review: showData.review,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return {
+        success: true,
+        shows: data.shows,
+      };
+    } else {
+      return {
+        success: false,
+        message:
+          data.error ||
+          "Something went wrong while getting currently watching TV shows.",
+      };
+    }
+  } catch (error) {
+    console.log("Error fetching currently watching TV shows:", error);
+    return {
+      success: false,
+      message: "Exception occurred in request",
+    };
+  }
+};
+
 export const getCurrentlyWatchingTVShows = async () => {
   try {
     const response = await fetch(`${BASE_URL}/tvshows/currentlywatching`, {

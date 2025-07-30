@@ -26,7 +26,7 @@ const validateInput = (input, requireEmail = false) => {
   }
 
   if (password.length < 8) {
-    return "password msut be at least 8 characters long";
+    return "password must be at least 8 characters long";
   }
 
   return SUCCESS;
@@ -45,9 +45,7 @@ router.post("/signup", async (req, res) => {
     // Check if username is already taken
     const userExists = await checkUserExists(username, email);
     if (userExists) {
-      return res
-        .status(400)
-        .json({error: "Username already exists. Log in instead."});
+      return res.status(400).json({error: "Username taken"});
     }
 
     // Hash the password before storing it

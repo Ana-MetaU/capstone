@@ -1,6 +1,7 @@
 .movies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 5px;
 }
 
 .movie-card {
@@ -31,11 +32,20 @@
 
 @media (max-width: 769px) {
   .movies-grid {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 5px;
   }
-  .movie-card{
-    height: 220px;
-    margin: 6px;
+
+  .movie-card {
+    width: 200px;
+    margin: auto;
+    height: 300px;
+  }
+
+  .movie-posters {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
   }
 }
