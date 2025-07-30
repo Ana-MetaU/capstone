@@ -1,3 +1,23 @@
 .layout {
   margin-left: 300px;
 }
+
+.search-bar-layout {
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    margin-left: 0;
+  }
+
+  .layout.collapsed {
+    margin-left: 80px;
+  }
+}
+
+@media (min-width: 902px) {
+  .search-bar-layout {
+    display: none;
+  }
+}

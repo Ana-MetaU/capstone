@@ -51,3 +51,72 @@
   margin-top: auto;
   padding: 16px 24px;
 }
+
+.menu {
+  display: none;
+}
+@media (max-width: 900px) {
+  .search-bar-sidebar {
+    display: none;
+  }
+  .sidebar {
+    width: 72px;
+    padding: 16px 0px;
+  }
+
+  .sidebar-header {
+    padding: 0px 12px;
+    text-align: center;
+  }
+
+  .sidebar-label {
+    display: none;
+  }
+
+  .sidebar-item {
+    justify-content: center;
+    padding: 10px 0px;
+  }
+  .logout-button {
+    padding: 0 0 16px 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .sidebar aside {
+    align-items: center;
+  }
+
+  .sidebar-icon {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .search-bar-sidebar {
+    display: none;
+  }
+  .menu {
+    display: block;
+    position: fixed;
+    top: 19px;
+    left: 4px;
+    z-index: 1101;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+  }
+  .sidebar{
+    padding-top: 50px;
+  }
+  .sidebar-header h3 {
+    display: none;
+  }
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+}

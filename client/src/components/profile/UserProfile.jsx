@@ -232,29 +232,7 @@ const UserProfile = () => {
       )}
       <div className="user-profile-header">
         {user?.username !== username && followStatus !== "request recieved" && (
-          <div className="profile-actions">
-            <button
-              className={`follow-button  ${
-                followStatus === "none"
-                  ? "follow-button-primary"
-                  : followStatus === "following" ||
-                    followStatus === "request sent"
-                  ? "follow-button-secondary"
-                  : "follow-button-primary"
-              }`}
-              onClick={handleFollowClick}
-            >
-              {followLoading
-                ? "Loading"
-                : followStatus === "none"
-                ? "Follow"
-                : followStatus === "following"
-                ? "Following"
-                : followStatus === "request sent"
-                ? "Request"
-                : "Follow"}
-            </button>
-          </div>
+          <div className="profile-actions"></div>
         )}
 
         <div className="profile-info">
@@ -278,6 +256,29 @@ const UserProfile = () => {
                   </span>
                 </div>
               )}
+          </div>
+          <div className="profile-actions">
+            <button
+              className={`follow-button  ${
+                followStatus === "none"
+                  ? "follow-button-primary"
+                  : followStatus === "following" ||
+                    followStatus === "request sent"
+                  ? "follow-button-secondary"
+                  : "follow-button-primary"
+              }`}
+              onClick={handleFollowClick}
+            >
+              {followLoading
+                ? "Loading"
+                : followStatus === "none"
+                ? "Follow"
+                : followStatus === "following"
+                ? "Following"
+                : followStatus === "request sent"
+                ? "Request"
+                : "Follow"}
+            </button>
           </div>
         </div>
 
