@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const reguireLogin = require("../middleware/requireLogin");
+const {createOrUpdateGoal, getWatchGoal} = require("../database/userUtils");
 const {
   getUserStats,
   getUserProfileByUsername,
@@ -124,6 +125,32 @@ router.get("/:userId/stats", async (req, res) => {
   } catch (error) {
     console.log("error getting user's stats", error);
     res.status(500).json({error: "Failed to get user stats"});
+  }
+});
+
+router.post("/:userId/goal", async (req, res) => {
+  const {userId} = req.params;
+  const {year, goal} = req.body;
+  if (!year || !goal) {
+    return res.status(400).json({error: "Missing year or gaol"});
+  }
+
+  try {
+    await createOrUpdateGoal(userId, year, goal);
+    res.status(200).json({message: "goal set or updated successfully"});
+  } catch (error) {
+    res.status(500).json({error: "failed to set or update goal"});
+  }
+});
+
+router.get("/:userId/goal/:year", async (req, res) => {
+  const {userId, year} = req.params;
+  try {
+    const goal = await getWatchGoal(userId, year);
+    res.status(200).json({goal});
+  } catch (error) {
+    console.log("failed to fetch goal", error);
+    res.status(500).json({error: "failed to fetch goal"});
   }
 });
 

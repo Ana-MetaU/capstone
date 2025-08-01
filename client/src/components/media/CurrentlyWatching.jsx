@@ -12,8 +12,8 @@ function CurrentlyWatching() {
     if (currentlyWatching.length === 0) {
       return <p>No current movies. </p>;
     }
-    return currentlyWatching.map((show) => (
-      <div key={show.id} className="movie-container">
+    return currentlyWatching.map((show, index) => (
+      <div key={`${show.id}-${index}`} className="movie-container">
         <img
           src={getImage(show.posterPath)}
           alt={show.title}

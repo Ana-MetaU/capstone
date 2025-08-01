@@ -7,9 +7,9 @@ import EditProfileModal from "./EditProfileModal";
 import MovieTabs from "../media/MovieTabs";
 import {MovieContext} from "../../context/MovieContext";
 import {useProfile} from "../../context/ProfileContext";
+import WatchGoal from "../media/WatchGoal";
 import "./Profile.css";
 
-// TODO: replace currently wathcing with recently watched. fetch latest 16 movies watched.
 const Profile = () => {
   const {user} = useUser();
   const {profile, fetchProfile, userStats} = useProfile();
@@ -76,6 +76,7 @@ const Profile = () => {
         </div>
       </div>
       <CurrentlyWatching movies={movies} />
+      <WatchGoal userId={user?.id}></WatchGoal>
       <MovieTabs></MovieTabs>
 
       {isEditmodalOpen && (

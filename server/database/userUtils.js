@@ -124,10 +124,49 @@ const verifyUserPassword = async (username, password) => {
   }
 };
 
+async function createOrUpdateGoal(userId, year, goal) {
+  const session = getSession();
+
+  try {
+    await session.run(
+      `
+      MERGE (u: User {id: $userId})
+      MERGE (g: WatchGoal {userId: $userId, year: $year})
+      ON CREATE SET g.goal = $goal
+      MERGE (u)-[:HAS_GOAL]->(g)
+      `,
+      {userId, year: parseInt(year), goal: parseInt(goal)}
+    );
+  } finally {
+    await session.close();
+  }
+}
+
+async function getWatchGoal(userId, year) {
+  const session = getSession();
+
+  try {
+    const result = await session.run(
+      `
+      MATCH (u:User {id: $userId})-[:HAS_GOAL]->(g: WatchGoal {year: $year})
+      RETURN g.goal AS goal
+      `,
+      {userId, year: parseInt(year)}
+    );
+    const record = result.records[0];
+    console.log("what", result);
+    return record ? record.get("goal") : 0;
+  } finally {
+    await session.close();
+  }
+}
+
 module.exports = {
   createUser,
   checkUserExists,
   getUserByUsername,
   verifyUserPassword,
   getUserById,
+  createOrUpdateGoal,
+  getWatchGoal,
 };
