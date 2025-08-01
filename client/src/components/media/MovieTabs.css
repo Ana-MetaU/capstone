@@ -33,6 +33,7 @@
 
 .tab-content {
   min-height: 400px;
+  padding: 10px;
 }
 
 @media (max-width: 769px) {

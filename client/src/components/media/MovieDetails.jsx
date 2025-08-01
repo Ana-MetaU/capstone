@@ -17,6 +17,8 @@ function MovieDetails() {
   };
 
   const handleWriteReview = () => {
+
+    
     navigate(`/review/${selectedMovie.id}`);
   };
 

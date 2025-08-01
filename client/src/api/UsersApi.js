@@ -260,3 +260,65 @@ export const getUserWantToWatchShows = async (userId) => {
     };
   }
 };
+
+export const getWatchGoal = async (userId, currentYear) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/users/${userId}/goal/${currentYear}`,
+      {
+        credentials: "include",
+      }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return {
+        success: true,
+        goal: data.goal,
+      };
+    } else {
+      return {
+        success: false,
+        message: data.error || "something went wrong while getting the goal.",
+      };
+    }
+  } catch (error) {
+    console.log("getting watch goal error: ", error);
+    return {
+      success: false,
+      message: "Exception occurred in request",
+    };
+  }
+};
+
+export const setWatchGoal = async (userId, currentYear, newGoal) => {
+  console.log("what is going on ", userId, currentYear, newGoal);
+  try {
+    const response = await fetch(`${BASE_URL}/users/${userId}/goal`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      credentials: "include",
+      body: JSON.stringify({year: currentYear, goal: newGoal}),
+    });
+    console.log("what is the repsonse", response);
+    const data = await response.json();
+    if (response.ok) {
+      return {
+        success: true,
+        goal: data,
+      };
+    } else {
+      return {
+        success: false,
+        message: data.error || "something went wrong while setting the goal.",
+      };
+    }
+  } catch (error) {
+    console.log("setting watch goal error: ", error);
+    return {
+      success: false,
+      message: "Exception occurred in request",
+    };
+  }
+};
